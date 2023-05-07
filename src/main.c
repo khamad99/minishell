@@ -1,19 +1,5 @@
 #include "../include/minishell.h"
 
-void ft_ctrl_c()
-{
-	rl_replace_line("", 0);
-	printf("\n");
-	rl_on_new_line();
-	rl_redisplay();
-}
-
-void ft_signal()
-{
-	signal(SIGQUIT, SIG_IGN);
-	signal(SIGINT, ft_ctrl_c);
-}
-
 int main(int argc, char **argv, char **envp)
 {
 	t_shell_s	*minishell;
