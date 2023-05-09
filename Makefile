@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ooutabac <ooutabac@student.42.fr>          +#+  +:+       +#+         #
+#    By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/09 11:29:51 by ooutabac          #+#    #+#              #
-#    Updated: 2023/02/16 18:17:23 by ooutabac         ###   ########.fr        #
+#    Updated: 2023/05/09 11:03:13 by kalshaer         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,6 @@ SRC_DIR		=	src
 OBJ_DIR		=	objects
 
 SRCS		=	src/main.c			\
-				builtin/echo.c		\
 				parsing/parse.c		\
 				parsing/utils1.c	\
 				parsing/utils2.c	\
@@ -32,6 +31,8 @@ SRCS		=	src/main.c			\
 				parsing/utils6.c	\
 				parsing/utils7.c	\
 				parsing/free.c		\
+				builtin/echo.c		\
+				src/signal.c		\
 
 OBJS		=	$(SRCS:%c=%o)
 
