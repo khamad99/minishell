@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/14 00:24:48 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/14 08:41:43 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ it have 2 roles,
 	return any redir to original
 2- it will loop and fork the proccess in each loop to execute the child
 */
-static int	start_exec(t_shell_s *shell)
+static void	start_exec(t_shell_s *shell)
 {
 	shell->cmd_used = 0;
 	if (forking_required(shell) && is_builtin(shell->command_block[0]->command))
