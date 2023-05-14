@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 21:42:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/14 12:24:08 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/14 12:58:29 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ void	pipes_in_child(t_shell_s *shell, int cmd_num)
 {
 	int	i;
 
-	if (!shell->num_pipes)
-		return ;
 	i = -1;
 	while (++i < shell->num_pipes * 2)
 		if (((cmd_num * 2) - 2) != i && ((cmd_num * 2) + 1) != i)

@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/14 12:26:35 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/14 13:02:57 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 		execve(shell->command_block[cmd_num]->command,
 			shell->command_block[cmd_num]->args, shell->envp->envp);
 	//or
-	// search the path in env 
+	// search the path in env
+	// split the path into char ** array 
 	// join the path with cmd
 	// check the validity by access function
 	// yes -> execve
@@ -76,7 +77,8 @@ void	excute_child(t_shell_s *shell, int cmd_num)
 		return ; // fix the free function later
 	else if (shell->pid[cmd_num] == 0)
 	{
-		pipes_in_child(shell, cmd_num);
+		if (shell->num_pipes > 0)
+			pipes_in_child(shell, cmd_num);
 		// make the redir accourding to < > >>
 		if (is_builtin(shell->command_block[0]->command))
 		{
