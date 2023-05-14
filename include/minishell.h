@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/14 08:39:53 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/14 12:23:52 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,7 @@ typedef struct s_shell_s
 int		shell_loop(char **envp);
 void	pipes_pid_init(t_shell_s *shell);
 void	excute_child(t_shell_s *shell, int cmd_num);
+void	pipes_in_child(t_shell_s *shell, int cmd_num);
 /*--------------------------------signal-------------------------------*/
 void	ft_ctrl_c(int sig);
 /*--------------------------------builtin-------------------------------*/
