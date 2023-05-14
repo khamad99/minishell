@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/09 10:59:35 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/13 22:12:45 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,15 @@
 # include <unistd.h>
 # include <sys/wait.h>
 # include "../libft/libft.h"
+# include <sys/stat.h>
+# include <sys/types.h>
+ #include <signal.h>
 
 # define TRUE 0
 # define FALSE 1
+# define STD_IN 0
+# define STD_OUT 1
+# define STD_ERROR 2
 
 /* T_COUNTER
 - This struct is just for general use to save lines.
@@ -154,6 +160,10 @@ typedef struct s_shell_s
 {
     int			num_commands; // number of all commands
     int			num_pipes;  // number of all pipes
+	int			*pipes_fd;  // fd number for the opend pipes
+	pid_t		*pid;  // pid array to stor the pid when forking 
+	int			cmd_used;  // during execution, it counts the commands used in the loop
+	int			exit_code; // exit code when finish excuteion
 	char		***flags;	// List of arguments of every command
     char		**commands; // Simple commands
     char		**path;    // a path for the list of path direcotories separeted by ':' (DONE)
@@ -164,9 +174,18 @@ typedef struct s_shell_s
 	t_execute	**command_block; // Has all the necessary data for execution on each command block
 }t_shell_s;
 
-/*--------------------------------SAMIYA-------------------------------*/
+/*--------------------------------KHALED-------------------------------*/
 /*---------------------------------MAIN--------------------------------*/
-void	ft_signal(void);
+int		shell_loop(char **envp);
+void	pipes_pid_init(t_shell_s *shell);
+/*--------------------------------signal-------------------------------*/
+void	ft_ctrl_c(int sig);
+/*--------------------------------builtin-------------------------------*/
+int		ft_echo(char **args);
+int		ft_env(char ** arg, t_env_s *env);
+int		is_builtin(char *cmd);
+int		builtin_exec(t_execute *exec);
+
 
 /*--------------------------------OBADA--------------------------------*/
 /*-------------------------------PARSING-------------------------------*/

@@ -6,11 +6,25 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 13:09:07 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/07 13:12:15 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/12 21:13:43 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+// static void	ft_putstr_fd_echo(char *s, int fd)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (s[i] != '\0')
+// 	{
+// 		if (s[i] == 92 && s[i + 1])
+// 			i++;
+// 		write(fd, &s[i], 1);
+// 		i++;
+// 	}
+// }
 
 static int	nb_args(char **args)
 {
@@ -22,7 +36,7 @@ static int	nb_args(char **args)
 	return (size);
 }
 
-int	echo(char **args)
+int	ft_echo(char **args)
 {
 	int	i;
 	int	n_option;
@@ -31,11 +45,8 @@ int	echo(char **args)
 	n_option = 0;
 	if (nb_args(args) > 1)
 	{
-		while (args[i] && ft_strncmp(args[i], "-n", 3) == 0)
-		{
+		if (ft_strncmp(args[1], "-n", 3) == 0)
 			n_option = 1;
-			i++;
-		}
 		while (args[i])
 		{
 			ft_putstr_fd(args[i], 1);

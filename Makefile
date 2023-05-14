@@ -6,7 +6,7 @@
 #    By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/09 11:29:51 by ooutabac          #+#    #+#              #
-#    Updated: 2023/05/09 11:03:13 by kalshaer         ###   ########.fr        #
+#    Updated: 2023/05/13 23:46:22 by kalshaer         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,18 +21,23 @@ INC_DIR		=	include
 SRC_DIR		=	src
 OBJ_DIR		=	objects
 
-SRCS		=	src/main.c			\
-				parsing/parse.c		\
-				parsing/utils1.c	\
-				parsing/utils2.c	\
-				parsing/utils3.c	\
-				parsing/utils4.c	\
-				parsing/utils5.c	\
-				parsing/utils6.c	\
-				parsing/utils7.c	\
-				parsing/free.c		\
-				builtin/echo.c		\
-				src/signal.c		\
+SRCS		=	src/main.c					\
+				parsing/parse.c				\
+				parsing/utils1.c			\
+				parsing/utils2.c			\
+				parsing/utils3.c			\
+				parsing/utils4.c			\
+				parsing/utils5.c			\
+				parsing/utils6.c			\
+				parsing/utils7.c			\
+				parsing/free.c				\
+				builtin/echo.c				\
+				builtin/env.c				\
+				builtin/builtin_utils.c		\
+				src/excution.c				\
+				src/exec_child.c			\
+				src/pipes.c					\
+				src/signal.c				\
 
 OBJS		=	$(SRCS:%c=%o)
 
