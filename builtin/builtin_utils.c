@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:03:04 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/13 20:03:41 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/16 08:20:18 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,18 @@ int	is_builtin(char *cmd)
 int	builtin_exec(t_execute *exec)
 {
 	// if (!ft_strncmp(exec->command, "export", 7))
-	// 	return (built_in_export(shell, cmd_args));
+	// 	return (ft_export());
 	// else if (!ft_strncmp(exec->command, "cd", 3))
-	// 	return (ft_cd(shell, cmd_args));
+	// 	return (ft_cd();
 	if (!ft_strncmp(exec->command, "echo", 5))
 		return (ft_echo(exec->args));
 	else if (!ft_strncmp(exec->command, "env", 4))
 		return (ft_env(exec->args, exec->env));
-	// else if (!ft_strncmp(exec->command, "unset", 6))
-	// 	return (built_in_unset(shell, cmd_args));
+	else if (!ft_strncmp(exec->command, "unset", 6))
+		return (ft_unset(exec));
 	// else if (!ft_strncmp(exec->command, "exit", 5))
-	// 	built_in_exit(shell, cmd_args);
-	// else if (!ft_strncmp(cexec->command, "pwd", 4))
-	// 	return (built_in_pwd(shell, cmd_args[0]));
+	// 	ft_exit();
+	else if (!ft_strncmp(exec->command, "pwd", 4))
+		return (ft_pwd());
 	return (0);
 }

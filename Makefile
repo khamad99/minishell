@@ -6,7 +6,7 @@
 #    By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/09 11:29:51 by ooutabac          #+#    #+#              #
-#    Updated: 2023/05/13 23:46:22 by kalshaer         ###   ########.fr        #
+#    Updated: 2023/05/16 09:40:36 by kalshaer         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,11 @@ SRCS		=	src/main.c					\
 				parsing/free.c				\
 				builtin/echo.c				\
 				builtin/env.c				\
+				builtin/pwd.c				\
+				builtin/unset.c				\
+				builtin/exit.c				\
+				builtin/export.c			\
+				builtin/cd.c				\
 				builtin/builtin_utils.c		\
 				src/excution.c				\
 				src/exec_child.c			\

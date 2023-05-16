@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/14 12:23:52 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/16 09:41:11 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,6 +185,8 @@ void	ft_ctrl_c(int sig);
 /*--------------------------------builtin-------------------------------*/
 int		ft_echo(char **args);
 int		ft_env(char ** arg, t_env_s *env);
+int		ft_pwd(void);
+int		ft_unset(t_execute *exec);
 int		is_builtin(char *cmd);
 int		builtin_exec(t_execute *exec);
 
