@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/14 08:41:43 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/18 14:57:47 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ static void	start_exec(t_shell_s *shell)
 	shell->cmd_used = 0;
 	if (forking_required(shell) && is_builtin(shell->command_block[0]->command))
 	{
-		// make the redirection
+		if (init_redir(shell->command_block[0]) == -1)
+			return ; // to handle the no_acess to infile
 		shell->exit_code = builtin_exec(shell->command_block[0]);
-		// return any redir to original
-		//dup2();
-		//dup2();
+		dup2(0, STDIN_FILENO);
+		dup2(1, STDOUT_FILENO);
 	}
 	else
 	{
@@ -86,11 +86,9 @@ int	shell_loop(char **envp)
 		cmd = NULL;
 		if (shell)
 		{
-			// int i = -1;
-			// while ( ++i < shell->num_commands && shell)
-			// 	printf("command->%s\nARGS->%s\n", shell->command_block[i]->command, shell->command_block[i]->args[1]);
-			// printf("%d\n", shell->command_block[0]->num_pipes );
-			//printf("redir num -> %d\nif->%d\nof->%d\naf->%d\nhf->%d\ntype->%s\n", shell->files->num_of_redirections, shell->files->infile_fd, shell->files->outfile_fd, shell->files->append_fd, shell->files->heredoc_fd, shell->files->redirect_type);
+			int i = -1;
+			while (shell->command_block[0]->files->redirect_type[++i])
+				printf("redir->%c\n", shell->command_block[0]->files->redirect_type[i]);
 			start_exec(shell);
 			free_everything(shell);
 		}

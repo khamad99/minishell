@@ -6,7 +6,7 @@
 #    By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/09 11:29:51 by ooutabac          #+#    #+#              #
-#    Updated: 2023/05/16 09:40:36 by kalshaer         ###   ########.fr        #
+#    Updated: 2023/05/18 11:49:32 by kalshaer         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,10 @@ SRCS		=	src/main.c					\
 				builtin/builtin_utils.c		\
 				src/excution.c				\
 				src/exec_child.c			\
+				src/redir.c					\
+				src/exec_heredoc.c			\
+				src/exec_infile.c			\
+				src/exec_outfile.c			\
 				src/pipes.c					\
 				src/signal.c				\
 
