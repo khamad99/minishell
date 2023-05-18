@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 13:32:12 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/18 14:47:23 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/18 21:32:27 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,8 @@ it is used to count the number of each redir in the char **names
 int	ft_strstrlen(char **str)
 {
 	int i = 0;
-	while (str)
-	{
+	while (str[i])
 		i++;
-		str++;
-	}
 	return (i);
 }
 
@@ -75,21 +72,21 @@ static int	open_files(t_files *files)
 /*
 to minimise the init_redir function 
 */
-static void	init_redir2(t_execute *cmd, int i, counter *c)
+static void	init_redir2(t_execute *cmd, counter *c)
 {
-	if (cmd->files->redirect_type[i] == '>')
+	if (cmd->files->redirect_type[c->i] == '>')
 	{
 		dup2(cmd->files->outfile_fd, STDOUT_FILENO);
 		if (++c->outfile_i == ft_strstrlen(cmd->files->infile_name))
 			close(cmd->files->outfile_fd);
 	}
-	else if (cmd->files->redirect_type[i] == 'a')
+	else if (cmd->files->redirect_type[c->i] == 'a')
 	{
 		dup2(cmd->files->append_fd, STDOUT_FILENO);
 		if (++c->append_i == ft_strstrlen(cmd->files->append_name))
 			close(cmd->files->append_fd);
 	}
-	else if ((cmd->files->redirect_type[i] == '<'))
+	else if ((cmd->files->redirect_type[c->i] == '<'))
 	{
 		dup2(cmd->files->infile_fd, STDIN_FILENO);
 		if (++c->infile_i == ft_strstrlen(cmd->files->infile_name))
@@ -116,9 +113,10 @@ int	init_redir(t_execute *cmd)
 		return (-1);
 	while (cmd->files->redirect_type[++c.i])
 	{
-		init_redir2(cmd, c.i, &c);
+		init_redir2(cmd, &c);
 		if ((cmd->files->redirect_type[c.i] == 'h'))
 		{
+			open("temp", O_RDONLY);
 			dup2(cmd->files->heredoc_fd, STDIN_FILENO);
 			if (++c.hd_i == ft_strstrlen(cmd->files->limiter))
 				close(cmd->files->heredoc_fd);

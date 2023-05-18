@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/18 14:57:47 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/18 21:55:56 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,13 @@ static void	start_exec(t_shell_s *shell)
 	shell->cmd_used = 0;
 	if (forking_required(shell) && is_builtin(shell->command_block[0]->command))
 	{
+		shell->std_in = dup(STDIN_FILENO);
+		shell->std_out = dup(STDOUT_FILENO);
 		if (init_redir(shell->command_block[0]) == -1)
 			return ; // to handle the no_acess to infile
 		shell->exit_code = builtin_exec(shell->command_block[0]);
-		dup2(0, STDIN_FILENO);
-		dup2(1, STDOUT_FILENO);
+		dup2(shell->std_out, STDOUT_FILENO);
+		dup2(shell->std_in, STDIN_FILENO);
 	}
 	else
 	{
@@ -86,9 +88,10 @@ int	shell_loop(char **envp)
 		cmd = NULL;
 		if (shell)
 		{
-			int i = -1;
-			while (shell->command_block[0]->files->redirect_type[++i])
-				printf("redir->%c\n", shell->command_block[0]->files->redirect_type[i]);
+			// int i = -1;
+			// while (shell->command_block[0]->files->redirect_type[++i])
+			// //printf("redir: %s\n", shell->command_block[0]->files->redirect_type);
+			// printf("%s\n", shell->command_block[0]->files->infile_name[i]);
 			start_exec(shell);
 			free_everything(shell);
 		}
