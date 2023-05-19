@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/14 13:02:57 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/19 10:40:39 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 F_OK: This constant is used to check if the file or directory exists.
 X_OK: This constant is used to check if the file or directory is executable.
 */
-int	path_check(t_execute *cmd)
+int	path_check(char *cmd)
 {
-	if (!access(cmd->command, F_OK))
+	if (!access(cmd, F_OK))
 	{
-		if (!access(cmd->command, X_OK))
+		if (!access(cmd, X_OK))
 			return (1);
 		else
 			//access_denied
@@ -34,8 +34,7 @@ int	path_check(t_execute *cmd)
 this function excute the non_builtin command, it do the following
 1- update the env
 2- check if bath provided and excute if yes
-3- if no search the path in env 
-	join the path with cmd
+3- if no join the path with cmd
 	check the validity by access function
 	yes -> execve
 	no -> error - not found 
@@ -43,16 +42,22 @@ this function excute the non_builtin command, it do the following
 
 void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 {
+	int	i;
+	char	*cmd_with_path;
 	// check env
-	if (path_check(shell->command_block[cmd_num]))
+	if (path_check(shell->command_block[cmd_num]->command))
 		execve(shell->command_block[cmd_num]->command,
 			shell->command_block[cmd_num]->args, shell->envp->envp);
-	//or
-	// search the path in env
-	// split the path into char ** array 
-	// join the path with cmd
-	// check the validity by access function
-	// yes -> execve
+	i = -1;
+	while (shell->path[++i])
+	{
+		cmd_with_path = ft_strjoin(shell->path[i], "/");
+		cmd_with_path = ft_strjoin(cmd_with_path, shell->command_block[cmd_num]->command);
+		if (path_check(cmd_with_path))
+			execve(cmd_with_path, shell->command_block[cmd_num]->args, shell->envp->envp);
+		free(cmd_with_path);
+	}
+	
 	// no -> error - not found 
 
 }
