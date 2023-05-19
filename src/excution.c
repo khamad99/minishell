@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/18 21:55:56 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/19 11:06:23 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,13 @@ it have 2 roles,
 static void	start_exec(t_shell_s *shell)
 {
 	shell->cmd_used = 0;
+	shell->std_in = dup(STDIN_FILENO);
+	shell->std_out = dup(STDOUT_FILENO);
 	if (forking_required(shell) && is_builtin(shell->command_block[0]->command))
 	{
-		shell->std_in = dup(STDIN_FILENO);
-		shell->std_out = dup(STDOUT_FILENO);
 		if (init_redir(shell->command_block[0]) == -1)
 			return ; // to handle the no_acess to infile
 		shell->exit_code = builtin_exec(shell->command_block[0]);
-		dup2(shell->std_out, STDOUT_FILENO);
-		dup2(shell->std_in, STDIN_FILENO);
 	}
 	else
 	{
@@ -49,6 +47,8 @@ static void	start_exec(t_shell_s *shell)
 		while (shell->cmd_used < shell->num_commands)
 			excute_child(shell, shell->cmd_used++);
 	}
+	dup2(shell->std_out, STDOUT_FILENO);
+	dup2(shell->std_in, STDIN_FILENO);
 	//return (status);
 
 }

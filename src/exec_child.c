@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/19 10:40:39 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/19 11:19:47 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,9 @@ void	excute_child(t_shell_s *shell, int cmd_num)
 	{
 		if (shell->num_pipes > 0)
 			pipes_in_child(shell, cmd_num);
-		// make the redir accourding to < > >>
-		if (is_builtin(shell->command_block[0]->command))
+		if (init_redir(shell->command_block[cmd_num]) == -1)
+			return ; // to handle the no_acess to infile
+		if (is_builtin(shell->command_block[cmd_num]->command))
 		{
 			status = builtin_exec(shell->command_block[0]);
 			// free chiild process
@@ -95,5 +96,5 @@ void	excute_child(t_shell_s *shell, int cmd_num)
 			excute_child_non_builtin(shell, cmd_num);
 	}
 	else if (shell->pid[cmd_num] > 0)
-		wait(&shell->pid[cmd_num]);
+		waitpid(shell->pid[cmd_num], NULL, 0);
 }
