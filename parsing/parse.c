@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ooutabac <ooutabac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 11:29:43 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/18 21:56:30 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/03/06 21:31:12 by ooutabac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ t_shell_s	*parse(char *str, char **envp)
 	t_shell_s	*minishell;
 
 	minishell = ft_calloc(sizeof(t_shell_s), 1);
+	// if (minishell)
+	// 	minishell->exit_code = 0;
 	minishell->cmd_line = ft_strdup(str);
 	minishell = get_path(minishell, envp);
 	minishell = get_env_struct(minishell, envp);
@@ -28,6 +30,8 @@ t_shell_s	*parse(char *str, char **envp)
 	if (check_validity(minishell, str) == FALSE)
 	{
 		free_everything(minishell);
+		printf("Error: Syntax\n");
+		// g_exit_code = 258;
 		return (NULL);
 	}
 	if (minishell)

@@ -83,8 +83,8 @@ t_shell_s	*raw_lexer(t_shell_s *minishell, char *str)
 		// printf("str[%i] = %c\n", count.i, str[count.i]);
 	}
 	minishell->lexer->raw_tokens[count.j] = NULL;
-	// for (int i = 0; minishell->lexer->raw_tokens[i]; i++)
-	// 	printf("raw_tokens[%i] = %s\n", i, minishell->lexer->raw_tokens[i]);
+	for (int i = 0; minishell->lexer->raw_tokens[i]; i++)
+		printf("raw_tokens[%i] = %s\n", i, minishell->lexer->raw_tokens[i]);
 	return (minishell);
 }
 
@@ -197,7 +197,7 @@ char	**split_pipes(char	*str)
 int	num_of_tokens_to_pipe(char **tokens, int token_num)
 {
 	t_counter	count;
-	
+
 	if (!tokens || !tokens[0])
 		return (0);
 	count.i = 0;

@@ -49,8 +49,8 @@ minishell$ hello there"  " (DONE)
 minishell$ "" "  "  """" (DONE)
 minishell$ ""  """ "" " (DONE)
 minishell$ "" "  "  """" " (DONE)"
-minishell$ "hello""hello""hello""hello""hello""hello" (DONE)"
-minishell$ hello there"is this working? (DONE)
+minishell$ "hello""hello""hello""hello""hello""hello" (DONE)
+minishell$ hello there"is this working? (DONE)"
 
 **PIPES**
 minishell$ |
@@ -66,7 +66,20 @@ minishell$ <infile|>outfile
 minishell$
 
 **DOLLAR SIGN**
-
+minishell$ echo $HOME (DONE)
+minishell$ echo "$HOME" (DONE)
+minishell$ echo '$HOME' (DONE)
+minishell$ echo $"HOME" (DONE)
+minishell$ echo "$"HOME (DONE)
+minishell$ echo $HOME$HOME (DONE)
+minishell$ echo $HOME"$HOME" (DONE)
+minishell$ echo $HOMEyes"$HOME" (DONE)
+minishell$ echo $NOT_ENV (DONE)
+minishell$ echo $HOME'$HOME' (DONE)
+minishell$ echo hello$HOME (DONE)
+minishell$ echo $HOMEhello (DONE)
+minishell$ echo hello$HOMEhello (DONE)
+minishell$ echo hello$HOME$HOMEhello$PATH (DONE)
 
 **SIGNALS**
 
@@ -111,3 +124,10 @@ typedef struct s_files
     char    *redirect_type;
 }
 */
+
+<<| '<<'|''
+''<"$?<<"<
+''<"$?<<"<<|"<"
+''|''
+
+"">""<a|""

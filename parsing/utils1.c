@@ -6,7 +6,7 @@
 /*   By: ooutabac <ooutabac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 05:35:50 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/03/05 14:05:52 by ooutabac         ###   ########.fr       */
+/*   Updated: 2023/03/06 18:38:06 by ooutabac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,64 +42,64 @@ int	skip_symbols(char *str, int i)
 		return (i);
 	if (str[i] == '>' && str[i + 1] && str[i + 1] == '>')
 		i += 2;
-	if (str[i] == '<' && str[i + 1] && str[i + 1] == '<')
+	else if (str[i] == '<' && str[i + 1] && str[i + 1] == '<')
 		i += 2;
-	if (str[i] == '<' || str[i] == '>' || str[i] == '|')
+	else if (str[i] == '<' || str[i] == '>' || str[i] == '|')
 		i++;
 	return (i);
 }
 
-char	*check_for_input(char *str)
-{
-	int 	i;
-	int		j;
-	char	*file_name;
+// char	*check_for_input(char *str)
+// {
+// 	int 	i;
+// 	int		j;
+// 	char	*file_name;
 
-	i = 0;
-	j = 0;
-	if (!str)
-		return (NULL);
-	while (str[i])
-	{
-		if (str[i] == '<')
-		{
-			i = skip_spaces(str, i + 1);
-			file_name = malloc(sizeof(char) * ft_strlen_spaces(str, i) + 1);
-			while (str[i] && (str[i] != ' ' && str[i] != '\t' && str[i] != '<' && str[i] != '>'))
-				file_name[j++] = str[i++];
-			file_name[j] = '\0';
-			return (file_name);
-		}
-		i++;
-	}
-	return (NULL);
-}
+// 	i = 0;
+// 	j = 0;
+// 	if (!str)
+// 		return (NULL);
+// 	while (str[i])
+// 	{
+// 		if (str[i] == '<')
+// 		{
+// 			i = skip_spaces(str, i + 1);
+// 			file_name = malloc(sizeof(char) * ft_strlen_spaces(str, i) + 1);
+// 			while (str[i] && (str[i] != ' ' && str[i] != '\t' && str[i] != '<' && str[i] != '>'))
+// 				file_name[j++] = str[i++];
+// 			file_name[j] = '\0';
+// 			return (file_name);
+// 		}
+// 		i++;
+// 	}
+// 	return (NULL);
+// }
 
-char	*check_for_output(char *str)
-{
-	int 	i;
-	int		j;
-	char	*file_name;
+// char	*check_for_output(char *str)
+// {
+// 	int 	i;
+// 	int		j;
+// 	char	*file_name;
 
-	i = 0;
-	j = 0;
-	if (!str)
-		return (NULL);
-	while (str[i])
-	{
-		if (str[i] == '>')
-		{
-			i = skip_spaces(str, i + 1);
-			file_name = malloc(sizeof(char) * ft_strlen_spaces(str, i) + 1);
-			while (str[i] && (str[i] != ' ' && str[i] != '\t' && str[i] != '<' && str[i] != '>'))
-				file_name[j++] = str[i++];
-			file_name[j] = '\0';
-			return (file_name);
-		}
-		i++;
-	}
-	return (NULL);
-}
+// 	i = 0;
+// 	j = 0;
+// 	if (!str)
+// 		return (NULL);
+// 	while (str[i])
+// 	{
+// 		if (str[i] == '>')
+// 		{
+// 			i = skip_spaces(str, i + 1);
+// 			file_name = malloc(sizeof(char) * ft_strlen_spaces(str, i) + 1);
+// 			while (str[i] && (str[i] != ' ' && str[i] != '\t' && str[i] != '<' && str[i] != '>'))
+// 				file_name[j++] = str[i++];
+// 			file_name[j] = '\0';
+// 			return (file_name);
+// 		}
+// 		i++;
+// 	}
+// 	return (NULL);
+// }
 
 int	check_pipes_valid(char *str)
 {

@@ -6,7 +6,7 @@
 /*   By: ooutabac <ooutabac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 10:29:08 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/03/02 20:40:01 by ooutabac         ###   ########.fr       */
+/*   Updated: 2023/03/06 15:43:51 by ooutabac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ int	get_num_flags(char **token, int i)
 	count.counter = 0;
 	while (token[i])
 	{
+		// printf("token num = %i\n", i);
+		// printf("token in get_num_flags = %s\n", token[i]);
 		if ((ft_strncmp(token[i], ">\0", 2) == 0 || ft_strncmp(token[i], "<\0", 2) == 0 || ft_strncmp(token[i], "<<\0", 3) == 0 || ft_strncmp(token[i], ">>\0", 3) == 0))
 			i++;
 		else if (ft_strncmp(token[i], "|\0", 2) != 0)
@@ -101,13 +103,13 @@ int	check_validity(t_shell_s *minishell, char *str)
 		if ((ft_strncmp(minishell->lexer->raw_tokens[count.i], ">\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i], "<\0", 2) == 0) && !minishell->lexer->raw_tokens[count.i + 1])
 			return (FALSE);
 		// 2 redirections of different types
-		if (ft_strncmp(minishell->lexer->raw_tokens[count.i], "<\0", 2) == 0 && ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">\0", 2) == 0)
+		if (ft_strncmp(minishell->lexer->raw_tokens[count.i], "<\0", 2) == 0 && ((!minishell->lexer->raw_tokens[count.i + 1]) || (minishell->lexer->raw_tokens[count.i + 1] && (ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<<\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">>\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "|\0", 2) == 0))))
 			return (FALSE);
-		if (ft_strncmp(minishell->lexer->raw_tokens[count.i], ">\0", 2) == 0 && ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<\0", 2) == 0)
+		if (ft_strncmp(minishell->lexer->raw_tokens[count.i], ">\0", 2) == 0 && ((!minishell->lexer->raw_tokens[count.i + 1]) || (minishell->lexer->raw_tokens[count.i + 1] && (ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<<\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">>\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "|\0", 2) == 0))))
 			return (FALSE);
-		if (ft_strncmp(minishell->lexer->raw_tokens[count.i], ">\0", 2) == 0 && ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">\0", 2) == 0)
+		if (ft_strncmp(minishell->lexer->raw_tokens[count.i], "<<\0", 3) == 0 && ((!minishell->lexer->raw_tokens[count.i + 1]) || (minishell->lexer->raw_tokens[count.i + 1] && (ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<<\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">>\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "|\0", 2) == 0))))
 			return (FALSE);
-		if (ft_strncmp(minishell->lexer->raw_tokens[count.i], "<\0", 2) == 0 && ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<\0", 2) == 0)
+		if (ft_strncmp(minishell->lexer->raw_tokens[count.i], ">>\0", 3) == 0 && ((!minishell->lexer->raw_tokens[count.i + 1]) || (minishell->lexer->raw_tokens[count.i + 1] && (ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<<\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">>\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "|\0", 2) == 0))))
 			return (FALSE);
 		if (ft_strncmp(minishell->lexer->raw_tokens[count.i], "|\0", 2) == 0 && !minishell->lexer->raw_tokens[count.i + 1])
 			return (FALSE);
