@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/14 08:41:43 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/19 11:06:23 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ it have 2 roles,
 static void	start_exec(t_shell_s *shell)
 {
 	shell->cmd_used = 0;
+	shell->std_in = dup(STDIN_FILENO);
+	shell->std_out = dup(STDOUT_FILENO);
 	if (forking_required(shell) && is_builtin(shell->command_block[0]->command))
 	{
-		// make the redirection
+		if (init_redir(shell->command_block[0]) == -1)
+			return ; // to handle the no_acess to infile
 		shell->exit_code = builtin_exec(shell->command_block[0]);
-		// return any redir to original
-		//dup2();
-		//dup2();
 	}
 	else
 	{
@@ -47,6 +47,8 @@ static void	start_exec(t_shell_s *shell)
 		while (shell->cmd_used < shell->num_commands)
 			excute_child(shell, shell->cmd_used++);
 	}
+	dup2(shell->std_out, STDOUT_FILENO);
+	dup2(shell->std_in, STDIN_FILENO);
 	//return (status);
 
 }
@@ -87,10 +89,9 @@ int	shell_loop(char **envp)
 		if (shell)
 		{
 			// int i = -1;
-			// while ( ++i < shell->num_commands && shell)
-			// 	printf("command->%s\nARGS->%s\n", shell->command_block[i]->command, shell->command_block[i]->args[1]);
-			// printf("%d\n", shell->command_block[0]->num_pipes );
-			//printf("redir num -> %d\nif->%d\nof->%d\naf->%d\nhf->%d\ntype->%s\n", shell->files->num_of_redirections, shell->files->infile_fd, shell->files->outfile_fd, shell->files->append_fd, shell->files->heredoc_fd, shell->files->redirect_type);
+			// while (shell->command_block[0]->files->redirect_type[++i])
+			// //printf("redir: %s\n", shell->command_block[0]->files->redirect_type);
+			// printf("%s\n", shell->command_block[0]->files->infile_name[i]);
 			start_exec(shell);
 			free_everything(shell);
 		}

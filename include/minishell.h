@@ -6,7 +6,7 @@
 /*   By: ooutabac <ooutabac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/03/08 15:40:22 by ooutabac         ###   ########.fr       */
+/*   Updated: 2023/05/20 18:13:22 by ooutabac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,16 +165,13 @@ typedef struct s_shell_s
     char		**commands; // Simple commands
     char		**path;    // a path for the list of path direcotories separeted by ':' (DONE)
     char		*cmd_line; // read the command line (DONE)
+	int			std_in;
+	int			std_out;
     t_env_s		*envp;	// Has data about environment variables
 	t_lexer		*lexer;	// Used for tokenisation. Has tokens with quotes and without.
 	t_files		*files;	// Has all infiles and outfiles for every command block
 	t_execute	**command_block; // Has all the necessary data for execution on each command block
 }t_shell_s;
-
-/*--------------------------------SAMIYA-------------------------------*/
-/*---------------------------------MAIN--------------------------------*/
-void ft_signal();
-void ft_ctrl_c();
 
 /*--------------------------------OBADA--------------------------------*/
 /*-------------------------------PARSING-------------------------------*/
