@@ -173,6 +173,22 @@ typedef struct s_shell_s
 	t_execute	**command_block; // Has all the necessary data for execution on each command block
 }t_shell_s;
 
+/*--------------------------------KHALED-------------------------------*/
+/*---------------------------------MAIN--------------------------------*/
+int		shell_loop(char **envp);
+void	pipes_pid_init(t_shell_s *shell);
+void	excute_child(t_shell_s *shell, int cmd_num);
+void	pipes_in_child(t_shell_s *shell, int cmd_num);
+/*--------------------------------signal-------------------------------*/
+void	ft_ctrl_c(int sig);
+/*--------------------------------builtin-------------------------------*/
+int		ft_echo(char **args);
+int		ft_env(char ** arg, t_env_s *env);
+int		ft_pwd(void);
+int		ft_unset(t_execute *exec);
+int		is_builtin(char *cmd);
+int		builtin_exec(t_execute *exec);
+
 /*--------------------------------OBADA--------------------------------*/
 /*-------------------------------PARSING-------------------------------*/
 t_shell_s		*parse(char *str, char **envp);
