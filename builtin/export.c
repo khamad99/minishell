@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/17 10:09:54 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/21 07:04:54 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,10 @@ void sort_words(char **words, int num_words) {
     }
 }
 
+int	ft_export(t_execute *cmd)
+{
+	if (!cmd->args[1])
+		env_export_printing(cmd->env);
+	
+}
 
