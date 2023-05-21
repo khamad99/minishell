@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ooutabac <ooutabac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 19:19:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/03/07 16:39:09 by ooutabac         ###   ########.fr       */
+/*   Updated: 2023/05/21 19:50:07 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -361,7 +361,7 @@ t_shell_s	*get_execution_blocks(t_shell_s *minishell)
 		// printf("entering get_files with count.i = %i\n", count.i);
 		minishell->command_block[count.i] = get_files(minishell, minishell->command_block[count.i], command_block, raw_command_block);
 		free_2d(command_block);
-		// minishell->command_block[count.i]->env = get_env_struct(minishell);
+		minishell->command_block[count.i]->env = minishell->envp;
 		count.i++;
 	}
 	minishell->command_block[count.i] = NULL;
