@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/19 11:19:47 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/21 10:59:25 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,5 +96,5 @@ void	excute_child(t_shell_s *shell, int cmd_num)
 			excute_child_non_builtin(shell, cmd_num);
 	}
 	else if (shell->pid[cmd_num] > 0)
-		waitpid(shell->pid[cmd_num], NULL, 0);
+		waitpid(shell->pid[cmd_num], NULL, WUNTRACED);
 }

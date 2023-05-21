@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ooutabac <ooutabac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/20 18:13:22 by ooutabac         ###   ########.fr       */
+/*   Updated: 2023/05/21 17:29:47 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,21 @@
 # include <unistd.h>
 # include <sys/wait.h>
 # include "../libft/libft.h"
+# include <sys/stat.h>
+# include <sys/types.h>
+ #include <signal.h>
 
 # define TRUE 0
 # define FALSE 1
+# define STD_IN 0
+# define STD_OUT 1
+# define STD_ERROR 2
 
 /* T_COUNTER
 - This struct is just for general use to save lines.
 It is used so I can easily pass multiple counters between functions and declare
 many counters using one variable.
 */
-
-// enum e_ffg{
-// 	W =5,
-// 	X,
-// 	t,
-// };
-
 typedef struct s_counter
 {
 	int	i;
@@ -73,7 +72,7 @@ typedef struct s_lexer
 	int		num_of_tokens;
 	int		num_of_pipes;
 	int		num_of_commands;
-} t_lexer;
+}t_lexer;
 
 typedef struct s_env_s
 {
@@ -111,6 +110,7 @@ typedef struct s_execute
     char	**args; // Contains all arguments in the command block
 	char	**tokens; // Contains all tokens in the command block
     t_files	*files; // Contains all the files and redirections in the command block
+    t_env_s	*env; // Contains all the environment variables
 }t_execute; // This is the executor's struct. It is stored as a double pointer struct in t_shell, each pointer representing a command block
 
 /* T_SHELL_S
@@ -120,7 +120,7 @@ This is the main and most important struct that contains everything
 - This is related to char **commands. Flags contain every argument to every command
 The reason it is a triple pointer is the way it works. It is quite simple so don't be intimidated
 Example:
-minishell$ ls -l -la -a | head -n5
+minishell🤓$ ls -l -la -a | head -n5
 Here commands will store "ls" and "head"
 commands[0] = "ls"
 commands[1] = "head"
@@ -158,9 +158,12 @@ in the same prompt
 */
 typedef struct s_shell_s
 {
-	int			exit_code; // Exit code of last execution. 0 on start
     int			num_commands; // number of all commands
     int			num_pipes;  // number of all pipes
+	int			*pipes_fd;  // fd number for the opend pipes
+	pid_t		*pid;  // pid array to stor the pid when forking 
+	int			cmd_used;  // during execution, it counts the commands used in the loop
+	int			exit_code; // exit code when finish excuteion
 	char		***flags;	// List of arguments of every command
     char		**commands; // Simple commands
     char		**path;    // a path for the list of path direcotories separeted by ':' (DONE)
@@ -179,15 +182,26 @@ int		shell_loop(char **envp);
 void	pipes_pid_init(t_shell_s *shell);
 void	excute_child(t_shell_s *shell, int cmd_num);
 void	pipes_in_child(t_shell_s *shell, int cmd_num);
+/*---------------------------------redir--------------------------------*/
+int		ft_strstrlen(char **str);
+int		init_redir(t_execute *cmd);
+void	open_exec_heredoc(t_files *files);
+void 	open_outfile(t_files * files, int i);
+void 	open_appendfile(t_files * files, int i);
+void	open_infile(t_files *files, int i);
 /*--------------------------------signal-------------------------------*/
 void	ft_ctrl_c(int sig);
 /*--------------------------------builtin-------------------------------*/
+int		is_builtin(char *cmd);
+int		builtin_exec(t_execute *exec);
 int		ft_echo(char **args);
 int		ft_env(char ** arg, t_env_s *env);
 int		ft_pwd(void);
 int		ft_unset(t_execute *exec);
-int		is_builtin(char *cmd);
-int		builtin_exec(t_execute *exec);
+int		ft_export(t_execute *cmd);
+int		ft_cd(t_execute *cmd);
+void	ft_exit(t_execute *exec);
+
 
 /*--------------------------------OBADA--------------------------------*/
 /*-------------------------------PARSING-------------------------------*/
@@ -203,6 +217,7 @@ int				ft_strlen_spaces(char *str, int i);
 int				count_pipes(char *str);
 int				ft_strlen_equals(char *str);
 int				count_tokens(char *str);
+
 int				count_infiles(char	**str);
 int				count_outfiles(char	**str);
 int				count_appends(char	**str);
@@ -250,12 +265,12 @@ int				num_of_tokens_to_pipe(char **tokens, int token_num);
 int				length_to_pipe(char *str, int i);
 
 /*--------------------------------UTSIL7-------------------------------*/
-t_shell_s		*dollar_sign(t_shell_s *minishell);
-t_shell_s		*expand_env_variables(t_shell_s *minishell);
+t_shell_s	   *dollar_sign(t_shell_s *minishell);
+t_shell_s	   *dollar_sign_env_variables(t_shell_s *minishell);
 
 /*---------------------------------FREE--------------------------------*/
 void		    free_everything(t_shell_s *minishell);
 void    		free_2d(char **array);
-void    		free_3d(char ***array);
+void			free_3d(char ***array);
 
 #endif

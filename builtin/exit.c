@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:26 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/16 10:29:39 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/21 13:43:26 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,3 +71,97 @@ Exit status 255 is typically used to indicate that the exit status value is out 
 These exit status numbers provide a way to convey specific information about the execution of a program or script. By examining the exit status, users or other programs can determine the outcome of the execution and take appropriate actions or make decisions based on that information.
 
 */
+
+/*
+for arg it should be numaric between ULLi 9223372036854775807 and -9223372036854775808
+++ or -- not allowed (only one)
+
+*/
+
+static	unsigned long long int 	ft_my_attoi(char *str, int *s)
+{
+	unsigned long long int	r;
+
+	*s = 1;
+	r = 0;
+	if (*str == '-')
+		*s = -1;
+	if (*str == '-' || *str == '+')
+		++str;
+	while (ft_isdigit(*str))
+	{
+		r = r * 10 + (*str - '0');
+		str++;
+	}
+	if (*s == -1 && r > 9223372036854775807)
+		return (1);
+	else if (*s == 1 && r >= 9223372036854775807)
+		return (1);
+	return (r);
+}
+
+static void	exit_ok(unsigned long long int	num, int *s)
+{
+	int	r;
+ 
+	if (*s == 1 && num >= 256)
+		r = num % 256;
+	else if (*s == -1)
+	{
+		if (num > 256)
+			r = num % 256;
+		else
+			r = 256 - num;
+	}
+	// free
+	ft_putstr_fd("exit\n", STDOUT_FILENO);
+	exit(r);
+}
+
+
+static int	check_exit_args(char *str, int *s)
+{
+	int	i;
+
+	i = 0;
+	if (!str[i] || (!ft_isdigit(str[i]) && str[i] != '+' && str[i] != '-'))
+		return (1);
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	while (str[i])
+	{
+		if (ft_isdigit(str[i]) != 1 || i > 20)
+			return (1);
+		i++;
+	}
+	if (ft_my_attoi(str, s) == 1 && i > 3)
+		return (1);
+	return (0);
+}
+
+void	ft_exit(t_execute *exec)
+{
+	int	s;
+
+	if (!exec->args[1])
+	{
+		ft_putstr_fd("exit\n", STDOUT_FILENO);
+		exit(1); // with last exit code 
+	}
+	else if (exec->args[2])
+	{
+		ft_putstr_fd("exit\nminishell: exit: too many arguments\n", STDERR_FILENO);
+		exit(2); // with last exit code
+	}
+	else if (exec->args[1] && !check_exit_args(exec->args[1], &s))
+		exit_ok(ft_my_attoi(exec->args[1], &s), &s);
+	else
+	{
+		ft_putstr_fd("exit\nminishell: exit: ", STDERR_FILENO);
+		ft_putstr_fd(exec->args[1], STDERR_FILENO);
+		ft_putendl_fd(": numeric argument required", STDERR_FILENO);
+		//free 
+		exit(2);
+	}
+	
+}

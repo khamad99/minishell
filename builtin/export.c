@@ -6,56 +6,99 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/21 07:04:54 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/21 08:37:02 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void sort_words(char **words, int num_words) {
-    int i, j, k;
-    char *temp;
+void add_export_args(char *str)
+{
+	(void)str;
+}
 
-    // Sort the char* strings using bubble sort
-    for (i = 0; i < num_words - 1; i++) {
-        for (j = 0; j < num_words - i - 1; j++) {
-            // Compare the first letter of the current and next word
-            if (words[j][0] > words[j + 1][0]) {
-                // Swap the words if they are out of order
-                temp = words[j];
-                words[j] = words[j + 1];
-                words[j + 1] = temp;
-            } else if (words[j][0] == words[j + 1][0]) {
-                // If the first letter is the same, compare subsequent letters
-                k = 1;
-                while (words[j][k] != '\0' && words[j + 1][k] != '\0') {
-                    if (words[j][k] > words[j + 1][k]) {
-                        // Swap the words if they are out of order
-                        temp = words[j];
-                        words[j] = words[j + 1];
-                        words[j + 1] = temp;
-                        break;
-                    } else if (words[j][k] < words[j + 1][k]) {
-                        // Stop comparing if the current letter is smaller
-                        break;
-                    }
-                    k++;
-                }
-                // If both words are equal so far, sort based on word length
-                if (words[j][k] == '\0' && words[j + 1][k] == '\0' && strlen(words[j]) > strlen(words[j + 1])) {
-                    temp = words[j];
-                    words[j] = words[j + 1];
-                    words[j + 1] = temp;
-                }
-            }
-        }
-    }
+static void sort_env(char **envp) 
+{
+	int		i;
+	char	*temp;
+	int		len;
+	int		j;
+
+	j = -1;
+	len = ft_strstrlen(envp);
+	while (++j < len)
+	{
+		i = -1;
+		while (envp[++i])
+		{
+			if (envp[i + 1] && ft_strncmp(envp[i], envp[i + 1], ft_strlen(envp[i])) > 0)
+			{
+				temp = envp[i];
+				envp[i] = envp[i + 1];
+				envp[i + 1] = temp;
+			}
+		}
+	}
+}
+
+static void	env_export_printing(t_env_s *env)
+{
+	char	**sorted_env;
+	int		i;
+
+	i = -1;
+	sorted_env = (char **)ft_calloc(ft_strstrlen(env->envp), sizeof(char *) + 1);
+	while (env->envp[++i])
+		sorted_env[i] = ft_strdup(env->envp[i]);
+	sorted_env[i] = 0;
+	sort_env(sorted_env);
+	i = -1;
+	while (sorted_env[++i])
+	{
+		ft_putstr_fd("declare -x ", STDOUT_FILENO);
+		ft_putstr_fd(sorted_env[i], STDOUT_FILENO);
+		ft_putstr_fd("\n", STDOUT_FILENO);
+	}
+	free_2d(sorted_env);
+}
+
+static int	export_args_check(char *str)
+{
+	int	i;
+
+	i = -1;
+	if (ft_isdigit(str[0]) || str[0] == '=')
+		return (0);
+	while (str[++i] != '=' && str[i] != '\0')
+	{
+		if (!ft_isdigit(str[i]) && str[i] != '_' && !ft_isalpha(str[i]))
+			return (0);
+	}
+	return (1);
 }
 
 int	ft_export(t_execute *cmd)
-{
+{	
+	int i;
+
+	i = -1;
 	if (!cmd->args[1])
+	{
 		env_export_printing(cmd->env);
+		return (0); // exit status
+	}
+	else
+	{
+		while (cmd->args[++i])
+		{
+			if (export_args_check(cmd->args[i]))
+				add_export_args(cmd->args[i]);
+			else
+			{
+				return (1); //exit status
+			}
+		}
+	}
+	return (0);
 	
 }
-
