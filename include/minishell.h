@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/21 17:29:47 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/21 19:44:02 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,8 +179,9 @@ typedef struct s_shell_s
 /*--------------------------------KHALED-------------------------------*/
 /*---------------------------------MAIN--------------------------------*/
 int		shell_loop(char **envp);
-void	pipes_pid_init(t_shell_s *shell);
 void	excute_child(t_shell_s *shell, int cmd_num);
+/*---------------------------------pipes--------------------------------*/
+void	pipes_pid_init(t_shell_s *shell);
 void	pipes_in_child(t_shell_s *shell, int cmd_num);
 /*---------------------------------redir--------------------------------*/
 int		ft_strstrlen(char **str);
@@ -202,7 +203,6 @@ int		ft_export(t_execute *cmd);
 int		ft_cd(t_execute *cmd);
 void	ft_exit(t_execute *exec);
 
-
 /*--------------------------------OBADA--------------------------------*/
 /*-------------------------------PARSING-------------------------------*/
 t_shell_s		*parse(char *str, char **envp);
@@ -217,7 +217,6 @@ int				ft_strlen_spaces(char *str, int i);
 int				count_pipes(char *str);
 int				ft_strlen_equals(char *str);
 int				count_tokens(char *str);
-
 int				count_infiles(char	**str);
 int				count_outfiles(char	**str);
 int				count_appends(char	**str);
