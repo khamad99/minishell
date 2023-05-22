@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/22 21:43:18 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/22 23:19:36 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	start_exec(t_shell_s *shell)
 		close(shell->pipes_fd[3]);
 	}
 	int i = -1;
-	while (++i < shell->cmd_used)
+	while (++i < shell->num_commands)
 		waitpid(shell->pid[i], NULL, WUNTRACED);
 	dup2(shell->std_out, STDOUT_FILENO);
 	dup2(shell->std_in, STDIN_FILENO);

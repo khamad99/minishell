@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 13:32:12 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/18 21:32:27 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/22 23:47:20 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ this function have 2 roles:
 close the files (if onther files with the same type is provided)
 it will return -1 if no access to infile 
 */
-static int	open_files(t_files *files)
+static int	open_files(t_files *files, t_shell_s *shell)
 {
 	counter	c;
 
@@ -51,11 +51,13 @@ static int	open_files(t_files *files)
 	c.append_i = -1;
 	c.outfile_i = -1;
 	c.i = -1;
-	open_exec_heredoc(files);
+	open_exec_heredoc(files, shell);
 	while (files->redirect_type[++c.i])
 	{
-		if (files->redirect_type[c.i] == '>' )
+		if (files->redirect_type[c.i] == '>')
+		{
 			open_outfile(files, ++c.outfile_i);
+		}
 		else if (files->redirect_type[c.i] == 'a')
 			open_appendfile(files, ++c.append_i);
 		else if (files->redirect_type[c.i] == '<')
@@ -77,7 +79,7 @@ static void	init_redir2(t_execute *cmd, counter *c)
 	if (cmd->files->redirect_type[c->i] == '>')
 	{
 		dup2(cmd->files->outfile_fd, STDOUT_FILENO);
-		if (++c->outfile_i == ft_strstrlen(cmd->files->infile_name))
+		if (++c->outfile_i == ft_strstrlen(cmd->files->outfile_name))
 			close(cmd->files->outfile_fd);
 	}
 	else if (cmd->files->redirect_type[c->i] == 'a')
@@ -100,7 +102,7 @@ accourding to the order of redir in cmd_block and closes the fd in the
 final match of each redir_type
 it will return -1 if no access to infile
 */
-int	init_redir(t_execute *cmd)
+int	init_redir(t_execute *cmd, t_shell_s *shell)
 {
 	counter c;
 
@@ -109,7 +111,7 @@ int	init_redir(t_execute *cmd)
 	c.outfile_i = 0;
 	c.append_i = 0;
 	c.hd_i = 0;
-	if (open_files(cmd->files) == -1)
+	if (open_files(cmd->files, shell) == -1)
 		return (-1);
 	while (cmd->files->redirect_type[++c.i])
 	{

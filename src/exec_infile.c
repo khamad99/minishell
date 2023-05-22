@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 11:49:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/18 14:23:49 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/22 23:07:22 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,6 @@ and writing.
 void	open_infile(t_files *files, int i)
 {
 	files->infile_fd = open(files->infile_name[i], O_RDONLY);
-	if (i < ft_strstrlen(files->infile_name))
+	if (i < ft_strstrlen(files->infile_name) - 1)
 		close(files->infile_fd);
 }

@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 08:08:08 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/18 21:33:28 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/22 23:49:28 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static char	*get_next_line(int fd)
 	return(buffer);
 }
 
-static void	exec_heredoc(t_files *files)
+static void	exec_heredoc(t_files *files, t_shell_s *shell)
 {
 	char	*input;
 	int		i;
@@ -44,8 +44,8 @@ static void	exec_heredoc(t_files *files)
 	{
 		while (1)
 		{
-			write(1, "> ", 2);
-			input = get_next_line(STDIN_FILENO);
+			write(shell->std_out, "> ", 2);
+			input = get_next_line(shell->std_in);
 			if (!input)
 			{
 				printf("^D/n");	
@@ -77,12 +77,12 @@ O_TRUNC: This flag specifies that the file should be truncated
 O_WRONLY flag specifies that the file should be opened for writing only
 0644: This is the file mode that specifies the permissions for the newly created file
 */
-void	open_exec_heredoc(t_files *files)
+void	open_exec_heredoc(t_files *files, t_shell_s *shell)
 {
 	if (files->limiter)
 	{
 		files->heredoc_fd = open("temp", 
 			O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		exec_heredoc(files);
+		exec_heredoc(files, shell);
 	}
 }

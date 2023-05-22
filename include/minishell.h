@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/21 20:09:16 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/22 23:47:50 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,10 +185,10 @@ void	pipes_pid_init(t_shell_s *shell);
 void	pipes_in_child(t_shell_s *shell, int cmd_num);
 /*---------------------------------redir--------------------------------*/
 int		ft_strstrlen(char **str);
-int		init_redir(t_execute *cmd);
-void	open_exec_heredoc(t_files *files);
-void 	open_outfile(t_files * files, int i);
-void 	open_appendfile(t_files * files, int i);
+int		init_redir(t_execute *cmd, t_shell_s *shell);
+void	open_exec_heredoc(t_files *files, t_shell_s *shell);
+void	open_outfile(t_files *files, int i);
+void	open_appendfile(t_files * files, int i);
 void	open_infile(t_files *files, int i);
 /*--------------------------------signal-------------------------------*/
 void	ft_ctrl_c(int sig, siginfo_t *info, void *context);
