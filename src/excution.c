@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/22 23:19:36 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/22 23:53:53 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	start_exec(t_shell_s *shell)
 	shell->std_out = dup(STDOUT_FILENO);
 	if (forking_required(shell) && is_builtin(shell->command_block[0]->command))
 	{
-		if (init_redir(shell->command_block[0]) == -1)
+		if (init_redir(shell->command_block[0], shell) == -1)
 			return ; // to handle the no_acess to infile
 		shell->exit_code = builtin_exec(shell->command_block[0]);
 	}
