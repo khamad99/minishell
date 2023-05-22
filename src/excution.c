@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/21 20:00:12 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/22 07:45:12 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,11 @@ static void	start_exec(t_shell_s *shell)
 		while (shell->cmd_used < shell->num_commands)
 			excute_child(shell, shell->cmd_used++);
 	}
+	close(shell->pipes_fd[0]);
+	close(shell->pipes_fd[1]);
+	int i = -1;
+	while (++i < shell->cmd_used)
+		waitpid(shell->pid[i], NULL, WUNTRACED);
 	dup2(shell->std_out, STDOUT_FILENO);
 	dup2(shell->std_in, STDIN_FILENO);
 	//return (status);
