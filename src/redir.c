@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 13:32:12 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/23 15:05:57 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/23 19:29:46 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,6 @@ int	init_redir(t_execute *cmd, t_shell_s *shell)
 		if (cmd->files->redirect_type[c.i] == 'h')
 		{
 			open("temp", O_RDONLY);
-			write(shell->std_in, "123\n", 4);
 			dup2(cmd->files->heredoc_fd, STDIN_FILENO);
 			if (++c.hd_i == ft_strstrlen(cmd->files->limiter))
 				close(cmd->files->heredoc_fd);
@@ -130,10 +129,10 @@ int	init_redir(t_execute *cmd, t_shell_s *shell)
 
 int	init_heredoc(t_execute *cmd, t_shell_s *shell)
 {
-	int	i;
+	// int	i;
 	// int	hd_i;
 
-	i = -1;
+	// i = -1;
 	open_exec_heredoc(cmd->files, shell);
 	// while (cmd->files->redirect_type[++i])
 	// {

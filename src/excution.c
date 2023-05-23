@@ -6,11 +6,46 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/23 13:50:31 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/23 21:33:34 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+void	parent_after_fork(t_shell_s *shell)
+{
+	int	i;
+
+	if (shell->num_pipes > 0)
+	{
+		close(shell->pipes_fd[0]);
+		close(shell->pipes_fd[1]);
+		close(shell->pipes_fd[2]);
+		close(shell->pipes_fd[3]);
+	}
+	i = -1;
+	while (++i < shell->num_commands)
+		waitpid(shell->pid[i], NULL, WUNTRACED);
+	dup2(shell->std_out, STDOUT_FILENO);
+	dup2(shell->std_in, STDIN_FILENO);
+}
+
+void	exec_child_heredoc(t_shell_s *shell)
+{
+	int i;
+
+	i = -1;
+	while (++i < shell->num_commands)
+	{
+		shell->command_block[i]->excuted = 0;
+		if (shell->command_block[i]->files->limiter[0] != NULL)
+		{
+			shell->command_block[i]->excuted = 1;
+			init_heredoc(shell->command_block[i], shell);
+			excute_child(shell, i);
+		}
+	}
+}
 
 /*
 check if forking required in order to call fork or excute by parent
@@ -32,9 +67,7 @@ it have 2 roles,
 */
 static void	start_exec(t_shell_s *shell)
 {
-	int	i;
-
-	shell->cmd_used = 0;
+	shell->cmd_used = -1;
 	shell->std_in = dup(STDIN_FILENO);
 	shell->std_out = dup(STDOUT_FILENO);
 	if (forking_required(shell) && is_builtin(shell->command_block[0]->command))
@@ -45,23 +78,18 @@ static void	start_exec(t_shell_s *shell)
 	}
 	else
 	{
-		pid_init(shell);
-		pipes_init(shell);
-		while (shell->cmd_used < shell->num_commands)
-			excute_child(shell, shell->cmd_used++);
+		pid_pipes_init(shell);
+		exec_child_heredoc(shell);
+		while (++shell->cmd_used < shell->num_commands)
+		{
+			if (shell->command_block[shell->cmd_used]->excuted == 0)
+			{
+				shell->command_block[shell->cmd_used]->excuted = 1;
+				excute_child(shell, shell->cmd_used);
+			}
+		}
+		parent_after_fork(shell);
 	}
-	if (shell->num_pipes > 0)
-	{
-		close(shell->pipes_fd[0]);
-		close(shell->pipes_fd[1]);
-		close(shell->pipes_fd[2]);
-		close(shell->pipes_fd[3]);
-	}
-	i = -1;
-	while (++i < shell->num_commands)
-		waitpid(shell->pid[i], NULL, WUNTRACED);
-	dup2(shell->std_out, STDOUT_FILENO);
-	dup2(shell->std_in, STDIN_FILENO);
 	//return (status);
 }
 

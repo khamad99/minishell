@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/23 15:00:27 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/23 20:01:34 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ typedef struct s_execute
 {
     int		num_commands; // Contains the number of all commands
     int		num_pipes; // Contains the number of all pipes
+	int		excuted;
     char	*command; // Contains the command itself in the command block
     char	**args; // Contains all arguments in the command block
 	char	**tokens; // Contains all tokens in the command block
@@ -181,8 +182,7 @@ typedef struct s_shell_s
 int		shell_loop(char **envp);
 void	excute_child(t_shell_s *shell, int cmd_num);
 /*---------------------------------pipes--------------------------------*/
-void	pipes_init(t_shell_s *shell);
-void	pid_init(t_shell_s *shell);
+void	pid_pipes_init(t_shell_s *shell);
 void	pipes_in_child(t_shell_s *shell, int cmd_num);
 /*---------------------------------redir--------------------------------*/
 int		ft_strstrlen(char **str);
