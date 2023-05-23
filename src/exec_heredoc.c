@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 08:08:08 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/22 23:49:28 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/23 07:42:53 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,11 @@ static char	*get_next_line(int fd)
 	{
 		buffer[i++] = c;
 		if (c == '\n')
+		{
+			buffer[i - 1] =  '\0';
 			break ;
+		}
 	}
-	buffer[i - 1] =  '\0';
 	if (rd == -1 || i == 0 || (!buffer[i - 1] && !rd))
 		return (free(buffer), NULL);
 	return(buffer);
@@ -48,7 +50,7 @@ static void	exec_heredoc(t_files *files, t_shell_s *shell)
 			input = get_next_line(shell->std_in);
 			if (!input)
 			{
-				printf("^D/n");	
+				write(shell->std_out, "^D\n", 3);	
 				break ;
 			}
 			add_history(input);

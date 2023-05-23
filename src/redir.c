@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 13:32:12 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/22 23:47:20 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/23 10:10:09 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,8 @@ int	init_redir(t_execute *cmd, t_shell_s *shell)
 	c.outfile_i = 0;
 	c.append_i = 0;
 	c.hd_i = 0;
+	if (!shell->files)
+		return (0);
 	if (open_files(cmd->files, shell) == -1)
 		return (-1);
 	while (cmd->files->redirect_type[++c.i])

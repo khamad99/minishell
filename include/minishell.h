@@ -6,12 +6,13 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/22 23:47:50 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/23 09:32:31 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+# include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <errno.h>
@@ -24,7 +25,6 @@
 # include "../libft/libft.h"
 # include <sys/stat.h>
 # include <sys/types.h>
-# include <signal.h>
 
 # define TRUE 0
 # define FALSE 1
@@ -181,7 +181,8 @@ typedef struct s_shell_s
 int		shell_loop(char **envp);
 void	excute_child(t_shell_s *shell, int cmd_num);
 /*---------------------------------pipes--------------------------------*/
-void	pipes_pid_init(t_shell_s *shell);
+void	pipes_init(t_shell_s *shell);
+void	pid_init(t_shell_s *shell);
 void	pipes_in_child(t_shell_s *shell, int cmd_num);
 /*---------------------------------redir--------------------------------*/
 int		ft_strstrlen(char **str);

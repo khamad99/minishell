@@ -11,12 +11,8 @@ int main(int argc, char **argv, char **envp)
 	s_quit.sa_handler = SIG_IGN;
 	s_int.sa_sigaction = ft_ctrl_c;
 	s_int.sa_flags = SA_RESTART;
-	if (sigaction(SIGINT, &s_int, NULL) == -1
-		|| sigaction(SIGQUIT, &s_quit, NULL) == -1)
-	{
-		ft_putstr_fd("Error: Failed sigaction\n", STDERR_FILENO);
-		exit(EXIT_FAILURE);
-	}
+	sigaction(SIGINT, &s_int, NULL);
+	sigaction(SIGQUIT, &s_quit, NULL);
 	shell_loop(envp);
 	return (0);
 }
