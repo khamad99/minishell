@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 13:32:12 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/23 10:10:09 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/23 15:05:57 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,13 @@ it will return -1 if no access to infile
 */
 static int	open_files(t_files *files, t_shell_s *shell)
 {
+	(void)shell;
 	counter	c;
 
 	c.infile_i = -1;
 	c.append_i = -1;
 	c.outfile_i = -1;
 	c.i = -1;
-	open_exec_heredoc(files, shell);
 	while (files->redirect_type[++c.i])
 	{
 		if (files->redirect_type[c.i] == '>')
@@ -88,7 +88,7 @@ static void	init_redir2(t_execute *cmd, counter *c)
 		if (++c->append_i == ft_strstrlen(cmd->files->append_name))
 			close(cmd->files->append_fd);
 	}
-	else if ((cmd->files->redirect_type[c->i] == '<'))
+	else if (cmd->files->redirect_type[c->i] == '<')
 	{
 		dup2(cmd->files->infile_fd, STDIN_FILENO);
 		if (++c->infile_i == ft_strstrlen(cmd->files->infile_name))
@@ -111,20 +111,39 @@ int	init_redir(t_execute *cmd, t_shell_s *shell)
 	c.outfile_i = 0;
 	c.append_i = 0;
 	c.hd_i = 0;
-	if (!shell->files)
-		return (0);
 	if (open_files(cmd->files, shell) == -1)
 		return (-1);
 	while (cmd->files->redirect_type[++c.i])
 	{
 		init_redir2(cmd, &c);
-		if ((cmd->files->redirect_type[c.i] == 'h'))
+		if (cmd->files->redirect_type[c.i] == 'h')
 		{
 			open("temp", O_RDONLY);
+			write(shell->std_in, "123\n", 4);
 			dup2(cmd->files->heredoc_fd, STDIN_FILENO);
 			if (++c.hd_i == ft_strstrlen(cmd->files->limiter))
 				close(cmd->files->heredoc_fd);
 		}
 	}
+	return (0);
+}
+
+int	init_heredoc(t_execute *cmd, t_shell_s *shell)
+{
+	int	i;
+	// int	hd_i;
+
+	i = -1;
+	open_exec_heredoc(cmd->files, shell);
+	// while (cmd->files->redirect_type[++i])
+	// {
+	// 	if (cmd->files->redirect_type[i] == 'h')
+	// 	{
+	// 		open("temp", O_RDONLY);
+	// 		dup2(cmd->files->heredoc_fd, STDIN_FILENO);
+	// 		if (++hd_i == ft_strstrlen(cmd->files->limiter))
+	// 			close(cmd->files->heredoc_fd);
+	// 	}
+	// }
 	return (0);
 }

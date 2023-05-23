@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/23 12:06:32 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/23 15:01:10 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ void	excute_child(t_shell_s *shell, int cmd_num)
 	int	status;
 
 	status = 0;
+	init_heredoc(shell->command_block[cmd_num], shell);
 	shell->pid[cmd_num] = fork();
 	if (shell->pid[cmd_num] == -1)
 		return ; // fix the free function later
@@ -137,6 +138,4 @@ void	excute_child(t_shell_s *shell, int cmd_num)
 		else
 			excute_child_non_builtin(shell, cmd_num);
 	}
-	// else if (shell->pid[cmd_num] > 0)
-	// 	control_parent_after_fork(shell, cmd_num);
 }

@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:26 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/21 13:43:26 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/23 13:33:43 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,7 @@ static void	exit_ok(unsigned long long int	num, int *s)
 {
 	int	r;
  
+	r = 0;
 	if (*s == 1 && num >= 256)
 		r = num % 256;
 	else if (*s == -1)

@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/23 09:32:31 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/23 15:00:27 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,7 @@ void	pipes_in_child(t_shell_s *shell, int cmd_num);
 /*---------------------------------redir--------------------------------*/
 int		ft_strstrlen(char **str);
 int		init_redir(t_execute *cmd, t_shell_s *shell);
+int		init_heredoc(t_execute *cmd, t_shell_s *shell);
 void	open_exec_heredoc(t_files *files, t_shell_s *shell);
 void	open_outfile(t_files *files, int i);
 void	open_appendfile(t_files * files, int i);

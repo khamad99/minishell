@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils7.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ooutabac <ooutabac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 16:23:15 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/03/06 21:10:22 by ooutabac         ###   ########.fr       */
+/*   Updated: 2023/05/23 13:32:51 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -581,7 +581,7 @@ t_shell_s	*assign_tokens(t_shell_s *minishell)
 		minishell->lexer->tokens[count.i][count.k] = '\0';
 		count.i++;
 	}
-	minishell->lexer->tokens[count.i] = '\0';
+	minishell->lexer->tokens[count.i] = NULL;
 	// printf("token[%i] = %s\n", count.i, minishell->lexer->tokens[count.i]);
 	// for (int i = 0; i < minishell->lexer->num_of_tokens; i++)
 	// 	printf("Token[%i] = %s\n", i, minishell->lexer->tokens[i]);
