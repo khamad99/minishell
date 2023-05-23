@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/23 21:33:34 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/24 00:39:34 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,11 @@ void	parent_after_fork(t_shell_s *shell)
 {
 	int	i;
 
+	i = 0;
 	if (shell->num_pipes > 0)
 	{
-		close(shell->pipes_fd[0]);
-		close(shell->pipes_fd[1]);
-		close(shell->pipes_fd[2]);
-		close(shell->pipes_fd[3]);
+		while (i < shell->num_pipes * 2)
+			close(shell->pipes_fd[i++]);
 	}
 	i = -1;
 	while (++i < shell->num_commands)
@@ -42,7 +41,7 @@ void	exec_child_heredoc(t_shell_s *shell)
 		{
 			shell->command_block[i]->excuted = 1;
 			init_heredoc(shell->command_block[i], shell);
-			excute_child(shell, i);
+			excute_child(shell, i, 1);
 		}
 	}
 }
@@ -85,7 +84,7 @@ static void	start_exec(t_shell_s *shell)
 			if (shell->command_block[shell->cmd_used]->excuted == 0)
 			{
 				shell->command_block[shell->cmd_used]->excuted = 1;
-				excute_child(shell, shell->cmd_used);
+				excute_child(shell, shell->cmd_used, 2);
 			}
 		}
 		parent_after_fork(shell);

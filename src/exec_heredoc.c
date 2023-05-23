@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 08:08:08 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/23 07:42:53 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/24 00:46:52 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static void	exec_heredoc(t_files *files, t_shell_s *shell)
 				break ;
 			}
 			add_history(input);
-			if (!ft_strncmp(files->limiter[i], input, ft_strlen(files->limiter[i])))
+			if (!ft_strncmp(files->limiter[i], input, ft_strlen(files->limiter[i]) + 1))
 			{
 				free(input);
 				break ;

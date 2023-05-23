@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 13:32:12 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/23 19:29:46 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/24 00:45:27 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ int	init_redir(t_execute *cmd, t_shell_s *shell)
 		init_redir2(cmd, &c);
 		if (cmd->files->redirect_type[c.i] == 'h')
 		{
-			open("temp", O_RDONLY);
+			cmd->files->heredoc_fd = open("temp", O_RDONLY);
 			dup2(cmd->files->heredoc_fd, STDIN_FILENO);
 			if (++c.hd_i == ft_strstrlen(cmd->files->limiter))
 				close(cmd->files->heredoc_fd);

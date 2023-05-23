@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/23 20:01:23 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/24 00:27:28 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,31 @@ static void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 
 }
 
+// void	close_heredok_pipes(t_shell_s *shell, int cmd_num)
+// {
+// 	int	i;
+
+// 	if (shell->num_pipes <= 0)
+// 		return ;
+// 	i = -1;
+// 	while (++i < shell->num_pipes * 2)
+// 		if (((cmd_num * 2) - 2) != i && ((cmd_num * 2) + 1) != i)
+// 			close(shell->pipes_fd[i]);
+// 	if (cmd_num == 0)
+// 	{
+// 		close(shell->pipes_fd[1]);
+// 	}
+// 	else if (cmd_num == shell->num_pipes)
+// 	{
+// 		close(shell->pipes_fd[(cmd_num * 2) - 2]);
+// 	}
+// 	else
+// 	{
+// 		close(shell->pipes_fd[(cmd_num * 2) - 2]);
+// 		close(shell->pipes_fd[(cmd_num * 2) + 1]);
+// 	}
+// }
+
 /*
 this function will be caled if forking is requied according the test
 it will do the following:
@@ -115,9 +140,10 @@ it will do the following:
 5- call the function that excute the non_builtin 
 6- wait for child to finish
 */
-void	excute_child(t_shell_s *shell, int cmd_num)
+void	excute_child(t_shell_s *shell, int cmd_num, int flag)
 {
 	int	status;
+	(void)flag;
 
 	status = 0;
 	shell->pid[cmd_num] = fork();
@@ -137,4 +163,9 @@ void	excute_child(t_shell_s *shell, int cmd_num)
 		else
 			excute_child_non_builtin(shell, cmd_num);
 	}
+	// else if (shell->pid[cmd_num] > 0 && flag == 1)
+	// {
+	// 	close_heredok_pipes(shell, cmd_num);
+	// 	waitpid(shell->pid[cmd_num], NULL, WUNTRACED);
+	// }
 }

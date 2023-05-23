@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/23 20:01:34 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/24 00:39:57 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,7 +180,7 @@ typedef struct s_shell_s
 /*--------------------------------KHALED-------------------------------*/
 /*---------------------------------MAIN--------------------------------*/
 int		shell_loop(char **envp);
-void	excute_child(t_shell_s *shell, int cmd_num);
+void	excute_child(t_shell_s *shell, int cmd_num,  int flag);
 /*---------------------------------pipes--------------------------------*/
 void	pid_pipes_init(t_shell_s *shell);
 void	pipes_in_child(t_shell_s *shell, int cmd_num);
