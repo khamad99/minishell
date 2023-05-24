@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/24 00:27:28 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/24 11:15:48 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,22 +23,18 @@ int	path_check(char *cmd)
 		if (!access(cmd, X_OK))
 			return (1);
 		else
-			//access_denied
-			return (0);
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			ft_putstr_fd(cmd, STDERR_FILENO);
+			ft_putstr_fd(" : Permission denied\n", STDERR_FILENO);
+			return (-1);
+		}
 	}
 	else
 		return (0);
 }
 
-/*
-this function excute the non_builtin command, it do the following
-1- update the env
-2- check if bath provided and excute if yes
-3- if no join the path with cmd
-	check the validity by access function
-	yes -> execve
-	no -> error - not found 
-*/
+
 
 // static void	control_parent_after_fork(t_shell_s *shell, int cmd_num)
 // {
@@ -83,15 +79,39 @@ this function excute the non_builtin command, it do the following
 // // 		close(shell->pipes_fd[0]);
 // }
 
+/*
+this function excute the non_builtin command, it do the following
+1- update the env
+2- check if bath provided and excute if yes
+3- if no join the path with cmd
+	check the validity by access function
+	yes -> execve
+	no -> error - not found 
+*/
 static void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 {
 	int	i;
 	char	*cmd_with_path;
-	// check env
-	if (path_check(shell->command_block[cmd_num]->command))
+	// check if env updated and update the paths 
+	if (path_check(shell->command_block[cmd_num]->command) == 1)
 		execve(shell->command_block[cmd_num]->command,
 			shell->command_block[cmd_num]->args, shell->envp->envp);
+	else if (path_check(shell->command_block[cmd_num]->command) == -1)
+	{
+		free_error(shell);
+		exit(126);
+	}
+	if (!shell->path)
+	{
+		ft_putstr_fd("minishell: Command not found: ", STDERR_FILENO);
+		ft_putstr_fd(shell->command_block[cmd_num]->command, STDERR_FILENO);
+		ft_putstr_fd("\n", STDERR_FILENO);
+		free_error(shell);
+		exit(127);
+	}
 	i = -1;
+	close(shell->std_in);
+	close(shell->std_out);
 	while (shell->path[++i])
 	{
 		cmd_with_path = ft_strjoin(shell->path[i], shell->command_block[cmd_num]->command);
@@ -99,10 +119,11 @@ static void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 			execve(cmd_with_path, shell->command_block[cmd_num]->args, shell->envp->envp);
 		free(cmd_with_path);
 	}
-	
-	
-	// no -> error - not found 
-
+	ft_putstr_fd("minishell: Command not found: ", STDERR_FILENO);
+	ft_putstr_fd(shell->command_block[cmd_num]->command, STDERR_FILENO);
+	ft_putstr_fd("\n", STDERR_FILENO);
+	free_error(shell);
+	exit(127);
 }
 
 // void	close_heredok_pipes(t_shell_s *shell, int cmd_num)
@@ -140,15 +161,17 @@ it will do the following:
 5- call the function that excute the non_builtin 
 6- wait for child to finish
 */
-void	excute_child(t_shell_s *shell, int cmd_num, int flag)
+void	excute_child(t_shell_s *shell, int cmd_num)
 {
 	int	status;
-	(void)flag;
 
 	status = 0;
 	shell->pid[cmd_num] = fork();
 	if (shell->pid[cmd_num] == -1)
-		return ; // fix the free function later
+	{
+		ft_putstr_fd("fork failure\n", STDERR_FILENO);
+		free_error(shell);
+	}
 	else if (shell->pid[cmd_num] == 0)
 	{
 		pipes_in_child(shell, cmd_num);
@@ -157,15 +180,10 @@ void	excute_child(t_shell_s *shell, int cmd_num, int flag)
 		if (is_builtin(shell->command_block[cmd_num]->command))
 		{
 			status = builtin_exec(shell->command_block[0]);
-			// free chiild process
+			free_error(shell);
 			exit(status);
 		}
 		else
 			excute_child_non_builtin(shell, cmd_num);
 	}
-	// else if (shell->pid[cmd_num] > 0 && flag == 1)
-	// {
-	// 	close_heredok_pipes(shell, cmd_num);
-	// 	waitpid(shell->pid[cmd_num], NULL, WUNTRACED);
-	// }
 }

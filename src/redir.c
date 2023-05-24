@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 13:32:12 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/24 00:45:27 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/24 10:28:46 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,12 @@ static int	open_files(t_files *files, t_shell_s *shell)
 		{
 			++c.infile_i;
 			if (access(files->infile_name[c.infile_i], F_OK) != 0)
+			{
+				ft_putstr_fd("minishell: ", STDERR_FILENO);
+				ft_putstr_fd(files->infile_name[c.infile_i], STDERR_FILENO);
+				ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 				return (-1);
+			}
 			open_infile(files, c.infile_i);
 		}
 	}

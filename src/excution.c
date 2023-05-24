@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/24 00:39:34 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/24 10:35:29 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ void	exec_child_heredoc(t_shell_s *shell)
 		shell->command_block[i]->excuted = 0;
 		if (shell->command_block[i]->files->limiter[0] != NULL)
 		{
-			shell->command_block[i]->excuted = 1;
+			// shell->command_block[i]->excuted = 1;
 			init_heredoc(shell->command_block[i], shell);
-			excute_child(shell, i, 1);
+			// excute_child(shell, i);
 		}
 	}
 }
@@ -66,13 +66,17 @@ it have 2 roles,
 */
 static void	start_exec(t_shell_s *shell)
 {
-	shell->cmd_used = -1;
-	shell->std_in = dup(STDIN_FILENO);
-	shell->std_out = dup(STDOUT_FILENO);
-	if (forking_required(shell) && is_builtin(shell->command_block[0]->command))
+	shell->cmd_used = -1; // to add it to parsing
+	shell->std_in = dup(STDIN_FILENO); // to add it to parsing
+	shell->std_out = dup(STDOUT_FILENO); // to add it to parsing
+	// check sytax error
+	if (forking_required(shell))
 	{
 		if (init_redir(shell->command_block[0], shell) == -1)
-			return ; // to handle the no_acess to infile
+		{
+			shell->exit_code = EXIT_FAILURE;
+			return ;
+		}
 		shell->exit_code = builtin_exec(shell->command_block[0]);
 	}
 	else
@@ -84,7 +88,7 @@ static void	start_exec(t_shell_s *shell)
 			if (shell->command_block[shell->cmd_used]->excuted == 0)
 			{
 				shell->command_block[shell->cmd_used]->excuted = 1;
-				excute_child(shell, shell->cmd_used, 2);
+				excute_child(shell, shell->cmd_used);
 			}
 		}
 		parent_after_fork(shell);
@@ -129,10 +133,6 @@ int	shell_loop(char **envp)
 		cmd = NULL;
 		if (shell)
 		{
-			// int i = -1;
-			// while (shell->command_block[0]->files->redirect_type[++i])
-			// //printf("redir: %s\n", shell->command_block[0]->files->redirect_type);
-			// printf("%s\n", shell->command_block[0]->files->infile_name[i]);
 			start_exec(shell);
 			free_everything(shell);
 		}
