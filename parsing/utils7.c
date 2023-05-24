@@ -3,67 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils7.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ooutabac <ooutabac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 16:23:15 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/23 13:32:51 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/24 15:53:10 by ooutabac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-// t_shell_s   *dollar_sign(t_shell_s *minishell)
-// {
-//     t_counter   count;
-//     char        *str;
-//     char        *pid;
-
-//     if (!minishell || !minishell->lexer || !minishell->lexer->raw_tokens || !minishell->lexer->raw_tokens[0])
-//         return (NULL);
-//     count.i = 0;
-//     while (minishell->lexer->raw_tokens[count.i])
-//     {
-//         count.j = 0;
-//         while (minishell->lexer->raw_tokens[count.i][count.j])
-//         {
-//             if (minishell->lexer->raw_tokens[count.i][count.j] == '\'')
-//             {
-//                 count.j++;
-//                 while (minishell->lexer->raw_tokens[count.i][count.j] && minishell->lexer->raw_tokens[count.i][count.j] != '\'')
-//                     count.j++;
-//             }
-//             else if (minishell->lexer->raw_tokens[count.i][count.j] == '$' && minishell->lexer->raw_tokens[count.i][count.j + 1] && minishell->lexer->raw_tokens[count.i][count.j + 1] == '$')
-//             {
-//                 str = ft_strdup(minishell->lexer->raw_tokens[count.i]);
-//                 free(minishell->lexer->raw_tokens[count.i]);
-//                 minishell->lexer->raw_tokens[count.i] = malloc(sizeof(char) * (ft_strlen(str) + (ft_strlen(ft_itoa(getpid())) - 2) + 1));
-//                 count.k = 0;
-//                 count.m = 0;
-//                 count.n = 0;
-//                 while (str[count.k])
-//                 {
-//                     if (str[count.k] == '$' && str[count.k + 1 && str[count.k + 1] == '$'])
-//                     {
-//                         pid = ft_itoa(getpid());
-//                         while (pid[count.n] && minishell->lexer->raw_tokens[count.i][count.m])
-//                             minishell->lexer->raw_tokens[count.i][count.m++] = pid[count.n++];
-//                         count.k += 2;
-//                     }
-//                     else
-//                         minishell->lexer->raw_tokens[count.i][count.m++] = str[count.k++];
-//                 }
-//                 minishell->lexer->raw_tokens[count.i][count.m] = '\0';
-//                 free(str);
-//                 if (pid)
-//                     free(pid);
-//             }
-//             count.j++;
-//         }
-//         // printf("token[%i] after dollar sign function = %s\n", count.i, minishell->lexer->raw_tokens[count.i]);
-//         count.i++;
-//     }
-//     return (minishell);
-// }
 
 int	length_of_dollar_sign(char *str)
 {
@@ -232,7 +179,7 @@ char	*expand_token(char *old_token)
 			count.i++;
 			while (old_token[count.i] && old_token[count.i] != '\"' && count.trigger == 0)
 			{
-				if (old_token[count.i] == '$' && old_token[count.i + 1])
+				if (old_token[count.i] == '$' && old_token[count.i + 1] && old_token[count.i + 1] != '?')
 				{
 					count.y = 0;
 					count.z = length_of_dollar_sign(old_token + count.i);
@@ -257,7 +204,7 @@ char	*expand_token(char *old_token)
 			if (old_token[count.i] && old_token[count.i] == '\'')
 				count.i++;
 		}
-		else if (old_token[count.i] == '$' && old_token[count.i + 1])
+		else if (old_token[count.i] == '$' && old_token[count.i + 1] && old_token[count.i + 1] != '?')
 		{
 			count.y = 0;
 			count.z = length_of_dollar_sign(old_token + count.i);
@@ -271,10 +218,8 @@ char	*expand_token(char *old_token)
 		else
 			count.i++;
 	}
-	// printf("Dollar sign = %s\n", dollar_sign);
 	// expand dollar sign
 	env_value = getenv(dollar_sign);
-	// printf("env_value = %s\n", env_value);
 	count.i = 0;
 	count.j = 0;
 	count.k = 0;
@@ -282,13 +227,11 @@ char	*expand_token(char *old_token)
 	{
 		count.m = (ft_strlen(env_value) + ft_strlen(old_token) - (ft_strlen(dollar_sign) + 1));
 		new_token = malloc(sizeof(char) * (ft_strlen(env_value) + ft_strlen(old_token) - (ft_strlen(dollar_sign) + 1)) + 1);
-		// printf("length of new_token = %li\n", (ft_strlen(env_value) + ft_strlen(old_token) - (ft_strlen(dollar_sign) + 1)));
 	}
 	else
 	{
 		count.m = (ft_strlen(old_token) - (ft_strlen(dollar_sign) + 1));
 		new_token = malloc(sizeof(char) * (ft_strlen(old_token) - (ft_strlen(dollar_sign) - 1)) + 1);
-		// printf("length of new_token = %li\n", (ft_strlen(old_token) - (ft_strlen(dollar_sign) + 1)));
 	}
 	while (old_token[count.i])
 	{
@@ -297,7 +240,7 @@ char	*expand_token(char *old_token)
 			new_token[count.j++] = old_token[count.i++];
 			while (old_token[count.i] && old_token[count.i] != '\"')
 			{
-				if (old_token[count.i] == '$' && old_token[count.i + 1])
+				if (old_token[count.i] == '$' && old_token[count.i + 1] && old_token[count.i + 1] != '?')
 				{
 					if (env_value && env_value[0])
 						while (count.j < count.m && env_value[count.k])
@@ -306,7 +249,6 @@ char	*expand_token(char *old_token)
 					while (count.j < count.m && old_token[count.i])
 						new_token[count.j++] = old_token[count.i++];
 					new_token[count.j] = '\0';
-					// printf("new token = %s\n", new_token);
 					return (new_token);
 				}
 				else
@@ -323,7 +265,7 @@ char	*expand_token(char *old_token)
 			if (old_token[count.i] && old_token[count.i] == '\'')
 				count.i++;
 		}
-		else if (old_token[count.i] == '$' && old_token[count.i + 1])
+		else if (old_token[count.i] == '$' && old_token[count.i + 1] && old_token[count.i + 1] != '?')
 		{
 			if (env_value && env_value[0])
 				while (count.j < count.m && env_value[count.k])
@@ -332,14 +274,21 @@ char	*expand_token(char *old_token)
 			while (count.j < count.m && old_token[count.i])
 				new_token[count.j++] = old_token[count.i++];
 			new_token[count.j] = '\0';
-			// printf("new token = %s\n", new_token);
 			return (new_token);
 		}
 		else
 			new_token[count.j++] = old_token[count.i++];
 	}
+	new_token[count.j] = '\0';
+	free(old_token);
 	return (new_token);
 }
+					// printf("new token = %s\n", new_token);
+			// printf("new token = %s\n", new_token);
+	// printf("Dollar sign = %s\n", dollar_sign);
+	// printf("env_value = %s\n", env_value);
+		// printf("length of new_token = %li\n", (ft_strlen(env_value) + ft_strlen(old_token) - (ft_strlen(dollar_sign) + 1)));
+		// printf("length of new_token = %li\n", (ft_strlen(old_token) - (ft_strlen(dollar_sign) + 1)));
 
 int	exit_expansion_token_size(t_shell_s *minishell, char *str)
 {
@@ -359,9 +308,7 @@ int	exit_expansion_token_size(t_shell_s *minishell, char *str)
 			{
 				if (str[count.i] == '$' && str[count.i + 1] && str[count.i + 1] == '?')
 				{
-					// Uncomment line below and comment line below + 1
 					count.counter += ft_strlen(ft_itoa(minishell->exit_code));
-					// count.counter++;
 					count.i += 2;
 				}
 				else
@@ -395,9 +342,7 @@ int	exit_expansion_token_size(t_shell_s *minishell, char *str)
 		{
 			if (str[count.i] == '$' && str[count.i + 1] && str[count.i + 1] == '?')
 			{
-				// Uncomment line below and comment line below + 1
 				count.counter += ft_strlen(ft_itoa(minishell->exit_code));
-				// count.counter++;
 				count.i += 2;
 			}
 			else
@@ -420,7 +365,7 @@ char	*expand_exit_code_token(t_shell_s *minishell, char *str)
 		return (NULL);
 	count.i = 0;
 	count.j = 0;
-	// Convert to string
+	// printf("Exit code in function = %i\n", minishell->exit_code);
 	exit_code = ft_itoa(minishell->exit_code);
 	new_str = malloc(sizeof(char) * (exit_expansion_token_size(minishell, str)) + 1);
 	while (str[count.i])
@@ -491,7 +436,6 @@ t_shell_s	*expand_env_variables(t_shell_s *minishell)
 			old_token = ft_strdup(minishell->lexer->raw_tokens[count.i]);
 			free(minishell->lexer->raw_tokens[count.i]);
 			minishell->lexer->raw_tokens[count.i] = expand_exit_code_token(minishell, old_token);
-			// printf("%s\n", minishell->lexer->raw_tokens[count.i]);
 			free(old_token);
 		}
 		else
@@ -499,6 +443,7 @@ t_shell_s	*expand_env_variables(t_shell_s *minishell)
 	}
 	return (minishell);
 }
+			// printf("%s\n", minishell->lexer->raw_tokens[count.i]);
 
 int	token_size2(char *str)
 {
@@ -582,19 +527,49 @@ t_shell_s	*assign_tokens(t_shell_s *minishell)
 		count.i++;
 	}
 	minishell->lexer->tokens[count.i] = NULL;
+	return (minishell);
+}
 	// printf("token[%i] = %s\n", count.i, minishell->lexer->tokens[count.i]);
 	// for (int i = 0; i < minishell->lexer->num_of_tokens; i++)
 	// 	printf("Token[%i] = %s\n", i, minishell->lexer->tokens[i]);
-	return (minishell);
-}
 
-t_shell_s	*dollar_sign(t_shell_s *minishell)
+// t_shell_s	*dollar_sign(t_shell_s *minishell)
+// {
+// 	if (!minishell || !minishell->lexer || !minishell->lexer->tokens)
+// 		return (NULL);
+// 	minishell = expand_env_variables(minishell);
+// 	minishell = assign_tokens(minishell);
+// 	return (minishell);
+// }
+
+char    *dollar_sign(t_shell_s *minishell, char *cmd_line)
 {
-	if (!minishell || !minishell->lexer || !minishell->lexer->tokens)
-		return (NULL);
-	minishell = expand_env_variables(minishell);
-	minishell = assign_tokens(minishell);
-	return (minishell);
+    char        *old_cmd_line;
+    char        *new_cmd_line;
+
+    if (!cmd_line || !cmd_line[0] || !minishell)
+        return (NULL);
+	new_cmd_line = ft_strdup(cmd_line);
+	old_cmd_line = ft_strdup(new_cmd_line);
+	while (is_expandable(new_cmd_line) == TRUE)
+	{
+		free(new_cmd_line);
+		new_cmd_line = expand_token(old_cmd_line);
+		free(old_cmd_line);
+		old_cmd_line = NULL;
+		if (new_cmd_line)
+			old_cmd_line = ft_strdup(new_cmd_line);
+	}
+	if (old_cmd_line != NULL)
+		free(old_cmd_line);
+	while (is_exit_code_expansion(new_cmd_line) == TRUE)
+	{
+		old_cmd_line = ft_strdup(new_cmd_line);
+		free(new_cmd_line);
+		new_cmd_line = expand_exit_code_token(minishell, old_cmd_line);
+		free(old_cmd_line);
+	}
+    return (new_cmd_line);
 }
 
 // t_shell_s	*expand_env_variables(t_shell_s *minishell)

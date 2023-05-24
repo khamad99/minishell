@@ -16,14 +16,14 @@ t_shell_s	*raw_lexer(t_shell_s *minishell, char *str)
 {
 	t_counter	count;
 
-	if (!minishell)
+	if (!minishell || !minishell->lexer)
 		return (NULL);
 	if (!str)
 		return (minishell);
 	count.i = 0;
 	count.j = 0;
+	minishell->lexer->num_of_tokens = num_of_tokens(str);
 	minishell->lexer->raw_tokens = malloc(sizeof(char *) * (minishell->lexer->num_of_tokens + 1));
-	// printf("num of tokens = %i\n", minishell->lexer->num_of_tokens);
 	while (str[count.i] && count.j < minishell->lexer->num_of_tokens)
 	{
 		minishell->lexer->raw_tokens[count.j] = malloc(sizeof(char) * raw_token_size(str, count.i) + 1);
@@ -59,13 +59,11 @@ t_shell_s	*raw_lexer(t_shell_s *minishell, char *str)
 			}
 			else if (str[count.i] == ' ' || str[count.i] == '\t')
 				break ;
-			// printf("%c", str[count.i]);
 		}
 		if (count.k > 0)
 			minishell->lexer->raw_tokens[count.j++][count.k] = '\0';
 		if ((str[count.i] == '>' && str[count.i + 1] && str[count.i + 1] == '>') || (str[count.i] == '<' && str[count.i + 1] && str[count.i + 1] == '<'))
 		{
-			// printf("This is a heredoc\n");
 			minishell->lexer->raw_tokens[count.j] = malloc(sizeof(char) * (3));
 			minishell->lexer->raw_tokens[count.j][0] = str[count.i];
 			minishell->lexer->raw_tokens[count.j][1] = str[count.i + 1];
@@ -80,13 +78,16 @@ t_shell_s	*raw_lexer(t_shell_s *minishell, char *str)
 			count.i = skip_symbols(str, count.i);
 		}
 		count.i = skip_spaces(str, count.i);
-		// printf("str[%i] = %c\n", count.i, str[count.i]);
 	}
 	minishell->lexer->raw_tokens[count.j] = NULL;
-	// for (int i = 0; minishell->lexer->raw_tokens[i]; i++)
-	// 	printf("raw_tokens[%i] = %s\n", i, minishell->lexer->raw_tokens[i]);
 	return (minishell);
 }
+	// printf("num of tokens = %i\n", minishell->lexer->num_of_tokens);
+			// printf("%c", str[count.i]);
+			// printf("This is a heredoc\n");
+		// printf("str[%i] = %c\n", count.i, str[count.i]);
+	// for (int i = 0; minishell->lexer->raw_tokens[i]; i++)
+	// 	printf("raw_tokens[%i] = %s\n", i, minishell->lexer->raw_tokens[i]);
 
 int	raw_token_size(char *str, int i)
 {
@@ -140,9 +141,9 @@ int	raw_token_size(char *str, int i)
         	i++;
 		}
     }
-	// printf("token size = %i\n", length);
     return (length);
 }
+	// printf("token size = %i\n", length);
 
 char	**split_pipes(char	*str)
 {
@@ -189,10 +190,10 @@ char	**split_pipes(char	*str)
 		blocks[count.j++][count.k] = '\0';
 	}
 	blocks[count.j] = NULL;
-	// for (int i = 0; blocks[i]; i++)
-		// printf("block[%i] = %s\n", i, blocks[i]);
 	return (blocks);
 }
+	// for (int i = 0; blocks[i]; i++)
+		// printf("block[%i] = %s\n", i, blocks[i]);
 
 int	num_of_tokens_to_pipe(char **tokens, int token_num)
 {
@@ -209,9 +210,9 @@ int	num_of_tokens_to_pipe(char **tokens, int token_num)
 		count.counter++;
 		token_num++;
 	}
-	// printf("num of tokens till pipe = %i\n", count.counter);
 	return (count.counter);
 }
+	// printf("num of tokens till pipe = %i\n", count.counter);
 
 char	**split_raw_command_block(t_shell_s *minishell, int token_num)
 {
@@ -305,7 +306,6 @@ int	length_to_pipe(char *str, int i)
 	if (!str)
 		return (0);
 	length = 0;
-	// printf("i = %i\n", i);
 	while (str[i])
 	{
 		trigger = 0;
@@ -343,6 +343,7 @@ int	length_to_pipe(char *str, int i)
 			length++;
 		}
 	}
-	// printf("length to pipe = %i\n", length);
 	return (length);
 }
+	// printf("length to pipe = %i\n", length);
+	// printf("i = %i\n", i);

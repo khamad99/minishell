@@ -162,7 +162,7 @@ int	count_pipes(char *str)
 		if (count.trigger == 0)
 			count.i++;
 	}
-	
+
 	// printf("command blocks = %i\n", count.counter);
 	return (count.counter);
 }

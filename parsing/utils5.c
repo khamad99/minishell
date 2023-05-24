@@ -93,28 +93,28 @@ int	check_validity(t_shell_s *minishell, char *str)
 	count.i = 0;
 	count.j = 0;
 	if (minishell->lexer->raw_tokens && ft_strncmp(minishell->lexer->raw_tokens[0], "|", 2) == 0)
-		return (minishell->exit_code = 2, FALSE);
+		return (FALSE);
 	while (minishell->lexer->raw_tokens[count.i])
 	{
 		// Redirection before pipe
 		if (minishell->lexer->raw_tokens[count.i + 1] && ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "|\0", 2) == 0 && (ft_strncmp(minishell->lexer->raw_tokens[count.i], ">", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i], "<", 2) == 0))
-			return (minishell->exit_code = 2, FALSE);
+			return (FALSE);
 		// Nothing after a redirection
 		if ((ft_strncmp(minishell->lexer->raw_tokens[count.i], ">\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i], "<\0", 2) == 0) && !minishell->lexer->raw_tokens[count.i + 1])
-			return (minishell->exit_code = 2, FALSE);
+			return (FALSE);
 		// 2 redirections of different types
 		if (ft_strncmp(minishell->lexer->raw_tokens[count.i], "<\0", 2) == 0 && ((!minishell->lexer->raw_tokens[count.i + 1]) || (minishell->lexer->raw_tokens[count.i + 1] && (ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<<\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">>\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "|\0", 2) == 0))))
-			return (minishell->exit_code = 2, FALSE);
+			return (FALSE);
 		if (ft_strncmp(minishell->lexer->raw_tokens[count.i], ">\0", 2) == 0 && ((!minishell->lexer->raw_tokens[count.i + 1]) || (minishell->lexer->raw_tokens[count.i + 1] && (ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<<\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">>\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "|\0", 2) == 0))))
-			return (minishell->exit_code = 2, FALSE);
+			return (FALSE);
 		if (ft_strncmp(minishell->lexer->raw_tokens[count.i], "<<\0", 3) == 0 && ((!minishell->lexer->raw_tokens[count.i + 1]) || (minishell->lexer->raw_tokens[count.i + 1] && (ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<<\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">>\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "|\0", 2) == 0))))
-			return (minishell->exit_code = 2, FALSE);
+			return (FALSE);
 		if (ft_strncmp(minishell->lexer->raw_tokens[count.i], ">>\0", 3) == 0 && ((!minishell->lexer->raw_tokens[count.i + 1]) || (minishell->lexer->raw_tokens[count.i + 1] && (ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">\0", 2) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "<<\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], ">>\0", 3) == 0 || ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "|\0", 2) == 0))))
-			return (minishell->exit_code = 2, FALSE);
+			return (FALSE);
 		if (ft_strncmp(minishell->lexer->raw_tokens[count.i], "|\0", 2) == 0 && !minishell->lexer->raw_tokens[count.i + 1])
-			return (minishell->exit_code = 2, FALSE);
+			return (FALSE);
 		if (ft_strncmp(minishell->lexer->raw_tokens[count.i], "|\0", 2) == 0 && ft_strncmp(minishell->lexer->raw_tokens[count.i + 1], "|\0", 2) == 0)
-			return (minishell->exit_code = 2, FALSE);
+			return (FALSE);
 		// if (ft_strncmp(minishell->lexer->raw_tokens[count.i], "|", 2))
 		count.i++;
 	}

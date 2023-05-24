@@ -201,7 +201,6 @@ t_shell_s	*lexer(t_shell_s *minishell, char *str)
 			}
 			else if (str[count.i] == ' ' || str[count.i] == '\t')
 				break ;
-			// printf("%c", str[count.i]);
 		}
 		if (count.k > 0)
 			minishell->lexer->tokens[count.j++][count.k] = '\0';
@@ -209,7 +208,6 @@ t_shell_s	*lexer(t_shell_s *minishell, char *str)
 			minishell->lexer->tokens[count.j++][count.k] = '\0';
 		if ((str[count.i] == '>' && str[count.i + 1] && str[count.i + 1] == '>') || (str[count.i] == '<' && str[count.i + 1] && str[count.i + 1] == '<'))
 		{
-			// printf("This is a heredoc\n");
 			minishell->lexer->tokens[count.j] = malloc(sizeof(char) * (3));
 			minishell->lexer->tokens[count.j][0] = str[count.i];
 			minishell->lexer->tokens[count.j][1] = str[count.i + 1];
@@ -224,15 +222,13 @@ t_shell_s	*lexer(t_shell_s *minishell, char *str)
 			count.i = skip_symbols(str, count.i);
 		}
 		count.i = skip_spaces(str, count.i);
-		// printf("str[%i] = %c\n", count.i, str[count.i]);
 	}
 	minishell->lexer->tokens[count.j] = NULL;
+	return (minishell);
+}
 	// for (int i = 0; minishell->lexer->tokens[i]; i++)
 	// 	printf("tokens[%i] = %s\n", i, minishell->lexer->tokens[i]);
 		// printf("tokens[%i] = %d\n", i, minishell->lexer->tokens[i][0]);
-	// printf("Tokenisation completed\n");
-	return (minishell);
-}
 
 
 /* LEXER DOUBLE QUOTES

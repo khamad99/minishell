@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ooutabac <ooutabac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 19:19:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/21 19:50:07 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/24 15:52:52 by ooutabac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@ t_shell_s	*get_path(t_shell_s *minishell, char **envp)
 	t_counter	count;
 
 	count.i = 0;
+	count.j = 0;
+	if (!envp)
+		return (minishell->path = NULL, minishell);
 	while (envp[count.i] != NULL)
 	{
 		if (ft_strnstr(envp[count.i++], "PATH=", 5))
@@ -32,6 +35,7 @@ t_shell_s	*get_path(t_shell_s *minishell, char **envp)
 			break ;
 		}
 	}
+	minishell->path[count.j] = NULL;
 	return (minishell);
 }
 
@@ -306,6 +310,8 @@ t_execute	*get_files(t_shell_s *minishell, t_execute *execute_block, char **comm
 	execute_block->files->limiter[count.n] = NULL;
 	execute_block->files->redirect_type[count.counter] = '\0';
 	execute_block->files->num_of_redirections = count.counter;
+	return (execute_block);
+}
 	// for (int i = 0; execute_block->files->infile_name[i]; i++)
 	// 	printf("infile[%i] = %s\n", i, execute_block->files->infile_name[i]);
 	// for (int i = 0; execute_block->files->outfile_name[i]; i++)
@@ -315,8 +321,6 @@ t_execute	*get_files(t_shell_s *minishell, t_execute *execute_block, char **comm
 	// for (int i = 0; execute_block->files->limiter[i]; i++)
 	// 	printf("limiter[%i] = %s\n", i, execute_block->files->limiter[i]);
 	// printf("files order = %s\n", execute_block->files->redirect_type);
-	return (execute_block);
-}
 
 t_shell_s	*get_execution_blocks(t_shell_s *minishell)
 {
@@ -340,11 +344,16 @@ t_shell_s	*get_execution_blocks(t_shell_s *minishell)
 		else
 			minishell->command_block[count.i]->command = NULL;
 		minishell->command_block[count.i]->args = malloc(sizeof(char *) * (get_num_flags(minishell->lexer->raw_tokens, count.z) + 1));
-		// printf("%i\n", get_num_flags(minishell->lexer->tokens, count.z));
 		command_block = split_command_block(minishell, count.z);
 		raw_command_block = split_raw_command_block(minishell, count.z);
+		// Num of tokens per command block;
+		// minishell->command_block[count.i]->tokens = malloc(sizeof(char *) * ())
 		while (minishell->lexer->raw_tokens[count.z] && ft_strncmp(minishell->lexer->raw_tokens[count.z], "|\0", 2) != 0)
+		{
+			// minishell->command_block[count.i]->tokens[count.j++] = ft_strdup(command_block);
 			count.z++;
+		}
+		count.j = 0;
 		if (minishell->lexer->raw_tokens[count.z] && ft_strncmp(minishell->lexer->raw_tokens[count.z], "|\0", 2) == 0)
 			count.z++;
 		if (minishell->flags[count.i])
@@ -358,17 +367,18 @@ t_shell_s	*get_execution_blocks(t_shell_s *minishell)
 		else
 			minishell->command_block[count.i]->args[count.j++] = NULL;
 		minishell->command_block[count.i]->args[count.j] = NULL;
-		// printf("entering get_files with count.i = %i\n", count.i);
 		minishell->command_block[count.i] = get_files(minishell, minishell->command_block[count.i], command_block, raw_command_block);
 		free_2d(command_block);
-		minishell->command_block[count.i]->env = minishell->envp;
+		free_2d(raw_command_block);
+		// minishell->command_block[count.i]->env = minishell->envp;
 		count.i++;
 	}
 	minishell->command_block[count.i] = NULL;
+	return (minishell);
+}
+		// printf("%i\n", get_num_flags(minishell->lexer->tokens, count.z));
 	// for (int i = 0; minishell->command_block[i]; i++)
 	// 	printf("command[%i] in execution block = %s\n", i, minishell->command_block[i]->command);
 	// for (int i = 0; i < minishell->num_commands; i++)
 	// 	for (int j = 0; minishell->command_block[i]->args[j]; j++)
 	// 		printf("args[%i][%i] in execution blocks = %s\n", i, j, minishell->command_block[i]->args[j]);
-	return (minishell);
-}
