@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 05:35:50 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/24 22:52:18 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/25 15:03:51 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ void    free_after_execution(t_shell_s *minishell)
 
     if (!minishell)
         return ;
-    free_3d(minishell->flags);
+    // free_3d(minishell->flags);
     free_2d(minishell->commands);
     if (minishell->cmd_line)
         free(minishell->cmd_line);
@@ -158,6 +158,10 @@ void    free_after_execution(t_shell_s *minishell)
         }
         free(minishell->command_block);
     }
+	if (minishell->pipes_fd)
+		free(minishell->pipes_fd);
+	if (minishell->pid)
+		free(minishell->pid);
     return ;
 }
 
@@ -207,16 +211,12 @@ void	free_3d(char ***array)
 	{
 		while (array[i])
 		{
-            if (array[i][j])
-            {
-
-            }
 			while (array[i][j])
 			{
 				if (array[i][j] != NULL)
 					free(array[i][j++]);
 			}
-                free(array[i++]);
+            free(array[i++]);
 		}
 		free(array);
         array = NULL;

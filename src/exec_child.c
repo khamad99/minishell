@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/24 11:15:48 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/25 15:24:53 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ static void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 	}
 	if (!shell->path)
 	{
+		g_exit_code = 127;
 		ft_putstr_fd("minishell: Command not found: ", STDERR_FILENO);
 		ft_putstr_fd(shell->command_block[cmd_num]->command, STDERR_FILENO);
 		ft_putstr_fd("\n", STDERR_FILENO);
@@ -119,6 +120,7 @@ static void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 			execve(cmd_with_path, shell->command_block[cmd_num]->args, shell->envp->envp);
 		free(cmd_with_path);
 	}
+	g_exit_code = 127;
 	ft_putstr_fd("minishell: Command not found: ", STDERR_FILENO);
 	ft_putstr_fd(shell->command_block[cmd_num]->command, STDERR_FILENO);
 	ft_putstr_fd("\n", STDERR_FILENO);
@@ -186,4 +188,6 @@ void	excute_child(t_shell_s *shell, int cmd_num)
 		else
 			excute_child_non_builtin(shell, cmd_num);
 	}
+	sleep (1);
+	printf("test exit ->%d\n", g_exit_code);
 }

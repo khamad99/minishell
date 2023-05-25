@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/24 22:59:36 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/25 15:12:59 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,18 +66,17 @@ it have 2 roles,
 */
 static void	start_exec(t_shell_s *shell)
 {
-	shell->cmd_used = -1; // to add it to parsing
-	shell->std_in = dup(STDIN_FILENO); // to add it to parsing
-	shell->std_out = dup(STDOUT_FILENO); // to add it to parsing
-	// check sytax error
+	// shell->cmd_used = -1; // to add it to parsing
+	// shell->std_in = dup(STDIN_FILENO); // to add it to parsing
+	// shell->std_out = dup(STDOUT_FILENO); // to add it to parsing
 	if (forking_required(shell))
 	{
 		if (init_redir(shell->command_block[0], shell) == -1)
 		{
-			shell->exit_code = EXIT_FAILURE;
+			g_exit_code = EXIT_FAILURE;
 			return ;
 		}
-		shell->exit_code = builtin_exec(shell->command_block[0]);
+		g_exit_code = builtin_exec(shell->command_block[0]);
 	}
 	else
 	{
@@ -119,9 +118,9 @@ int	shell_loop(char **envp)
 {
 	t_shell_s	*shell;
 	char		*cmd;
-	// int			i;
+	int			i;
 
-	// i = -1;
+	i = -1;
 	while (1)
 	{
 		cmd = readline("minishell🤓$ ");
@@ -130,14 +129,15 @@ int	shell_loop(char **envp)
 		if (!cmd || check_cmd(cmd))
 			continue ;
 		add_history(cmd);
-		shell = parse(shell, cmd, envp, 0);
+		shell = parse(shell, cmd, envp, ++i);
 		free(cmd);
 		cmd = NULL;
-		if (shell)
+		if (shell && g_exit_code == 0)
 		{
 			start_exec(shell);
 			free_after_execution(shell);
 		}
 	}
+	free_everything(shell);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ooutabac <ooutabac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 11:29:43 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/24 16:17:35 by ooutabac         ###   ########.fr       */
+/*   Updated: 2023/05/25 15:16:21 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,18 @@ t_shell_s	*parse(t_shell_s *minishell, char *str, char **envp, int iteration_num
 	// t_shell_s	*minishell;
 	char		*expanded_str;
 
-	minishell = ft_calloc(sizeof(t_shell_s), 1);
-	if (minishell && iteration_num == 0)
-		minishell->exit_code = 0;
+	if (iteration_num == 0)
+		minishell = ft_calloc(sizeof(t_shell_s), 1);
+	minishell->pid = 0;
+	minishell->pipes_fd = 0;
+	minishell->cmd_used = -1;
+	minishell->std_in = dup(STDIN_FILENO);
+	minishell->std_out = dup(STDOUT_FILENO);
 	if (number_of_dquotes(str) % 2 == 1 || number_of_squotes(str) % 2 == 1)
 	{
 		// printf("Minishell: Error: lexer: Odd number of quotes\n");
 		ft_putstr_fd("Minishell: Error: lexer: Odd number of quotes\n", STDERR_FILENO);
-		minishell->exit_code = 0;
+		g_exit_code = 1;
 		return (minishell);
 	}
 	expanded_str = dollar_sign(minishell, str);
@@ -44,9 +48,9 @@ t_shell_s	*parse(t_shell_s *minishell, char *str, char **envp, int iteration_num
 	{
 		free_after_execution(minishell);
 		ft_putstr_fd("Error: Syntax\n", STDERR_FILENO);
-		minishell->exit_code = 2;
+		g_exit_code = 2;
 		// g_exit_code = 258;
-		return (NULL);
+		return (minishell);
 	}
 	// minishell = dollar_sign(minishell);
 	if (minishell)
@@ -55,5 +59,6 @@ t_shell_s	*parse(t_shell_s *minishell, char *str, char **envp, int iteration_num
 	minishell = get_commands(minishell);
 	minishell = get_flags(minishell);
 	minishell = get_execution_blocks(minishell);
+	// g_exit_code = 0;
 	return (minishell);
 }

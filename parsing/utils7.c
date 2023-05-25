@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 16:23:15 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/24 20:10:20 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/25 15:14:12 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,6 +294,7 @@ int	exit_expansion_token_size(t_shell_s *minishell, char *str)
 {
 	t_counter	count;
 
+	(void)minishell;
 	if (!str || !str[0])
 		return (0);
 	count.i = 0;
@@ -308,7 +309,7 @@ int	exit_expansion_token_size(t_shell_s *minishell, char *str)
 			{
 				if (str[count.i] == '$' && str[count.i + 1] && str[count.i + 1] == '?')
 				{
-					count.counter += ft_strlen(ft_itoa(minishell->exit_code));
+					count.counter += ft_strlen(ft_itoa(g_exit_code));
 					count.i += 2;
 				}
 				else
@@ -342,7 +343,7 @@ int	exit_expansion_token_size(t_shell_s *minishell, char *str)
 		{
 			if (str[count.i] == '$' && str[count.i + 1] && str[count.i + 1] == '?')
 			{
-				count.counter += ft_strlen(ft_itoa(minishell->exit_code));
+				count.counter += ft_strlen(ft_itoa(g_exit_code));
 				count.i += 2;
 			}
 			else
@@ -365,8 +366,8 @@ char	*expand_exit_code_token(t_shell_s *minishell, char *str)
 		return (NULL);
 	count.i = 0;
 	count.j = 0;
-	// printf("Exit code in function = %i\n", minishell->exit_code);
-	exit_code = ft_itoa(minishell->exit_code);
+	// printf("Exit code in function = %i\n", g_exit_code);
+	exit_code = ft_itoa(g_exit_code);
 	new_str = malloc(sizeof(char) * (exit_expansion_token_size(minishell, str)) + 1);
 	while (str[count.i])
 	{

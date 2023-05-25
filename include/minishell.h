@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/24 20:07:09 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/25 15:10:31 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@
 # define STD_IN 0
 # define STD_OUT 1
 # define STD_ERROR 2
+
+int	g_exit_code;
 
 /* T_COUNTER
 - This struct is just for general use to save lines.
