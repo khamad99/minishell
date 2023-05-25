@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils7.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ooutabac <ooutabac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 16:23:15 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/24 15:53:10 by ooutabac         ###   ########.fr       */
+/*   Updated: 2023/05/24 20:10:20 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -547,8 +547,8 @@ char    *dollar_sign(t_shell_s *minishell, char *cmd_line)
     char        *old_cmd_line;
     char        *new_cmd_line;
 
-    if (!cmd_line || !cmd_line[0] || !minishell)
-        return (NULL);
+    // if (!cmd_line || !cmd_line[0] || !minishell)
+    //     return (NULL);
 	new_cmd_line = ft_strdup(cmd_line);
 	old_cmd_line = ft_strdup(new_cmd_line);
 	while (is_expandable(new_cmd_line) == TRUE)

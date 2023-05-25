@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/24 10:52:52 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/24 20:07:09 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,7 +208,7 @@ void	ft_exit(t_execute *exec);
 
 /*--------------------------------OBADA--------------------------------*/
 /*-------------------------------PARSING-------------------------------*/
-t_shell_s		*parse(char *str, char **envp);
+t_shell_s	*parse(t_shell_s *minishell, char *str, char **envp, int iteration_num);
 
 /*--------------------------------UTSIL1-------------------------------*/
 int				skip_spaces(char *str, int i);
@@ -267,11 +267,12 @@ int				num_of_tokens_to_pipe(char **tokens, int token_num);
 int				length_to_pipe(char *str, int i);
 
 /*--------------------------------UTSIL7-------------------------------*/
-t_shell_s	   *dollar_sign(t_shell_s *minishell);
-t_shell_s	   *dollar_sign_env_variables(t_shell_s *minishell);
+char 			*dollar_sign(t_shell_s *minishell, char *cmd_line);
+t_shell_s		*dollar_sign_env_variables(t_shell_s *minishell);
 
 /*---------------------------------FREE--------------------------------*/
 void		    free_everything(t_shell_s *minishell);
+void    free_after_execution(t_shell_s *minishell);
 void    		free_2d(char **array);
 void			free_3d(char ***array);
 

@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/24 10:35:29 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/24 22:59:36 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,9 @@ int	shell_loop(char **envp)
 {
 	t_shell_s	*shell;
 	char		*cmd;
+	// int			i;
 
+	// i = -1;
 	while (1)
 	{
 		cmd = readline("minishell🤓$ ");
@@ -128,13 +130,13 @@ int	shell_loop(char **envp)
 		if (!cmd || check_cmd(cmd))
 			continue ;
 		add_history(cmd);
-		shell = parse(cmd, envp);
+		shell = parse(shell, cmd, envp, 0);
 		free(cmd);
 		cmd = NULL;
 		if (shell)
 		{
 			start_exec(shell);
-			free_everything(shell);
+			free_after_execution(shell);
 		}
 	}
 	return (0);
