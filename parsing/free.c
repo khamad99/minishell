@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 05:35:50 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/27 13:14:29 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/27 17:46:13 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,15 +17,16 @@ void    free_2d(char **array)
 {
     int i;
 
-    if (array == 0)
+    if (array == NULL)
         return ;
-    if (array[0] == 0)
+    if (array[0] == NULL)
     {
         free(array);
+		array = NULL;
         return ;
     }
     i = 0;
-    if (array != 0)
+    if (array != NULL)
     {
         if (array[i])
         {
@@ -34,13 +35,13 @@ void    free_2d(char **array)
                 if (array[i] != NULL)
 				{
                     free(array[i]);
-					array[i++] = 0;
+					array[i++] = NULL;
 				}
 				
             }
         }
         free(array);
-        array = 0;
+        array = NULL;
     }
     return ;
 }
@@ -50,25 +51,39 @@ void	free_3d(char ***array)
 	int	i;
 	int	j;
 
+	i = 0;
     if (!array)
         return ;
     if (!array[0])
     {
         free(array);
+		array = NULL;
         return ;
     }
-	i = 0;
+	if (!array[0][0])
+    {
+        while (array[i])
+			free_2d(array[i++]);
+		free(array);
+		array = NULL;
+        return ;
+    }
 	j = 0;
 	if (array)
 	{
 		while (array[i])
 		{
+			j = 0;
 			while (array[i][j])
 			{
 				if (array[i][j] != NULL)
-					free(array[i][j++]);
+				{
+					free(array[i][j]);
+					array[i][j++] = NULL;
+				}
 			}
-            free(array[i++]);
+            free(array[i]);
+			array[i++] = NULL;
 		}
 		free(array);
         array = NULL;

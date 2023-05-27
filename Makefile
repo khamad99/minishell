@@ -6,7 +6,7 @@
 #    By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/09 11:29:51 by ooutabac          #+#    #+#              #
-#    Updated: 2023/05/27 12:01:35 by kalshaer         ###   ########.fr        #
+#    Updated: 2023/05/27 18:16:50 by kalshaer         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,7 @@ SRCS		=	src/main.c					\
 OBJS		=	$(SRCS:%c=%o)
 
 CC			=	gcc
-CFLAGS		=	-g -Wall -Wextra -Werror  #-fsanitize=address
+CFLAGS		=	-g -Wall -Wextra -Werror #-fsanitize=address
 RM			=	rm -rf
 
 all:		$(NAME)

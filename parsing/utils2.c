@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 19:19:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/27 11:59:09 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/27 17:07:10 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,9 @@ t_shell_s	*get_commands(t_shell_s *minishell)
 		if (check_if_command(minishell, minishell->lexer->raw_tokens[count.i], count.i) == TRUE)
 		{
 			// printf("token = %s\n", minishell->lexer->raw_tokens[count.i]);
+			// char * temp = minishell->commands[count.j];
 			minishell->commands[count.j++] = ft_strdup(minishell->lexer->tokens[count.i]);
+			// free(temp);
 			while (minishell->lexer->tokens[count.i] && ft_strncmp(minishell->lexer->raw_tokens[count.i], "|\0", 2) != 0)
 				count.i++;
 			if (minishell->lexer->tokens[count.i] && ft_strncmp(minishell->lexer->raw_tokens[count.i], "|\0", 2) == 0)

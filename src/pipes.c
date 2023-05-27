@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 21:42:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/27 13:23:25 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/27 18:36:36 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,13 @@
 
 void	free_error(t_shell_s *shell)
 {
-	clear_history();
 	close(shell->std_in);
 	close(shell->std_out);
 	close(0);
 	close(1);
 	close(2);
+	clear_history();
+	//free_after_execution(shell);
 	free_everything(shell);
 }
 

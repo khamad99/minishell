@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/26 20:27:35 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/27 18:25:47 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,10 +176,10 @@ void	excute_child(t_shell_s *shell, int cmd_num)
 	{
 		pipes_in_child(shell, cmd_num);
 		if (init_redir(shell->command_block[cmd_num], shell) == -1)
-			return ; // to handle the no_acess to infile
+			return ;
 		if (is_builtin(shell->command_block[cmd_num]->command))
 		{
-			status = builtin_exec(shell->command_block[0]);
+			status = builtin_exec(shell->command_block[cmd_num]);
 			free_error(shell);
 			exit(status);
 		}

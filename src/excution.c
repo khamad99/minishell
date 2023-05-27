@@ -6,11 +6,46 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/27 12:11:09 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/27 18:28:24 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+void minishell_reset(t_shell_s *shell)
+{
+	shell->num_commands = 0;
+    shell->num_pipes = 0;
+	shell->pipes_fd = 0;
+	shell->pid = 0;
+	shell->cmd_used = 0;
+	shell->flags = 0;
+    shell->commands = 0;
+    shell->cmd_line = 0;
+	shell->lexer = 0;	
+	shell->files = 0;	 
+	shell->command_block = 0; 
+}
+
+void minishell_init(t_shell_s *shell)
+{
+	shell->num_commands = 0;
+    shell->num_pipes = 0;
+	shell->pipes_fd = 0;
+	shell->pid = 0;
+	shell->cmd_used = 0;
+	shell->exit_code = 0;
+	shell->flags = 0;
+    shell->commands = 0;
+    shell->path = 0; 
+    shell->cmd_line = 0;
+	shell->std_in = 0;
+	shell->std_out = 0;
+    shell->envp = 0;
+	shell->lexer = 0;	
+	shell->files = 0;	 
+	shell->command_block = 0; 
+}
 
 void	parent_after_fork(t_shell_s *shell)
 {
@@ -24,7 +59,7 @@ void	parent_after_fork(t_shell_s *shell)
 		while (i < shell->num_pipes * 2)
 			close(shell->pipes_fd[i++]);
 	i = -1;
-	while (++i < shell->num_commands)
+	while (++i < shell->num_commands )
 	{
 		if (waitpid(shell->pid[i], &status, 0) == -1)
 		{
@@ -38,6 +73,8 @@ void	parent_after_fork(t_shell_s *shell)
 		shell->exit_code = exit_code;
 	// dup2(shell->std_out, STDOUT_FILENO);
 	// dup2(shell->std_in, STDIN_FILENO);
+	close(shell->std_out);
+	close(shell->std_in);
 }
 
 void	exec_child_heredoc(t_shell_s *shell)
@@ -114,6 +151,8 @@ int	shell_loop(char **envp)
 	char		*cmd;
 	int			i;
 
+	shell = ft_calloc(sizeof(t_shell_s), 1);
+	minishell_init(shell);
 	i = -1;
 	while (1)
 	{
@@ -126,13 +165,14 @@ int	shell_loop(char **envp)
 		shell = parse(shell, cmd, envp, ++i);
 		free(cmd);
 		cmd = NULL;
-		if (shell && shell->command_block[0])
+		if (shell && shell->command_block)
 		{
 			start_exec(shell);
 			free_after_execution(shell);
+			minishell_reset(shell);
 		}
 	}
-	if (cmd)
+	//if (cmd)
 		free_everything(shell);
 	return (0);
 }
