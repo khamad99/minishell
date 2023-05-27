@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/25 22:57:21 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/27 10:12:20 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	parent_after_fork(t_shell_s *shell)
 		shell->exit_code = exit_code;
 	dup2(shell->std_out, STDOUT_FILENO);
 	dup2(shell->std_in, STDIN_FILENO);
-	// printf("%d\n", exit_code);
 }
 
 void	exec_child_heredoc(t_shell_s *shell)
@@ -49,15 +48,8 @@ void	exec_child_heredoc(t_shell_s *shell)
 
 	i = -1;
 	while (++i < shell->num_commands)
-	{
-		shell->command_block[i]->excuted = 0;
 		if (shell->command_block[i]->files->limiter[0] != NULL)
-		{
-			// shell->command_block[i]->excuted = 1;
 			init_heredoc(shell->command_block[i], shell);
-			// excute_child(shell, i);
-		}
-	}
 }
 
 /*
@@ -97,13 +89,7 @@ static void	start_exec(t_shell_s *shell)
 		pid_pipes_init(shell);
 		exec_child_heredoc(shell);
 		while (++shell->cmd_used < shell->num_commands)
-		{
-			if (shell->command_block[shell->cmd_used]->excuted == 0)
-			{
-				shell->command_block[shell->cmd_used]->excuted = 1;
-				excute_child(shell, shell->cmd_used);
-			}
-		}
+			excute_child(shell, shell->cmd_used);
 		parent_after_fork(shell);
 	}
 	//return (status);

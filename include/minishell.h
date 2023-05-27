@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/25 22:20:08 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/27 10:07:00 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,6 @@ typedef struct s_execute
 {
     int		num_commands; // Contains the number of all commands
     int		num_pipes; // Contains the number of all pipes
-	int		excuted;
     char	*command; // Contains the command itself in the command block
     char	**args; // Contains all arguments in the command block
 	char	**tokens; // Contains all tokens in the command block
