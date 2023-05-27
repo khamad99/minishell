@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 05:35:50 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/26 23:01:24 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/27 13:14:29 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,10 @@ void    free_everything(t_shell_s *minishell)
 		free(minishell->flags);
 	}
 	// free_2d(minishell->command_block);
+	if (minishell->pipes_fd)
+		free(minishell->pipes_fd);
+	if (minishell->pid)
+		free(minishell->pid);
     if (minishell != NULL)
         free(minishell);
 }

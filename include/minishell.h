@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/27 10:07:00 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/27 13:12:15 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,7 +193,7 @@ void	open_outfile(t_files *files, int i);
 void	open_appendfile(t_files * files, int i);
 void	open_infile(t_files *files, int i);
 /*--------------------------------signal-------------------------------*/
-void	ft_ctrl_c(int sig, siginfo_t *info, void *context);
+void	ft_ctrl_c(int sig);
 /*--------------------------------builtin-------------------------------*/
 int		is_builtin(char *cmd);
 int		builtin_exec(t_execute *exec);

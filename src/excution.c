@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/27 10:12:20 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/27 12:11:09 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,8 @@ void	parent_after_fork(t_shell_s *shell)
 	i = 0;
 	exit_code = -1;
 	if (shell->num_pipes > 0)
-	{
 		while (i < shell->num_pipes * 2)
 			close(shell->pipes_fd[i++]);
-	}
 	i = -1;
 	while (++i < shell->num_commands)
 	{
@@ -38,8 +36,8 @@ void	parent_after_fork(t_shell_s *shell)
 	}
 	if (exit_code != -1)
 		shell->exit_code = exit_code;
-	dup2(shell->std_out, STDOUT_FILENO);
-	dup2(shell->std_in, STDIN_FILENO);
+	// dup2(shell->std_out, STDOUT_FILENO);
+	// dup2(shell->std_in, STDIN_FILENO);
 }
 
 void	exec_child_heredoc(t_shell_s *shell)
@@ -72,9 +70,6 @@ it have 2 roles,
 */
 static void	start_exec(t_shell_s *shell)
 {
-	// shell->cmd_used = -1; // to add it to parsing
-	// shell->std_in = dup(STDIN_FILENO); // to add it to parsing
-	// shell->std_out = dup(STDOUT_FILENO); // to add it to parsing
 	if (forking_required(shell))
 	{
 		if (init_redir(shell->command_block[0], shell) == -1)
@@ -92,7 +87,6 @@ static void	start_exec(t_shell_s *shell)
 			excute_child(shell, shell->cmd_used);
 		parent_after_fork(shell);
 	}
-	//return (status);
 }
 
 /*

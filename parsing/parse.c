@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 11:29:43 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/25 22:20:44 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/27 13:25:11 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ t_shell_s	*parse(t_shell_s *minishell, char *str, char **envp, int iteration_num
 	minishell->pid = 0;
 	minishell->pipes_fd = 0;
 	minishell->cmd_used = -1;
-	minishell->std_in = dup(STDIN_FILENO);
-	minishell->std_out = dup(STDOUT_FILENO);
+	// minishell->std_in = dup(STDIN_FILENO);
+	// minishell->std_out = dup(STDOUT_FILENO);
 	if (number_of_dquotes(str) % 2 == 1 || number_of_squotes(str) % 2 == 1)
 	{
 		// printf("Minishell: Error: lexer: Odd number of quotes\n");

@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 19:19:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/25 14:32:01 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/27 11:59:09 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ t_shell_s	*get_path(t_shell_s *minishell, char **envp)
 			count.j = 0;
 			while (minishell->path[count.j])
 			{
-				minishell->path[count.j] = ft_strjoin(minishell->path[count.j], "/");
+				char *temp = minishell->path[count.j];
+				minishell->path[count.j] = ft_strjoin(temp, "/");
+				free(temp);
 				// printf("path[%i] = %s\n", count.j, minishell->path[count.j]);
 				count.j++;
 			}
