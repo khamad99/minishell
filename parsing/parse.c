@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 11:29:43 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/25 15:16:21 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/25 22:20:44 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ t_shell_s	*parse(t_shell_s *minishell, char *str, char **envp, int iteration_num
 {
 	// t_shell_s	*minishell;
 	char		*expanded_str;
-
 	if (iteration_num == 0)
 		minishell = ft_calloc(sizeof(t_shell_s), 1);
 	minishell->pid = 0;
@@ -28,7 +27,7 @@ t_shell_s	*parse(t_shell_s *minishell, char *str, char **envp, int iteration_num
 	{
 		// printf("Minishell: Error: lexer: Odd number of quotes\n");
 		ft_putstr_fd("Minishell: Error: lexer: Odd number of quotes\n", STDERR_FILENO);
-		g_exit_code = 1;
+		minishell->exit_code = 1;
 		return (minishell);
 	}
 	expanded_str = dollar_sign(minishell, str);
@@ -48,8 +47,8 @@ t_shell_s	*parse(t_shell_s *minishell, char *str, char **envp, int iteration_num
 	{
 		free_after_execution(minishell);
 		ft_putstr_fd("Error: Syntax\n", STDERR_FILENO);
-		g_exit_code = 2;
-		// g_exit_code = 258;
+		minishell->exit_code = 2;
+		// minishell->exit_code = 258;
 		return (minishell);
 	}
 	// minishell = dollar_sign(minishell);
@@ -59,6 +58,6 @@ t_shell_s	*parse(t_shell_s *minishell, char *str, char **envp, int iteration_num
 	minishell = get_commands(minishell);
 	minishell = get_flags(minishell);
 	minishell = get_execution_blocks(minishell);
-	// g_exit_code = 0;
+	// minishell->exit_code = 0;
 	return (minishell);
 }

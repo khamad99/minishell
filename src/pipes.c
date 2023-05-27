@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 21:42:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/24 20:13:01 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/26 20:28:21 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@ void	free_error(t_shell_s *shell)
 	clear_history();
 	close(shell->std_in);
 	close(shell->std_out);
-	free_after_execution(shell);
-	exit(EXIT_FAILURE);
+	//free_after_execution(shell);
+	free_everything(shell);
+	//ft_putstr_fd("done\n", shell->std_out);
+	//exit(EXIT_FAILURE);
 }
 
 void	pid_pipes_init(t_shell_s *shell)

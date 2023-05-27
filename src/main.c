@@ -8,7 +8,6 @@ int main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	(void)envp;
-	g_exit_code = 0;
 	s_quit.sa_handler = SIG_IGN;
 	s_int.sa_sigaction = ft_ctrl_c;
 	s_int.sa_flags = SA_RESTART;

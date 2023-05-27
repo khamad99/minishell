@@ -6,11 +6,74 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 05:35:50 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/25 15:03:51 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/26 23:01:24 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+
+void    free_2d(char **array)
+{
+    int i;
+
+    if (array == 0)
+        return ;
+    if (array[0] == 0)
+    {
+        free(array);
+        return ;
+    }
+    i = 0;
+    if (array != 0)
+    {
+        if (array[i])
+        {
+            while (array[i])
+            {
+                if (array[i] != NULL)
+				{
+                    free(array[i]);
+					array[i++] = 0;
+				}
+				
+            }
+        }
+        free(array);
+        array = 0;
+    }
+    return ;
+}
+
+void	free_3d(char ***array)
+{
+	int	i;
+	int	j;
+
+    if (!array)
+        return ;
+    if (!array[0])
+    {
+        free(array);
+        return ;
+    }
+	i = 0;
+	j = 0;
+	if (array)
+	{
+		while (array[i])
+		{
+			while (array[i][j])
+			{
+				if (array[i][j] != NULL)
+					free(array[i][j++]);
+			}
+            free(array[i++]);
+		}
+		free(array);
+        array = NULL;
+	}
+}
 
 void    free_everything(t_shell_s *minishell)
 {
@@ -31,6 +94,7 @@ void    free_everything(t_shell_s *minishell)
     free_2d(minishell->commands);
     // for (int i = 0; minishell->path[i]; i++)
     //     printf("%s\n", minishell->path[i]);
+	
     free_2d(minishell->path);
     // if (!minishell->path)
         // printf("No path\n");
@@ -86,7 +150,7 @@ void    free_everything(t_shell_s *minishell)
     {
         free_2d(minishell->envp->envp);
         free_2d(minishell->envp->key);
-        // free_2d(minishell->envp->value);
+        free(minishell->envp->value);
         free(minishell->envp);
     }
 	if (minishell->flags != NULL)
@@ -111,10 +175,13 @@ void    free_after_execution(t_shell_s *minishell)
 
     if (!minishell)
         return ;
-    // free_3d(minishell->flags);
+    free_3d(minishell->flags);
     free_2d(minishell->commands);
     if (minishell->cmd_line)
+	{
         free(minishell->cmd_line);
+		minishell->cmd_line = 0;
+	}
     if (minishell->lexer)
     {
         free_2d(minishell->lexer->command_blocks);
@@ -163,62 +230,4 @@ void    free_after_execution(t_shell_s *minishell)
 	if (minishell->pid)
 		free(minishell->pid);
     return ;
-}
-
-void    free_2d(char **array)
-{
-    int i;
-
-    if (!array)
-        return ;
-    if (!array[0])
-    {
-        free(array);
-        return ;
-    }
-    i = 0;
-    if (array != NULL)
-    {
-        if (array[i])
-        {
-            while (array[i])
-            {
-                if (array[i] != NULL)
-                    free(array[i++]);
-            }
-        }
-        free(array);
-        array = NULL;
-    }
-    return ;
-}
-
-void	free_3d(char ***array)
-{
-	int	i;
-	int	j;
-
-    if (!array)
-        return ;
-    if (!array[0])
-    {
-        free(array);
-        return ;
-    }
-	i = 0;
-	j = 0;
-	if (array)
-	{
-		while (array[i])
-		{
-			while (array[i][j])
-			{
-				if (array[i][j] != NULL)
-					free(array[i][j++]);
-			}
-            free(array[i++]);
-		}
-		free(array);
-        array = NULL;
-	}
 }

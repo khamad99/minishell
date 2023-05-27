@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/25 15:12:59 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/25 22:57:21 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,11 @@
 void	parent_after_fork(t_shell_s *shell)
 {
 	int	i;
+	int	status;
+	int	exit_code;
 
 	i = 0;
+	exit_code = -1;
 	if (shell->num_pipes > 0)
 	{
 		while (i < shell->num_pipes * 2)
@@ -24,9 +27,20 @@ void	parent_after_fork(t_shell_s *shell)
 	}
 	i = -1;
 	while (++i < shell->num_commands)
-		waitpid(shell->pid[i], NULL, WUNTRACED);
+	{
+		if (waitpid(shell->pid[i], &status, 0) == -1)
+		{
+			ft_putstr_fd("Waitpid failed\n", STDERR_FILENO);
+			free_error(shell);
+		}
+		if (WIFEXITED(status))
+			exit_code = WEXITSTATUS(status);
+	}
+	if (exit_code != -1)
+		shell->exit_code = exit_code;
 	dup2(shell->std_out, STDOUT_FILENO);
 	dup2(shell->std_in, STDIN_FILENO);
+	// printf("%d\n", exit_code);
 }
 
 void	exec_child_heredoc(t_shell_s *shell)
@@ -73,10 +87,10 @@ static void	start_exec(t_shell_s *shell)
 	{
 		if (init_redir(shell->command_block[0], shell) == -1)
 		{
-			g_exit_code = EXIT_FAILURE;
+			shell->exit_code = EXIT_FAILURE;
 			return ;
 		}
-		g_exit_code = builtin_exec(shell->command_block[0]);
+		shell->exit_code = builtin_exec(shell->command_block[0]);
 	}
 	else
 	{
@@ -132,12 +146,13 @@ int	shell_loop(char **envp)
 		shell = parse(shell, cmd, envp, ++i);
 		free(cmd);
 		cmd = NULL;
-		if (shell && g_exit_code == 0)
+		if (shell && shell->command_block[0])
 		{
 			start_exec(shell);
 			free_after_execution(shell);
 		}
 	}
-	free_everything(shell);
+	if (cmd)
+		free_everything(shell);
 	return (0);
 }
