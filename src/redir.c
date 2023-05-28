@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 13:32:12 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/27 22:35:25 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/28 14:16:57 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,8 @@ static int	open_files(t_files *files, t_shell_s *shell)
 	{
 		if (files->redirect_type[c.i] == '>')
 		{
-			open_outfile(files, ++c.outfile_i);
+			if (open_outfile(files, ++c.outfile_i) == -1)
+				return (-1);
 		}
 		else if (files->redirect_type[c.i] == 'a')
 			open_appendfile(files, ++c.append_i);

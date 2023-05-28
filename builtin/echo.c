@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 13:09:07 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/28 08:41:35 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/28 13:44:15 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ static int	nb_args(char **args)
 int	ft_echo(char **args)
 {
 	int	i;
+	int	i2;
 	int	j;
 	int	n_option;
 
@@ -46,18 +47,22 @@ int	ft_echo(char **args)
 	n_option = 0;
 	if (nb_args(args) > 1)
 	{
-		if (ft_strncmp(args[1], "-n", 2) == 0)
+		i2 = 0;
+		while(args[++i2])
 		{
-			n_option = 1;
-			j = 0;
-			while (args[1][++j])
+			if (ft_strncmp(args[i2], "-n", 2) == 0)
 			{
-				if (args[1][j] != 'n')
-					n_option = 0;
+				n_option = 1;
+				j = 0;
+				while (args[1][++j])
+				{
+					if (args[1][j] != 'n')
+						n_option = 0;
+				}
 			}
 		}
 		if (n_option)
-			i++;
+			i = i2 - 1;
 		while (args[i])
 		{
 			ft_putstr_fd(args[i], 1);

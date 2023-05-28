@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/28 13:36:23 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/28 14:19:22 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,6 +124,8 @@ static void	start_exec(t_shell_s *shell)
 			return ;
 		}
 		g_exit_code = builtin_exec(shell->command_block[0]);
+		dup2(shell->std_out, STDOUT_FILENO);
+		dup2(shell->std_in, STDIN_FILENO);
 	}
 	else
 	{

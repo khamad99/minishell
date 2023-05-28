@@ -6,7 +6,7 @@
 #    By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/09 11:29:51 by ooutabac          #+#    #+#              #
-#    Updated: 2023/05/27 18:16:50 by kalshaer         ###   ########.fr        #
+#    Updated: 2023/05/28 13:49:29 by kalshaer         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,8 +14,8 @@ NAME		=	minishell
 
 LIBFT_DIR	=	libft
 LIBFT		=	libft.a
-RL_INC		=	-I /goinfre/include
-RL_LINK		=	-L /goinfre/lib -l readline
+RL_INC		=	-I /usr/local/opt/readline/include #-I /goinfre/include
+RL_LINK		=	-L /usr/local/opt/readline/lib -l readline #-L /goinfre/lib -l readline
 
 INC_DIR		=	include
 SRC_DIR		=	src
@@ -110,4 +110,5 @@ re:			fclean all
 
 .PHONY:		all clean fclean re
 
-# valgrind -s --track-fds=yes --tool=memcheck --leak-check=full --show-leak-kinds=all --suppressions=.ignore_readline ./minishell
+mem:
+	valgrind -s --track-fds=yes --tool=memcheck --leak-check=full --show-leak-kinds=all --suppressions=.ignore_readline ./minishell

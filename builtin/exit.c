@@ -6,12 +6,13 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:26 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/23 13:33:43 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/28 15:06:10 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+extern int g_exit_code;
 
 /*
 Function Purpose:
@@ -147,12 +148,12 @@ void	ft_exit(t_execute *exec)
 	if (!exec->args[1])
 	{
 		ft_putstr_fd("exit\n", STDOUT_FILENO);
-		exit(1); // with last exit code 
+		exit(g_exit_code); // with last exit code 
 	}
 	else if (exec->args[2])
 	{
 		ft_putstr_fd("exit\nminishell: exit: too many arguments\n", STDERR_FILENO);
-		exit(2); // with last exit code
+		exit(g_exit_code); // with last exit code
 	}
 	else if (exec->args[1] && !check_exit_args(exec->args[1], &s))
 		exit_ok(ft_my_attoi(exec->args[1], &s), &s);

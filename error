@@ -2,7 +2,7 @@ cd '/////' 2>/dev/null
 
 cd "doesntexist" 2>/dev/null 
 
-cd "wtf" 2>/dev/null 
+cd "wtf" 2>/dev/null
 
 cd .. | echo "something" -> leakes
 
@@ -54,5 +54,10 @@ ______________random___________
 
 
 
+sig fault
+>>"<><><><<><<<<<<<<''''''''''"
+ls>' '
+
+echo "> >> < * ? [ ] | ; [ ] || && ( ) & # $  <<" -> handle pipes inside quotes
 
 
