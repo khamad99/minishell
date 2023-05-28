@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/28 07:33:59 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/28 13:36:23 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,8 +172,11 @@ int	shell_loop(char **envp)
 	{
 		cmd = readline("minishell🤓$ ");
 		if (!cmd)
+		{
+			printf("exit\n");
 			break ;
-		if (!cmd || check_cmd(cmd))
+		}
+		if (check_cmd(cmd))
 			continue ;
 		add_history(cmd);
 		shell = parse(shell, cmd, envp, ++i);
