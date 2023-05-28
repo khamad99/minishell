@@ -1,0 +1,58 @@
+cd '/////' 2>/dev/null
+
+cd "doesntexist" 2>/dev/null 
+
+cd "wtf" 2>/dev/null 
+
+cd .. | echo "something" -> leakes
+
+________________echo______________
+eChO
+eCho
+eCHO
+EechoE
+echo oui | cat -e
+echo oui | echo non | echo something | grep oui
+echo oui | echo non | echo something | grep something
+ECHO ->leakes
+
+echo -n -n -n bonjour
+echo ~  && echo ~/123 && echo ~/123/456 not echo '~' or echo "~" it returns HOME env
+
+echo '\" ' " \"\""
+
+echo \\\" \\\" \\\" \\\"\\\"\\\" \\\'\\\'\\\'
+
+echo '$USER' "$USER" "text \' text"
+
+echo '$USER'"$USER"'$USER'
+
+echo '"$USER"''$USER'"""$USER"
+
+echo " $USER  \$ "'$PWD'
+
+echo $USER$12USER$USER=4$USER12
+
+echo $USER $123456789USER $USER123456789
+
+echo $USER $9999USER $8888USER $7777USER
+
+echo "$9USER" "'$USER=12$SOMETHING'"
+
+____________export____________
+
+export $? 
+
+______________random___________
+
+~
+
+/Users
+
+\\\
+
+
+
+
+
+
