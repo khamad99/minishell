@@ -6,21 +6,26 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 21:42:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/27 18:36:36 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/27 23:02:00 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+void	close_all_fd(void)
+{
+	int	i;
+
+	i = -1;
+	while (++i <= 1024)
+		close(i);
+	
+}
+
 void	free_error(t_shell_s *shell)
 {
-	close(shell->std_in);
-	close(shell->std_out);
-	close(0);
-	close(1);
-	close(2);
+	close_all_fd();
 	clear_history();
-	//free_after_execution(shell);
 	free_everything(shell);
 }
 

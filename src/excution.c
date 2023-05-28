@@ -6,41 +6,45 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/27 18:28:24 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/28 07:33:59 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+extern int g_exit_code;
+
 void minishell_reset(t_shell_s *shell)
 {
-	shell->num_commands = 0;
-    shell->num_pipes = 0;
+	//shell->num_commands = 0;
+    //shell->num_pipes = 0;
 	shell->pipes_fd = 0;
 	shell->pid = 0;
-	shell->cmd_used = 0;
+	//shell->cmd_used = 0;
 	shell->flags = 0;
     shell->commands = 0;
     shell->cmd_line = 0;
 	shell->lexer = 0;	
 	shell->files = 0;	 
-	shell->command_block = 0; 
+	shell->command_block = 0;
+	shell->std_in = dup(STDIN_FILENO);
+	shell->std_out = dup(STDOUT_FILENO);
 }
 
 void minishell_init(t_shell_s *shell)
 {
-	shell->num_commands = 0;
-    shell->num_pipes = 0;
+	//shell->num_commands = 0;
+    //shell->num_pipes = 0;
 	shell->pipes_fd = 0;
 	shell->pid = 0;
-	shell->cmd_used = 0;
-	shell->exit_code = 0;
+	//shell->cmd_used = 0;
+	//shell->exit_code = 0;
 	shell->flags = 0;
     shell->commands = 0;
     shell->path = 0; 
     shell->cmd_line = 0;
-	shell->std_in = 0;
-	shell->std_out = 0;
+	// shell->std_in = 0;
+	// shell->std_out = 0;
     shell->envp = 0;
 	shell->lexer = 0;	
 	shell->files = 0;	 
@@ -70,9 +74,9 @@ void	parent_after_fork(t_shell_s *shell)
 			exit_code = WEXITSTATUS(status);
 	}
 	if (exit_code != -1)
-		shell->exit_code = exit_code;
-	// dup2(shell->std_out, STDOUT_FILENO);
-	// dup2(shell->std_in, STDIN_FILENO);
+		g_exit_code = exit_code;
+	dup2(shell->std_out, STDOUT_FILENO);
+	dup2(shell->std_in, STDIN_FILENO);
 	close(shell->std_out);
 	close(shell->std_in);
 }
@@ -82,6 +86,11 @@ void	exec_child_heredoc(t_shell_s *shell)
 	int i;
 
 	i = -1;
+	while (++i < shell->num_commands)
+		if (shell->command_block[i]->files->limiter[0] != NULL)
+			break ;
+	i = -1;
+	g_exit_code = 0;
 	while (++i < shell->num_commands)
 		if (shell->command_block[i]->files->limiter[0] != NULL)
 			init_heredoc(shell->command_block[i], shell);
@@ -111,18 +120,23 @@ static void	start_exec(t_shell_s *shell)
 	{
 		if (init_redir(shell->command_block[0], shell) == -1)
 		{
-			shell->exit_code = EXIT_FAILURE;
+			g_exit_code = EXIT_FAILURE;
 			return ;
 		}
-		shell->exit_code = builtin_exec(shell->command_block[0]);
+		g_exit_code = builtin_exec(shell->command_block[0]);
 	}
 	else
 	{
 		pid_pipes_init(shell);
 		exec_child_heredoc(shell);
-		while (++shell->cmd_used < shell->num_commands)
-			excute_child(shell, shell->cmd_used);
-		parent_after_fork(shell);
+		if (g_exit_code != 130)
+		{
+			close(shell->std_out);
+			close(shell->std_in);
+			while (++shell->cmd_used < shell->num_commands)
+				excute_child(shell, shell->cmd_used);
+			parent_after_fork(shell);
+		}
 	}
 }
 
@@ -172,7 +186,7 @@ int	shell_loop(char **envp)
 			minishell_reset(shell);
 		}
 	}
-	//if (cmd)
-		free_everything(shell);
+	close_all_fd();
+	free_everything(shell);
 	return (0);
 }

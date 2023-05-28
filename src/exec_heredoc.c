@@ -6,11 +6,13 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 08:08:08 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/25 14:55:05 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/28 07:27:08 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+extern int g_exit_code;
 
 static char	*get_next_line(int fd)
 {
@@ -44,8 +46,12 @@ static void	exec_heredoc(t_files *files, t_shell_s *shell)
 	i = -1;
 	while (files->limiter[++i])
 	{
+		if (g_exit_code == 130)
+			break ;
 		while (1)
 		{
+			if (g_exit_code == 130)
+				break ;
 			write(shell->std_out, "> ", 2);
 			input = get_next_line(shell->std_in);
 			if (!input)

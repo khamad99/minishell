@@ -6,11 +6,13 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/06 16:23:15 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/25 22:20:51 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/28 07:01:11 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+extern int g_exit_code;
 
 int	length_of_dollar_sign(char *str)
 {
@@ -309,7 +311,7 @@ int	exit_expansion_token_size(t_shell_s *minishell, char *str)
 			{
 				if (str[count.i] == '$' && str[count.i + 1] && str[count.i + 1] == '?')
 				{
-					count.counter += ft_strlen(ft_itoa(minishell->exit_code));
+					count.counter += ft_strlen(ft_itoa(g_exit_code));
 					count.i += 2;
 				}
 				else
@@ -343,7 +345,7 @@ int	exit_expansion_token_size(t_shell_s *minishell, char *str)
 		{
 			if (str[count.i] == '$' && str[count.i + 1] && str[count.i + 1] == '?')
 			{
-				count.counter += ft_strlen(ft_itoa(minishell->exit_code));
+				count.counter += ft_strlen(ft_itoa(g_exit_code));
 				count.i += 2;
 			}
 			else
@@ -366,8 +368,8 @@ char	*expand_exit_code_token(t_shell_s *minishell, char *str)
 		return (NULL);
 	count.i = 0;
 	count.j = 0;
-	// printf("Exit code in function = %i\n", minishell->exit_code);
-	exit_code = ft_itoa(minishell->exit_code);
+	// printf("Exit code in function = %i\n", g_exit_code);
+	exit_code = ft_itoa(g_exit_code);
 	new_str = malloc(sizeof(char) * (exit_expansion_token_size(minishell, str)) + 1);
 	while (str[count.i])
 	{

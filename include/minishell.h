@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/27 13:12:15 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/28 07:33:41 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include "../libft/libft.h"
 # include <sys/stat.h>
 # include <sys/types.h>
+# include <sys/ioctl.h>
 
 # define TRUE 0
 # define FALSE 1
@@ -184,6 +185,7 @@ void	excute_child(t_shell_s *shell, int cmd_num);
 void	pid_pipes_init(t_shell_s *shell);
 void	pipes_in_child(t_shell_s *shell, int cmd_num);
 void	free_error(t_shell_s *shell);
+void	close_all_fd(void);
 /*---------------------------------redir--------------------------------*/
 int		ft_strstrlen(char **str);
 int		init_redir(t_execute *cmd, t_shell_s *shell);

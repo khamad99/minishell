@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/27 18:25:47 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/28 08:21:22 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,11 @@ this function excute the non_builtin command, it do the following
 static void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 {
 	int	i;
+
 	char	*cmd_with_path;
-	// check if env updated and update the paths 
+	// char *arg[] = {"./test1", NULL};
+	// // check if env updated and update the paths 
+	// execve("./test1", arg, shell->envp->envp);
 	if (path_check(shell->command_block[cmd_num]->command) == 1)
 		execve(shell->command_block[cmd_num]->command,
 			shell->command_block[cmd_num]->args, shell->envp->envp);
@@ -101,6 +104,7 @@ static void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 		free_error(shell);
 		exit(126);
 	}
+	//perror("execve");
 	if (!shell->path)
 	{
 		ft_putstr_fd("minishell: Command not found: ", STDERR_FILENO);
@@ -110,8 +114,6 @@ static void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 		exit(127);
 	}
 	i = -1;
-	close(shell->std_in);
-	close(shell->std_out);
 	while (shell->path[++i])
 	{
 		cmd_with_path = ft_strjoin(shell->path[i], shell->command_block[cmd_num]->command);
@@ -174,6 +176,8 @@ void	excute_child(t_shell_s *shell, int cmd_num)
 	}
 	else if (shell->pid[cmd_num] == 0)
 	{
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		pipes_in_child(shell, cmd_num);
 		if (init_redir(shell->command_block[cmd_num], shell) == -1)
 			return ;
