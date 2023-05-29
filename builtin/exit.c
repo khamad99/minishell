@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:26 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/28 15:06:10 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/28 21:43:23 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ static	unsigned long long int 	ft_my_attoi(char *str, int *s)
 	return (r);
 }
 
-static void	exit_ok(unsigned long long int	num, int *s)
+static void	exit_ok(unsigned long long int	num, int *s, t_shell_s *shell)
 {
 	int	r;
  
@@ -115,9 +115,13 @@ static void	exit_ok(unsigned long long int	num, int *s)
 		else
 			r = 256 - num;
 	}
-	// free
+	else
+		r = num;
 	ft_putstr_fd("exit\n", STDOUT_FILENO);
-	exit(r);
+	g_exit_code = r;
+	close_all_fd();
+	free_everything(shell);
+	exit(g_exit_code);
 }
 
 
@@ -141,7 +145,7 @@ static int	check_exit_args(char *str, int *s)
 	return (0);
 }
 
-void	ft_exit(t_execute *exec)
+void	ft_exit(t_execute *exec, t_shell_s *shell)
 {
 	int	s;
 
@@ -156,13 +160,14 @@ void	ft_exit(t_execute *exec)
 		exit(g_exit_code); // with last exit code
 	}
 	else if (exec->args[1] && !check_exit_args(exec->args[1], &s))
-		exit_ok(ft_my_attoi(exec->args[1], &s), &s);
+		exit_ok(ft_my_attoi(exec->args[1], &s), &s, shell);
 	else
 	{
 		ft_putstr_fd("exit\nminishell: exit: ", STDERR_FILENO);
 		ft_putstr_fd(exec->args[1], STDERR_FILENO);
 		ft_putendl_fd(": numeric argument required", STDERR_FILENO);
-		//free 
+		close_all_fd();
+		free_everything(shell);
 		exit(2);
 	}
 	

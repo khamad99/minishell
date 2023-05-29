@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/28 08:21:22 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/28 16:45:16 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ void	excute_child(t_shell_s *shell, int cmd_num)
 			return ;
 		if (is_builtin(shell->command_block[cmd_num]->command))
 		{
-			status = builtin_exec(shell->command_block[cmd_num]);
+			status = builtin_exec(shell->command_block[cmd_num], shell);
 			free_error(shell);
 			exit(status);
 		}
