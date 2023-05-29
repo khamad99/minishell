@@ -6,11 +6,20 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/21 08:37:02 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/29 10:05:27 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+// {
+// 	!;
+// 	@;
+// 	$;
+// 	%;
+// 	^;
+// 	-;
+// }
 
 void add_export_args(char *str)
 {
@@ -85,7 +94,7 @@ int	ft_export(t_execute *cmd)
 	if (!cmd->args[1])
 	{
 		env_export_printing(cmd->env);
-		return (0); // exit status
+		return (0);
 	}
 	else
 	{
@@ -95,7 +104,7 @@ int	ft_export(t_execute *cmd)
 				add_export_args(cmd->args[i]);
 			else
 			{
-				return (1); //exit status
+				return (1);
 			}
 		}
 	}
