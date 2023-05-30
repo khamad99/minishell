@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/29 10:05:27 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/29 14:12:56 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 // 	%;
 // 	^;
 // 	-;
+// 	" ";
+// 	"\";
+// 	_; //->one only will do nothing if it is alone
 // }
 
 void add_export_args(char *str)
@@ -109,5 +112,4 @@ int	ft_export(t_execute *cmd)
 		}
 	}
 	return (0);
-	
 }

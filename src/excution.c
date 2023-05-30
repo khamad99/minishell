@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/28 16:44:36 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/29 23:14:32 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,7 @@ int	shell_loop(char **envp)
 		cmd = NULL;
 		if (shell && shell->command_block)
 		{
+			printf("%s\n", shell->command_block[0]->files->outfile_name[0]);
 			start_exec(shell);
 			free_after_execution(shell);
 			minishell_reset(shell);
