@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 13:32:12 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/28 14:16:57 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/30 20:13:18 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,10 @@ static int	open_files(t_files *files, t_shell_s *shell)
 				return (-1);
 		}
 		else if (files->redirect_type[c.i] == 'a')
-			open_appendfile(files, ++c.append_i);
+		{
+			if (open_appendfile(files, ++c.append_i) == -1)
+			return (-1);
+		}
 		else if (files->redirect_type[c.i] == '<')
 		{
 			++c.infile_i;
@@ -124,7 +127,9 @@ int	init_redir(t_execute *cmd, t_shell_s *shell)
 		init_redir2(cmd, &c);
 		if (cmd->files->redirect_type[c.i] == 'h')
 		{
-			cmd->files->heredoc_fd = open("temp", O_RDONLY);
+			cmd->files->heredoc_fd = open(".temp", O_RDONLY);
+			if (cmd->files->heredoc_fd == -1)
+				return (-1);
 			dup2(cmd->files->heredoc_fd, STDIN_FILENO);
 			if (++c.hd_i == ft_strstrlen(cmd->files->limiter))
 				close(cmd->files->heredoc_fd);

@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/29 23:14:32 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/30 22:13:30 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,9 +101,40 @@ check if forking required in order to call fork or excute by parent
 */
 static int	forking_required(t_shell_s *shell)
 {
-	if (shell->num_pipes == 0 && is_builtin(shell->command_block[0]->command))
-		return (1);
+	if (shell->num_pipes == 0)
+	{
+		if (!shell->command_block[0]->command)
+			return (1);
+		if (is_builtin(shell->command_block[0]->command))
+			return (1);
+	}
 	return (0);
+}
+
+void	excute_only_redir(t_shell_s *shell, t_execute *cmd)
+{
+	if (init_redir(cmd, shell) == -1)
+	{
+		g_exit_code = EXIT_FAILURE;
+		return ;
+	}
+	g_exit_code = EXIT_SUCCESS;
+}
+
+
+void	excute_simple_cmd(t_shell_s *shell)
+{
+	if (!shell->command_block[0]->command)
+		excute_only_redir(shell, shell->command_block[0]);
+	else if (init_redir(shell->command_block[0], shell) == -1)
+	{
+		g_exit_code = EXIT_FAILURE;
+		return ;
+	}
+	if (shell->command_block[0]->command)
+		g_exit_code = builtin_exec(shell->command_block[0], shell);
+	dup2(shell->std_out, STDOUT_FILENO);
+	dup2(shell->std_in, STDIN_FILENO);
 }
 
 /*
@@ -116,21 +147,12 @@ it have 2 roles,
 */
 static void	start_exec(t_shell_s *shell)
 {
+	exec_child_heredoc(shell);
 	if (forking_required(shell))
-	{
-		if (init_redir(shell->command_block[0], shell) == -1)
-		{
-			g_exit_code = EXIT_FAILURE;
-			return ;
-		}
-		g_exit_code = builtin_exec(shell->command_block[0], shell);
-		dup2(shell->std_out, STDOUT_FILENO);
-		dup2(shell->std_in, STDIN_FILENO);
-	}
+		excute_simple_cmd(shell);
 	else
 	{
 		pid_pipes_init(shell);
-		exec_child_heredoc(shell);
 		if (g_exit_code != 130)
 		{
 			close(shell->std_out);
@@ -186,7 +208,7 @@ int	shell_loop(char **envp)
 		cmd = NULL;
 		if (shell && shell->command_block)
 		{
-			printf("%s\n", shell->command_block[0]->files->outfile_name[0]);
+			//printf("%s\n", shell->command_block[0]->files->outfile_name[0]);
 			start_exec(shell);
 			free_after_execution(shell);
 			minishell_reset(shell);

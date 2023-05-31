@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:26 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/28 21:43:23 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/31 07:24:13 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,10 @@ for arg it should be numaric between ULLi 9223372036854775807 and -9223372036854
 
 static	unsigned long long int 	ft_my_attoi(char *str, int *s)
 {
-	unsigned long long int	r;
+	unsigned long long	r;
+	char				*tmp;
 
+	tmp = str;
 	*s = 1;
 	r = 0;
 	if (*str == '-')
@@ -94,9 +96,13 @@ static	unsigned long long int 	ft_my_attoi(char *str, int *s)
 		r = r * 10 + (*str - '0');
 		str++;
 	}
+	if (*s == -1 && r == 9223372036854775807)
+		return (2);
+	if (!ft_strncmp("-9223372036854775808", tmp, 20))
+		return (3);
 	if (*s == -1 && r > 9223372036854775807)
 		return (1);
-	else if (*s == 1 && r >= 9223372036854775807)
+	if (*s == 1 && r > 9223372036854775807)
 		return (1);
 	return (r);
 }
@@ -142,6 +148,10 @@ static int	check_exit_args(char *str, int *s)
 	}
 	if (ft_my_attoi(str, s) == 1 && i > 3)
 		return (1);
+	if (ft_my_attoi(str, s) == 2 && i > 3)
+		return (2);
+	if (ft_my_attoi(str, s) == 3 && i > 3)
+		return (3);
 	return (0);
 }
 
@@ -152,15 +162,33 @@ void	ft_exit(t_execute *exec, t_shell_s *shell)
 	if (!exec->args[1])
 	{
 		ft_putstr_fd("exit\n", STDOUT_FILENO);
+		close_all_fd();
+		free_everything(shell);
 		exit(g_exit_code); // with last exit code 
 	}
 	else if (exec->args[2])
 	{
 		ft_putstr_fd("exit\nminishell: exit: too many arguments\n", STDERR_FILENO);
-		exit(g_exit_code); // with last exit code
+		close_all_fd();
+		free_everything(shell);
+		exit(EXIT_FAILURE);
 	}
 	else if (exec->args[1] && !check_exit_args(exec->args[1], &s))
 		exit_ok(ft_my_attoi(exec->args[1], &s), &s, shell);
+	else if (exec->args[1] && check_exit_args(exec->args[1], &s) == 2)
+	{
+		ft_putstr_fd("exit\n", STDOUT_FILENO);
+		close_all_fd();
+		free_everything(shell);
+		exit(EXIT_FAILURE);
+	}
+	else if (exec->args[1] && check_exit_args(exec->args[1], &s) == 3)
+	{
+		ft_putstr_fd("exit\n", STDOUT_FILENO);
+		close_all_fd();
+		free_everything(shell);
+		exit(EXIT_SUCCESS);
+	}
 	else
 	{
 		ft_putstr_fd("exit\nminishell: exit: ", STDERR_FILENO);

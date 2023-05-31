@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/29 14:12:56 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/30 23:17:18 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,23 +55,19 @@ static void sort_env(char **envp)
 
 static void	env_export_printing(t_env_s *env)
 {
-	char	**sorted_env;
-	int		i;
+	int	i;
 
+	sort_env(env->export_env);
 	i = -1;
-	sorted_env = (char **)ft_calloc(ft_strstrlen(env->envp), sizeof(char *) + 1);
-	while (env->envp[++i])
-		sorted_env[i] = ft_strdup(env->envp[i]);
-	sorted_env[i] = 0;
-	sort_env(sorted_env);
-	i = -1;
-	while (sorted_env[++i])
+	while (env->export_env[++i])
 	{
 		ft_putstr_fd("declare -x ", STDOUT_FILENO);
-		ft_putstr_fd(sorted_env[i], STDOUT_FILENO);
+		ft_putstr_fd(env->export_key[i], STDOUT_FILENO);
+		ft_putstr_fd("=\"", STDOUT_FILENO);
+		ft_putstr_fd(env->export_value[i], STDOUT_FILENO);
+		ft_putstr_fd("\"", STDOUT_FILENO);
 		ft_putstr_fd("\n", STDOUT_FILENO);
 	}
-	free_2d(sorted_env);
 }
 
 static int	export_args_check(char *str)
@@ -91,8 +87,21 @@ static int	export_args_check(char *str)
 
 int	ft_export(t_execute *cmd)
 {	
-	int i;
+	int		i;
 
+	i = -1;
+	cmd->env->export_env = (char **)ft_calloc(ft_strstrlen(cmd->env->envp), sizeof(char *) + 1);
+	cmd->env->export_key = (char **)ft_calloc(ft_strstrlen(cmd->env->key), sizeof(char *) + 1);
+	cmd->env->export_value = (char **)ft_calloc(ft_strstrlen(cmd->env->value), sizeof(char *) + 1);
+	while (cmd->env->envp[++i])
+	{
+		cmd->env->export_env[i] = ft_strdup(cmd->env->envp[i]);
+		cmd->env->export_key[i] = ft_strdup(cmd->env->key[i]);
+		cmd->env->export_value[i] = ft_strdup(cmd->env->value[i]);
+	}
+	cmd->env->export_env[i] = 0;
+	cmd->env->export_key[i] = 0;
+	cmd->env->export_value[i] = 0;
 	i = -1;
 	if (!cmd->args[1])
 	{

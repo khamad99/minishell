@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/28 16:45:16 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/30 23:02:18 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,14 +180,22 @@ void	excute_child(t_shell_s *shell, int cmd_num)
 		signal(SIGQUIT, SIG_DFL);
 		pipes_in_child(shell, cmd_num);
 		if (init_redir(shell->command_block[cmd_num], shell) == -1)
-			return ;
-		if (is_builtin(shell->command_block[cmd_num]->command))
 		{
-			status = builtin_exec(shell->command_block[cmd_num], shell);
 			free_error(shell);
-			exit(status);
+			exit(EXIT_FAILURE);
 		}
-		else
-			excute_child_non_builtin(shell, cmd_num);
+		if (shell->command_block[cmd_num]->command)
+		{
+			if (is_builtin(shell->command_block[cmd_num]->command))
+			{
+				status = builtin_exec(shell->command_block[cmd_num], shell);
+				free_error(shell);
+				exit(status);
+			}
+			else
+				excute_child_non_builtin(shell, cmd_num);
+		}
+		free_error(shell);
+		exit(EXIT_SUCCESS);
 	}
 }

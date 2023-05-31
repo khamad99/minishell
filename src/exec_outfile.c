@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 11:49:49 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/28 14:33:25 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/30 20:16:24 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,17 +29,24 @@ int	open_outfile(t_files *files, int i)
 	{
 		ft_putstr_fd(files->outfile_name[i], STDERR_FILENO);
 		ft_putstr_fd(": Not a directory\n", STDERR_FILENO);
-		return (0);
+		return (-1);
 	}
 	if (i < ft_strstrlen(files->outfile_name) - 1)
 		close(files->outfile_fd);
 	return (0);
 }
 
-void	open_appendfile(t_files * files, int i)
+int	open_appendfile(t_files * files, int i)
 {
 	files->append_fd = open(files->append_name[i], 
 		O_RDWR | O_CREAT | O_APPEND, 0644);
+	if (files->append_fd == -1)
+	{
+		ft_putstr_fd(files->append_name[i], STDERR_FILENO);
+		ft_putstr_fd(": Not a directory\n", STDERR_FILENO);
+		return (-1);
+	}
 	if (i < ft_strstrlen(files->append_name) - 1)
 		close(files->append_fd);
+	return (0);
 }

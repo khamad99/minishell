@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 08:08:08 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/28 07:27:08 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/30 20:15:48 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	open_exec_heredoc(t_files *files, t_shell_s *shell)
 {
 	if (files->limiter)
 	{
-		files->heredoc_fd = open("temp", 
+		files->heredoc_fd = open(".temp", 
 			O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		exec_heredoc(files, shell);
 	}

@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/11 12:21:06 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/29 09:52:51 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/30 23:10:55 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,9 @@ int	ft_env(char ** arg, t_env_s *env)
 	}
 	i = -1;
 	while (env->envp[++i])
-		printf("%s\n", env->envp[i]);
+	{
+		ft_putstr_fd(env->envp[i], STDOUT_FILENO);
+		ft_putstr_fd("\n", STDOUT_FILENO);
+	}
 	return (0);
 }

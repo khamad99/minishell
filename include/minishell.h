@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/28 16:41:29 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/30 20:12:14 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,9 @@ typedef struct s_lexer
 typedef struct s_env_s
 {
     int				env_size; // Number of environment variables
+	char			**export_env; // to detrmin if env is only in export list
+	char			**export_key;
+	char			**export_value; 
     char			**envp; // Contains all environment variables
     char			**key; // Contains the key name of each environment variable
     char			**value; // Contains the body value of each environment variable
@@ -192,7 +195,7 @@ int		init_redir(t_execute *cmd, t_shell_s *shell);
 int		init_heredoc(t_execute *cmd, t_shell_s *shell);
 void	open_exec_heredoc(t_files *files, t_shell_s *shell);
 int		open_outfile(t_files *files, int i);
-void	open_appendfile(t_files * files, int i);
+int		open_appendfile(t_files * files, int i);
 void	open_infile(t_files *files, int i);
 /*--------------------------------signal-------------------------------*/
 void	ft_ctrl_c(int sig);
