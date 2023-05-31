@@ -6,27 +6,22 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/30 23:17:18 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/05/31 16:50:00 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-// {
-// 	!;
-// 	@;
-// 	$;
-// 	%;
-// 	^;
-// 	-;
-// 	" ";
-// 	"\";
-// 	_; //->one only will do nothing if it is alone
-// }
 
-void add_export_args(char *str)
+
+void add_export_args(char *str, int *flag)
 {
-	(void)str;
+	if (*flag == 1)
+	{
+		//add to env and export
+	}
+	else
+		//add to export only
 }
 
 static void sort_env(char **envp) 
@@ -70,24 +65,140 @@ static void	env_export_printing(t_env_s *env)
 	}
 }
 
-static int	export_args_check(char *str)
-{
-	int	i;
+/*
+1 -> do nothing
+0 -> not valid
+2 -> ok to add
+*/
 
+// {
+// 	!;
+// 	@;
+// 	$;
+// 	%;
+// 	^;
+// 	-;
+// 	" ";
+// 	"\";
+// 	_; //->one only will do nothing if it is alone
+// }
+static int	export_args_check(char *str, int *flag)
+{
+	int		i;
+	char	r[10];
+
+	ft_strlcpy(r, " !@$%^-\\", 10);
 	i = -1;
+	*flag = 0;
+	if (!ft_strncmp(str, "_\0", 2))
+		return (1);
 	if (ft_isdigit(str[0]) || str[0] == '=')
 		return (0);
-	while (str[++i] != '=' && str[i] != '\0')
+	while (str[++i] != '\0')
 	{
-		if (!ft_isdigit(str[i]) && str[i] != '_' && !ft_isalpha(str[i]))
+		if (str[i] == '=')
+			*flag = 1;
+		else if (flag == 0 && ft_strchr(r, str[i]) != NULL)
 			return (0);
+		else if (*flag == 1 && !str[i + 1])
+			return (2);
 	}
-	return (1);
+	return (0);
+}
+
+static int	check_in_export(t_env_s *env, char *str, int *flag)
+{
+	int		i;
+	char	*key;
+	
+	i = -1;
+	*flag = 0;
+	while (str[++i] != '\0')
+	{
+		if (str[i] == '=')
+		{
+			*flag = i;
+			break ;
+		}
+	}
+	if (*flag != 0)
+	{
+		key = ft_calloc(*flag, sizeof(char) + 1);
+		ft_strlcpy(key, str, *flag);
+		i = -1;
+		while (env->export_key[++i])
+		{
+			if (!ft_strncmp(key, env->export_key[i], ft_strlen(str)))
+			{
+				free(key);
+				return (i);
+			}
+		}
+		free(key);
+		return (-1);
+	}
+	return (-1);
+}
+
+static int	check_in_env(t_env_s *env, char *str, int *flag)
+{
+	int		i;
+	char	*key;
+	
+	i = -1;
+	*flag = 0;
+	while (str[++i] != '\0')
+	{
+		if (str[i] == '=')
+		{
+			*flag = i;
+			break ;
+		}
+	}
+	if (*flag != 0)
+	{
+		key = ft_calloc(*flag, sizeof(char) + 1);
+		ft_strlcpy(key, str, *flag);
+		i = -1;
+		while (env->key[++i])
+		{
+			if (!ft_strncmp(key, env->key[i], ft_strlen(str)))
+			{
+				free(key);
+				return (i);
+			}
+		}
+		free(key);
+		return (-1);
+	}
+	return (-1);
+}
+
+void	add_value_to_env(int p, t_env_s *env, char *str, int *flag)
+{
+	free(env->envp[p]);
+	env->envp[p] = ft_calloc(ft_strlen(str), sizeof(char));
+	ft_strlcpy(env->envp[p], str, ft_strlen(str));
+	free(env->value);
+	env->envp[p] = ft_calloc(ft_strlen(str) - *flag, sizeof(char));
+	ft_strlcpy(env->value[p], str + *flag, ft_strlen(str) - *flag);
+}
+
+void	add_value_to_export(int p, t_env_s *env, char *str, int *flag)
+{
+	free(env->export_env[p]);
+	env->export_env[p] = ft_calloc(ft_strlen(str), sizeof(char));
+	ft_strlcpy(env->export_env[p], str, ft_strlen(str));
+	free(env->value);
+	env->envp[p] = ft_calloc(ft_strlen(str) - *flag, sizeof(char));
+	ft_strlcpy(env->value[p], str + *flag, ft_strlen(str) - *flag);
 }
 
 int	ft_export(t_execute *cmd)
 {	
 	int		i;
+	int		p;
+	int		flag;
 
 	i = -1;
 	cmd->env->export_env = (char **)ft_calloc(ft_strstrlen(cmd->env->envp), sizeof(char *) + 1);
@@ -112,13 +223,24 @@ int	ft_export(t_execute *cmd)
 	{
 		while (cmd->args[++i])
 		{
-			if (export_args_check(cmd->args[i]))
-				add_export_args(cmd->args[i]);
+			p = check_in_export(cmd->env, cmd->args[i], &flag);
+			if (p != -1)
+			{
+				add_value_to_export(p, cmd->env, cmd->args[i], &flag);
+				p = check_in_env(cmd->env, cmd->args[i], &flag);
+				if (p != -1)
+					add_value_to_env(p, cmd->env, cmd->args[i], &flag);
+			}
+			else if (export_args_check(cmd->args[i], &flag))
+				add_export_args(cmd->args[i], &flag);
 			else
 			{
-				return (1);
+				ft_putstr_fd("minishell: export: ", STDERR_FILENO);
+				ft_putstr_fd(cmd->args[i], STDERR_FILENO);
+				ft_putstr_fd(": not a valid identifier\n", STDERR_FILENO);
 			}
 		}
+		return (1);
 	}
 	return (0);
 }
