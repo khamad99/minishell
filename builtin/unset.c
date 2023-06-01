@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 23:47:48 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/16 10:10:23 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/01 22:47:24 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,16 +28,37 @@ static void	remove_env_from_list(t_env_s *env, int position)
 	env->envp[position] = 0;
 	env->key[position] = 0;
 	env->value[position] = 0;
-	// int i = -1;
-	// while (env->envp[++i])
-	// 	printf("%s\n", env->envp[i]);
-	
+}
+
+static void	remove_export_from_list(t_env_s *env, int position)
+{
+	while (env->export_key[position])
+	{
+		env->export_key[position] = env->export_key[position + 1];
+		env->export_value[position] = env->export_value[position + 1];
+		position++;
+	}
+	env->export_key[position] = 0;
+	env->export_value[position] = 0;
 }
 
 /*
 used to locate the env_key position in the array
 */
 static int	unset_arg_comp(char *arg, char **env_key)
+{
+	int i;
+
+	i = -1;
+	while (env_key[++i])
+	{
+		if (!ft_strncmp(arg, env_key[i], ft_strlen(arg)))
+			return (i);
+	}
+	return (-1);
+}
+
+static int	export_arg_comp(char *arg, char **env_key)
 {
 	int i;
 
@@ -64,6 +85,9 @@ int	ft_unset(t_execute *exec)
 		position = unset_arg_comp(exec->args[i], exec->env->key);
 		if (position != -1)
 			remove_env_from_list(exec->env, position);
+		position = export_arg_comp(exec->args[i], exec->env->export_key);
+		if (position != -1)
+			remove_export_from_list(exec->env, position);
 	}
 	return (0);
 }

@@ -6,11 +6,41 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/01 22:16:34 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/01 23:12:10 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+void	update_path(t_shell_s *shell)
+{
+	int		i;
+	char	*tmp;
+
+	i = -1;
+	while (shell->envp->envp[++i])
+	{
+		if (!ft_strncmp(shell->envp->envp[++i], "PATH=", 5))
+		{
+			free_2d(shell->path);
+			shell->path = ft_split(shell->envp->envp[i] + 5, ':');
+			break;
+		}
+		else if (i == shell->envp->env_size - 1)
+		{
+			free_2d(shell->path);
+			shell->path = 0;
+			return ;
+		}
+	}
+	i = -1;
+	while (shell->path[++i])
+	{
+		tmp = shell->path[i];
+		shell->path[i] = ft_strjoin(shell->path[i], "/");
+		free(tmp);
+	}
+}
 
 void	check_if_dir(char *cmd, t_shell_s *shell, int from)
 {
@@ -133,7 +163,7 @@ static void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 		free_error(shell);
 		exit(126);
 	}
-	//perror("execve");
+	update_path(shell);
 	if (!shell->path)
 	{
 		ft_putstr_fd("minishell: Command not found: ", STDERR_FILENO);
