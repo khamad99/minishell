@@ -1,23 +1,9 @@
-cd '/////' 2>/dev/null
 
-cd "doesntexist" 2>/dev/null 
 
-cd "wtf" 2>/dev/null
 
-cd .. | echo "something" -> leakes
+_______________echo______________
 
-________________echo______________
-eChO
-eCho
-eCHO
-EechoE
-echo oui | cat -e
-echo oui | echo non | echo something | grep oui
-echo oui | echo non | echo something | grep something
-ECHO ->leakes
-
-echo -n -n -n bonjour
-echo ~  && echo ~/123 && echo ~/123/456 not echo '~' or echo "~" it returns HOME env
+ ## echo ~  && echo ~/123 && echo ~/123/456 not echo '~' or echo "~" it returns HOME env
 
 echo '\" ' " \"\""
 
@@ -45,19 +31,10 @@ export $?
 
 ______________random___________
 
-~
+ ## ~
 
 /Users
 
 \\\
-
-
-
-
-sig fault
->>"<><><><<><<<<<<<<''''''''''"
-ls>' '
-
-echo "> >> < * ? [ ] | ; [ ] || && ( ) & # $  <<" -> handle pipes inside quotes
 
 
