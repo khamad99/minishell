@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/01 07:19:24 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/01 14:42:17 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ static void	env_export_printing(t_env_s *env)
 		ft_putstr_fd(env->export_key[i], STDOUT_FILENO);
 		if (env->export_value[i])
 		{
-			ft_putstr_fd("\"", STDOUT_FILENO);
+			ft_putstr_fd("=\"", STDOUT_FILENO);
 			ft_putstr_fd(env->export_value[i], STDOUT_FILENO);
 			ft_putstr_fd("\"", STDOUT_FILENO);
 			ft_putstr_fd("\n", STDOUT_FILENO);
@@ -273,12 +273,12 @@ static int	check_in_env(t_env_s *env, char *str, int *flag)
 	}
 	if (*flag != 0)
 	{
-		key = ft_calloc(*flag, sizeof(char) + 1);
+		key = ft_calloc(*flag + 1, sizeof(char));
 		ft_strlcpy(key, str, *flag);
 		i = -1;
 		while (env->key[++i])
 		{
-			if (!ft_strncmp(key, env->key[i], ft_strlen(str)))
+			if (!ft_strncmp(key, env->key[i], ft_strlen(key)))
 			{
 				free(key);
 				return (i);
@@ -296,8 +296,8 @@ void	add_value_to_env(int p, t_env_s *env, char *str, int *flag)
 	env->envp[p] = ft_calloc(ft_strlen(str), sizeof(char));
 	ft_strlcpy(env->envp[p], str, ft_strlen(str));
 	free(env->value);
-	env->envp[p] = ft_calloc(ft_strlen(str) - *flag, sizeof(char));
-	ft_strlcpy(env->value[p], str + *flag, ft_strlen(str) - *flag);
+	env->envp[p] = ft_calloc(ft_strlen(str) - *flag + 1, sizeof(char));
+	ft_strlcpy(env->value[p], str + *flag + 1, ft_strlen(str) - *flag);
 }
 
 void	add_value_to_export(int p, t_env_s *env, char *str, int *flag)
