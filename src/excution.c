@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/30 22:13:30 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/01 06:02:55 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,22 @@ int	shell_loop(char **envp)
 			continue ;
 		add_history(cmd);
 		shell = parse(shell, cmd, envp, ++i);
+		if (i == 0)
+		{
+			int i2 = -1;
+			shell->envp->export_env = (char **)ft_calloc(ft_strstrlen(shell->envp->envp), sizeof(char *) + 1);
+			shell->envp->export_key = (char **)ft_calloc(ft_strstrlen(shell->envp->key), sizeof(char *) + 1);
+			shell->envp->export_value = (char **)ft_calloc(ft_strstrlen(shell->envp->value), sizeof(char *) + 1);
+			while (shell->envp->envp[++i2])
+			{
+				shell->envp->export_env[i2] = ft_strdup(shell->envp->envp[i2]);
+				shell->envp->export_key[i2] = ft_strdup(shell->envp->key[i2]);
+				shell->envp->export_value[i2] = ft_strdup(shell->envp->value[i2]);
+			}
+			shell->envp->export_env[i2] = 0;
+			shell->envp->export_key[i2] = 0;
+			shell->envp->export_value[i2] = 0;
+		}
 		free(cmd);
 		cmd = NULL;
 		if (shell && shell->command_block)
