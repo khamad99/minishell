@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/01 14:42:17 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/01 15:03:55 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,12 +292,13 @@ static int	check_in_env(t_env_s *env, char *str, int *flag)
 
 void	add_value_to_env(int p, t_env_s *env, char *str, int *flag)
 {
+	(void)flag;
 	free(env->envp[p]);
-	env->envp[p] = ft_calloc(ft_strlen(str), sizeof(char));
-	ft_strlcpy(env->envp[p], str, ft_strlen(str));
-	free(env->value);
-	env->envp[p] = ft_calloc(ft_strlen(str) - *flag + 1, sizeof(char));
-	ft_strlcpy(env->value[p], str + *flag + 1, ft_strlen(str) - *flag);
+	env->envp[p] = ft_calloc(ft_strlen(str) + 1, sizeof(char));
+	ft_strlcpy(env->envp[p], str, ft_strlen(str) + 1);
+	// free(env->value[p]);
+	// env->value[p] = ft_calloc(ft_strlen(str) - *flag + 1, sizeof(char));
+	// ft_strlcpy(env->value[p], str + *flag + 1, ft_strlen(str) - *flag);
 }
 
 void	add_value_to_export(int p, t_env_s *env, char *str, int *flag)
