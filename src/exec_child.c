@@ -6,16 +6,18 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/01 12:01:41 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/01 14:25:36 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	check_if_dir(char *cmd, t_shell_s *shell)
+void	check_if_dir(char *cmd, t_shell_s *shell, int from)
 {
 	DIR	*dir;
 
+	if (from == 0)
+		return ;
 	if (cmd[0] != '.' && cmd[0] != '/')
 		return ;
 	dir = opendir(cmd);
@@ -35,9 +37,9 @@ void	check_if_dir(char *cmd, t_shell_s *shell)
 F_OK: This constant is used to check if the file or directory exists.
 X_OK: This constant is used to check if the file or directory is executable.
 */
-int	path_check(char *cmd, t_shell_s *shell)
+int	path_check(char *cmd, t_shell_s *shell, int from)
 {
-	check_if_dir(cmd, shell);
+	check_if_dir(cmd, shell, from);
 	if (!access(cmd, F_OK))
 	{
 		if (!access(cmd, X_OK))
@@ -113,7 +115,7 @@ static void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 	int	r;
 
 	char	*cmd_with_path;
-	r = path_check(shell->command_block[cmd_num]->command, shell);
+	r = path_check(shell->command_block[cmd_num]->command, shell, 1);
 	if (r == 1)
 		execve(shell->command_block[cmd_num]->command,
 			shell->command_block[cmd_num]->args, shell->envp->envp);
@@ -135,7 +137,7 @@ static void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 	while (shell->path[++i])
 	{
 		cmd_with_path = ft_strjoin(shell->path[i], shell->command_block[cmd_num]->command);
-		if (path_check(cmd_with_path, shell))
+		if (path_check(cmd_with_path, shell, 0))
 			execve(cmd_with_path, shell->command_block[cmd_num]->args, shell->envp->envp);
 		free(cmd_with_path);
 	}
