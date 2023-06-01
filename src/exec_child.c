@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/01 16:26:42 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/01 22:16:34 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,14 @@ static void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 	char	*cmd_with_path;
 	r = path_check(shell->command_block[cmd_num]->command, shell, 1);
 	if (r == 1)
-		execve(shell->command_block[cmd_num]->command,
-			shell->command_block[cmd_num]->args, shell->envp->envp);
+	{
+		if (execve(shell->command_block[cmd_num]->command,
+			shell->command_block[cmd_num]->args, shell->envp->envp) == -1)
+		{
+			free_error(shell);
+			exit(0);
+		}
+	}
 	else if (r == -1)
 	{
 		free_error(shell);
