@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/01 23:12:10 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/01 23:18:01 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ static void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 		free_error(shell);
 		exit(126);
 	}
-	update_path(shell);
+	//update_path(shell);
 	if (!shell->path)
 	{
 		ft_putstr_fd("minishell: Command not found: ", STDERR_FILENO);
