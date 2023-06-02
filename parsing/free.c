@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 05:35:50 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/27 17:46:13 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/02 21:38:57 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,6 +158,9 @@ void    free_everything(t_shell_s *minishell)
         free_2d(minishell->envp->envp);
         free_2d(minishell->envp->key);
         free(minishell->envp->value);
+		free_2d(minishell->envp->export_key);
+		free_2d(minishell->envp->export_value);
+		free_2d(minishell->envp->export_env);
         free(minishell->envp);
     }
 	if (minishell->pipes_fd)
