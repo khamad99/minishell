@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:09 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/01 22:36:21 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/02 22:56:54 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 static void	add_pwd_env(t_env_s *env)
 {
 	char	*pwd;
+	char	*get_pwd;
 	char	*pwd_export;
 	int		i;
 	int		old_pwd_p;
 	int		old_pwd_p_export;
+	
 
 	i = -1;
 	while (env->key[++i])
@@ -28,10 +30,12 @@ static void	add_pwd_env(t_env_s *env)
 	while (env->export_key[++i])
 		if (!ft_strncmp(env->export_key[i], "OLDPWD", 7))
 			old_pwd_p_export = i;
-	if (!getcwd(NULL, 0))
-		return ; // error handling
-	pwd = ft_strjoin("PWD=", getcwd(NULL, 0));
-	pwd_export = ft_strdup(pwd);
+	get_pwd = getcwd(NULL, 0);
+	if (!get_pwd)
+		return ;
+	pwd = ft_strjoin("PWD=", get_pwd);
+	free(get_pwd);
+	pwd_export = ft_strdup(pwd + 4);
 	i = -1;
 	while (env->key[++i])
 	{
@@ -86,10 +90,11 @@ int	ft_cd(t_execute *cmd)
 		return 0;
 	else if (!ft_strncmp(cmd->args[1], "-", 2))
 	{
+		i = -1;
 		while (cmd->env->key[++i])
-			if (!ft_strncmp(cmd->env->key[++i], "OLDPWD", 7))
+			if (!ft_strncmp(cmd->env->key[i], "OLDPWD", 7))
 			{
-				path = cmd->env->value[i];
+				path = cmd->env->envp[i] + 7;
 				break;
 			}
 	}
