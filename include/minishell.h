@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/06/01 08:43:11 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/03 20:36:14 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,7 @@ int		init_heredoc(t_execute *cmd, t_shell_s *shell);
 void	open_exec_heredoc(t_files *files, t_shell_s *shell);
 int		open_outfile(t_files *files, int i);
 int		open_appendfile(t_files * files, int i);
-void	open_infile(t_files *files, int i);
+int		open_infile(t_files *files, int i);
 /*--------------------------------signal-------------------------------*/
 void	ft_ctrl_c(int sig);
 /*--------------------------------builtin-------------------------------*/

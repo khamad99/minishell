@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 13:32:12 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/05/30 20:13:18 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/03 21:20:20 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,11 @@ static int	open_files(t_files *files, t_shell_s *shell)
 		else if (files->redirect_type[c.i] == '<')
 		{
 			++c.infile_i;
+			if (files->infile_name[c.infile_i] == NULL)
+			{
+				ft_putstr_fd("minishell: ambiguous redirect\n", STDERR_FILENO);
+				return (-1);
+			}
 			if (access(files->infile_name[c.infile_i], F_OK) != 0)
 			{
 				ft_putstr_fd("minishell: ", STDERR_FILENO);
@@ -74,7 +79,8 @@ static int	open_files(t_files *files, t_shell_s *shell)
 				ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 				return (-1);
 			}
-			open_infile(files, c.infile_i);
+			if (open_infile(files, c.infile_i) == -1)
+				return (-1);
 		}
 	}
 	return (0);
