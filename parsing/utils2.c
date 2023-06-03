@@ -285,26 +285,38 @@ t_execute	*get_files(t_shell_s *minishell, t_execute *execute_block, char **comm
 		if (ft_strncmp(raw_command_block[count.i], ">>\0", 3) == 0 && command_block[count.i + 1])
 		{
 			execute_block->files->redirect_type[count.counter++] = 'a';
-			execute_block->files->append_name[count.m++] = ft_strdup(command_block[count.i + 1]);
+			if (command_block[count.i + 1])
+				execute_block->files->append_name[count.m++] = ft_strdup(command_block[count.i + 1]);
+			else
+				execute_block->files->append_name[count.m++] = NULL;
 			count.i += 2;
 		}
 		else if (ft_strncmp(raw_command_block[count.i], "<<\0", 3) == 0 && command_block[count.i + 1])
 		{
 			execute_block->files->redirect_type[count.counter++] = 'h';
-			execute_block->files->limiter[count.n++] = ft_strdup(command_block[count.i + 1]);
+			if (command_block[count.i + 1])
+				execute_block->files->limiter[count.n++] = ft_strdup(command_block[count.i + 1]);
+			else
+				execute_block->files->limiter[count.n++] = NULL;
 			count.i += 2;
 		}
 		else if (ft_strncmp(raw_command_block[count.i], "<\0", 2) == 0 && command_block[count.i + 1])
 		{
 			execute_block->files->redirect_type[count.counter++] = '<';
 			// printf("count.i = %i && file = %s\n", count.i, command_block[count.i + 1]);
-			execute_block->files->infile_name[count.j++] = ft_strdup(command_block[count.i + 1]);
+			if (command_block[count.i + 1])
+				execute_block->files->infile_name[count.j++] = ft_strdup(command_block[count.i + 1]);
+			else
+				execute_block->files->infile_name[count.j++] = NULL;
 			count.i += 2;
 		}
 		else if (ft_strncmp(raw_command_block[count.i], ">\0", 2) == 0 && command_block[count.i + 1])
 		{
 			execute_block->files->redirect_type[count.counter++] = '>';
-			execute_block->files->outfile_name[count.k++] = ft_strdup(command_block[count.i + 1]);
+			if (command_block[count.i + 1])
+				execute_block->files->outfile_name[count.k++] = ft_strdup(command_block[count.i + 1]);
+			else
+				execute_block->files->outfile_name[count.k++] = NULL;
 			count.i += 2;
 		}
 		else
