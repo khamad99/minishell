@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/01 22:04:23 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/03 08:54:31 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,12 @@ void add_export_args(char *str, int *flag, t_env_s *env)
 			temp_key[i] = ft_strdup(env->key[i]);
 		}
 		temp_envp[i] = ft_strdup(str);
-		temp_key[i] = ft_calloc(ft_strlen(str) - *flag + 1, sizeof(char));
+		temp_key[i] = ft_calloc(*flag + 1, sizeof(char));
 		ft_strlcpy(temp_key[i], str, *flag + 1);
 		i = -1;
 		while (env->export_key[++i])
 			temp_key_ex[i] = ft_strdup(env->export_key[i]);
-		temp_key_ex[i] = ft_calloc(ft_strlen(str) - *flag + 1, sizeof(char));
+		temp_key_ex[i] = ft_calloc(*flag + 1, sizeof(char));
 		ft_strlcpy(temp_key_ex[i], str, *flag + 1);
 		i = -1;
 		while (env->export_value[++i])
@@ -140,14 +140,15 @@ static void	env_export_printing(t_env_s *env)
 // 	"\";
 // 	_; //->one only will do nothing if it is alone
 // }
-static int	export_args_check(char *str, int *flag)
+static int	export_args_check(char *str)
 {
 	int		i;
-	char	r[10];
+	char	r[17];
+	int		flag;
 
-	ft_strlcpy(r, " !@$%^-\\", 10);
+	ft_strlcpy(r, " !@$%^-\\+{}*#~.", 17);
 	i = -1;
-	*flag = 0;
+	flag = 0;
 	if (!ft_strncmp(str, "_\0", 2))
 		return (1);
 	if (ft_isdigit(str[0]) || str[0] == '=')
@@ -155,8 +156,8 @@ static int	export_args_check(char *str, int *flag)
 	while (str[++i] != '\0')
 	{
 		if (str[i] == '=')
-			*flag = i;
-		else if (*flag == 0 && ft_strchr(r, str[i]) != NULL)
+			flag = i;
+		else if (flag == 0 && ft_strchr(r, str[i]) != NULL)
 			return (0);
 		else if (!str[i + 1])
 			return (1);
@@ -182,7 +183,7 @@ static int	check_in_export(t_env_s *env, char *str, int *flag)
 	if (*flag != 0)
 	{
 		key = ft_calloc(*flag + 1, sizeof(char));
-		ft_strlcpy(key, str, *flag);
+		ft_strlcpy(key, str, *flag + 1);
 		//key[*flag + 1] = 0;
 		i = -1;
 		while (env->export_key[++i])
@@ -221,7 +222,7 @@ static int	check_in_env(t_env_s *env, char *str, int *flag)
 		i = -1;
 		while (env->key[++i])
 		{
-			if (!ft_strncmp(key, env->key[i], ft_strlen(key)))
+			if (!ft_strncmp(key, env->key[i], ft_strlen(key) - 1))
 			{
 				free(key);
 				return (i);
@@ -248,7 +249,7 @@ void	add_new_to_env(t_env_s *env, char *str, int *flag)
 		temp_key[i] = ft_strdup(env->key[i]);
 	}
 	temp_envp[i] = ft_strdup(str);
-	temp_key[i] = ft_calloc(ft_strlen(str) - *flag + 1, sizeof(char));
+	temp_key[i] = ft_calloc(*flag + 1, sizeof(char));
 	ft_strlcpy(temp_key[i], str, *flag + 1);
 	free_2d(env->envp);
 	free_2d(env->key);
@@ -262,16 +263,13 @@ void	add_value_to_env(int p, t_env_s *env, char *str, int *flag)
 	free(env->envp[p]);
 	env->envp[p] = ft_calloc(ft_strlen(str) + 1, sizeof(char));
 	ft_strlcpy(env->envp[p], str, ft_strlen(str) + 1);
-	// free(env->value[p]);
-	// env->value[p] = ft_calloc(ft_strlen(str) - *flag + 1, sizeof(char));
-	// ft_strlcpy(env->value[p], str + *flag + 1, ft_strlen(str) - *flag);
 }
 
 void	add_value_to_export(int p, t_env_s *env, char *str, int *flag)
 {
-	free(env->export_env[p]);
-	env->export_env[p] = ft_calloc(ft_strlen(str) + 1, sizeof(char));
-	ft_strlcpy(env->export_env[p], str, ft_strlen(str));
+	// free(env->export_env[p]);
+	// env->export_env[p] = ft_calloc(ft_strlen(str) + 1, sizeof(char));
+	// ft_strlcpy(env->export_env[p], str, ft_strlen(str) + 1);
 	free(env->export_value[p]);
 	env->export_value[p] = ft_calloc(ft_strlen(str) - *flag + 1, sizeof(char));
 	ft_strlcpy(env->export_value[p], str + *flag + 1, ft_strlen(str) - *flag);
@@ -296,6 +294,14 @@ int	ft_export(t_execute *cmd)
 		while (cmd->args[++i])
 		{
 			p = check_in_export(cmd->env, cmd->args[i], &flag);
+			if (export_args_check(cmd->args[i]) == 0 && p == -1)
+			{
+				ft_putstr_fd("minishell: export: ", STDERR_FILENO);
+				ft_putstr_fd(cmd->args[i], STDERR_FILENO);
+				ft_putstr_fd(": not a valid identifier\n", STDERR_FILENO);
+				exit_code = 1;
+				return (exit_code);
+			}
 			if (p != -1)
 			{
 				add_value_to_export(p, cmd->env, cmd->args[i], &flag);
@@ -305,15 +311,8 @@ int	ft_export(t_execute *cmd)
 				else if (p == -1 && flag != 0)
 					add_new_to_env(cmd->env, cmd->args[i], &flag);
 			}
-			else if (export_args_check(cmd->args[i], &flag))
-				add_export_args(cmd->args[i], &flag, cmd->env);
 			else
-			{
-				ft_putstr_fd("minishell: export: ", STDERR_FILENO);
-				ft_putstr_fd(cmd->args[i], STDERR_FILENO);
-				ft_putstr_fd(": not a valid identifier\n", STDERR_FILENO);
-				exit_code = 1;
-			}
+				add_export_args(cmd->args[i], &flag, cmd->env);
 		}
 	}
 	return (exit_code);
