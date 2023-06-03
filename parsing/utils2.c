@@ -282,26 +282,26 @@ t_execute	*get_files(t_shell_s *minishell, t_execute *execute_block, char **comm
 	while (command_block[count.i])
 	{
 		// printf("command_block[%i] in get_files = %s\n", count.i, command_block[count.i]);
-		if (ft_strncmp(raw_command_block[count.i], ">>\0", 3) == 0)
+		if (ft_strncmp(raw_command_block[count.i], ">>\0", 3) == 0 && command_block[count.i + 1])
 		{
 			execute_block->files->redirect_type[count.counter++] = 'a';
 			execute_block->files->append_name[count.m++] = ft_strdup(command_block[count.i + 1]);
 			count.i += 2;
 		}
-		else if (ft_strncmp(raw_command_block[count.i], "<<\0", 3) == 0)
+		else if (ft_strncmp(raw_command_block[count.i], "<<\0", 3) == 0 && command_block[count.i + 1])
 		{
 			execute_block->files->redirect_type[count.counter++] = 'h';
 			execute_block->files->limiter[count.n++] = ft_strdup(command_block[count.i + 1]);
 			count.i += 2;
 		}
-		else if (ft_strncmp(raw_command_block[count.i], "<\0", 2) == 0)
+		else if (ft_strncmp(raw_command_block[count.i], "<\0", 2) == 0 && command_block[count.i + 1])
 		{
 			execute_block->files->redirect_type[count.counter++] = '<';
 			// printf("count.i = %i && file = %s\n", count.i, command_block[count.i + 1]);
 			execute_block->files->infile_name[count.j++] = ft_strdup(command_block[count.i + 1]);
 			count.i += 2;
 		}
-		else if (ft_strncmp(raw_command_block[count.i], ">\0", 2) == 0)
+		else if (ft_strncmp(raw_command_block[count.i], ">\0", 2) == 0 && command_block[count.i + 1])
 		{
 			execute_block->files->redirect_type[count.counter++] = '>';
 			execute_block->files->outfile_name[count.k++] = ft_strdup(command_block[count.i + 1]);
