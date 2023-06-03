@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/03 08:54:31 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/03 10:12:35 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,10 +280,8 @@ int	ft_export(t_execute *cmd)
 	int		i;
 	int		p;
 	int		flag;
-	int		exit_code;
 
 	i = 0;
-	exit_code = 0;
 	if (!cmd->args[1])
 	{
 		env_export_printing(cmd->env);
@@ -299,8 +297,7 @@ int	ft_export(t_execute *cmd)
 				ft_putstr_fd("minishell: export: ", STDERR_FILENO);
 				ft_putstr_fd(cmd->args[i], STDERR_FILENO);
 				ft_putstr_fd(": not a valid identifier\n", STDERR_FILENO);
-				exit_code = 1;
-				return (exit_code);
+				return (EXIT_FAILURE);
 			}
 			if (p != -1)
 			{
@@ -315,5 +312,5 @@ int	ft_export(t_execute *cmd)
 				add_export_args(cmd->args[i], &flag, cmd->env);
 		}
 	}
-	return (exit_code);
+	return (EXIT_SUCCESS);
 }
