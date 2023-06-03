@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/01 23:18:01 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/03 14:39:55 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,8 @@
 
 void	update_path(t_shell_s *shell)
 {
-	int		i;
-	char	*tmp;
-
-	i = -1;
-	while (shell->envp->envp[++i])
-	{
-		if (!ft_strncmp(shell->envp->envp[++i], "PATH=", 5))
-		{
-			free_2d(shell->path);
-			shell->path = ft_split(shell->envp->envp[i] + 5, ':');
-			break;
-		}
-		else if (i == shell->envp->env_size - 1)
-		{
-			free_2d(shell->path);
-			shell->path = 0;
-			return ;
-		}
-	}
-	i = -1;
-	while (shell->path[++i])
-	{
-		tmp = shell->path[i];
-		shell->path[i] = ft_strjoin(shell->path[i], "/");
-		free(tmp);
-	}
+	free_2d(shell->path);
+	get_path(shell, shell->envp->envp);
 }
 
 void	check_if_dir(char *cmd, t_shell_s *shell, int from)
@@ -154,8 +130,9 @@ static void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 		if (execve(shell->command_block[cmd_num]->command,
 			shell->command_block[cmd_num]->args, shell->envp->envp) == -1)
 		{
+			perror("Error");
 			free_error(shell);
-			exit(0);
+			exit(126);
 		}
 	}
 	else if (r == -1)
@@ -163,7 +140,7 @@ static void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 		free_error(shell);
 		exit(126);
 	}
-	//update_path(shell);
+	update_path(shell);
 	if (!shell->path)
 	{
 		ft_putstr_fd("minishell: Command not found: ", STDERR_FILENO);

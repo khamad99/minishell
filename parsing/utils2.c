@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/31 19:19:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/05/27 17:07:10 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/03 14:12:44 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ t_shell_s	*get_path(t_shell_s *minishell, char **envp)
 			}
 			break ;
 		}
+		else if (count.i == ft_strstrlen(envp))
+			minishell->path = ft_calloc(1, sizeof(char *));
 	}
 	minishell->path[count.j] = NULL;
 	return (minishell);
