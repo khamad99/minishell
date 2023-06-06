@@ -6,108 +6,105 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:09 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/02 22:56:54 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/06 20:12:31 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-static void	add_pwd_env(t_env_s *env)
+void	add_pwd_env(t_env_s *env, char *old_pwd)
 {
 	char	*pwd;
-	char	*get_pwd;
+	char	*get_cwd;
 	char	*pwd_export;
-	int		i;
-	int		old_pwd_p;
-	int		old_pwd_p_export;
-	
 
-	i = -1;
-	while (env->key[++i])
-		if (!ft_strncmp(env->key[i], "OLDPWD", 7))
-			old_pwd_p = i;
-	i = -1;
-	while (env->export_key[++i])
-		if (!ft_strncmp(env->export_key[i], "OLDPWD", 7))
-			old_pwd_p_export = i;
-	get_pwd = getcwd(NULL, 0);
-	if (!get_pwd)
+	get_cwd = getcwd(NULL, 0);
+	if (!get_cwd)
 		return ;
-	pwd = ft_strjoin("PWD=", get_pwd);
-	free(get_pwd);
+	pwd = ft_strjoin("PWD=", get_cwd);
+	free (get_cwd);
 	pwd_export = ft_strdup(pwd + 4);
-	i = -1;
-	while (env->key[++i])
-	{
-		if (!ft_strncmp(env->key[i], "PWD", 4))
-		{
-			free(env->envp[old_pwd_p]);
-			env->envp[old_pwd_p] = ft_strjoin("OLD", env->envp[i]);
-			free(env->envp[i]);
-			env->envp[i] = pwd;
-		}
-	}
-	i = -1;
-	while (env->export_key[++i])
-	{
-		if (!ft_strncmp(env->export_key[i], "PWD", 4))
-		{
-			free(env->export_value[old_pwd_p_export]);
-			env->export_value[old_pwd_p_export] = ft_strdup(env->export_value[i]);
-			free(env->export_value[i]);
-			env->export_value[i] = pwd_export;
-		}
-	}
-	if (!pwd)
-		free(pwd);
-	if (!pwd_export)
-		free(pwd_export);
-
+	add_to_env(env, pwd, old_pwd);
+	add_to_export(env, pwd_export, old_pwd);
 }
 
-int	ft_cd(t_execute *cmd)
+char	*get_home_path(t_execute *cmd)
 {
-	int 	i;
+	int		i;
 	char	*path;
 
 	path = 0;
 	i = -1;
-	if (ft_strstrlen(cmd->args) > 2)
+	while (cmd->env->key[++i])
 	{
-		ft_putstr_fd("minishell: cd: too many arguments\n", STDERR_FILENO);
-		return 1;
+		if (!ft_strncmp(cmd->env->key[i], "HOME", 5))
+		{
+			path = cmd->env->envp[i] + 5;
+			break ;
+		}
 	}
-	if (!cmd->args[1] || !ft_strncmp(cmd->args[1], "~\0", 2))
+	return (path);
+}
+
+char	*get_old_pwd(t_execute *cmd)
+{
+	int		i;
+	char	*path;
+
+	path = 0;
+	i = -1;
+	while (cmd->env->key[++i])
 	{
-		while (cmd->env->key[++i])
-			if (!ft_strncmp(cmd->env->key[i], "HOME", 4))
-			{
-				path = cmd->env->value[i];
-				break;
-			}
+		if (!ft_strncmp(cmd->env->key[i], "OLDPWD", 7))
+		{
+			path = cmd->env->envp[i] + 7;
+			break ;
+		}
 	}
-	else if (!ft_strncmp(cmd->args[1], ".", 2))
-		return 0;
-	else if (!ft_strncmp(cmd->args[1], "-", 2))
-	{
-		i = -1;
-		while (cmd->env->key[++i])
-			if (!ft_strncmp(cmd->env->key[i], "OLDPWD", 7))
-			{
-				path = cmd->env->envp[i] + 7;
-				break;
-			}
-	}
-	if (!path)
-		path = cmd->args[1];
+	return (path);
+}
+
+int	action_cd(t_execute *cmd, char *path)
+{
+	char	*old_pwd;
+
+	old_pwd = getcwd(NULL, 0);
 	if (!chdir(path))
-		add_pwd_env(cmd->env);
+		add_pwd_env(cmd->env, old_pwd);
 	else
 	{
+		free(old_pwd);
 		ft_putstr_fd("minishell: cd: ", STDERR_FILENO);
 		ft_putstr_fd(path, STDERR_FILENO);
-		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
-		return 1;
+		perror(" ");
+		return (1);
 	}
 	return (0);
+}
+
+int	ft_cd(t_execute *cmd)
+{
+	char	*path;
+
+	path = 0;
+	if (ft_strstrlen(cmd->args) > 2)
+		return (ft_putstr_fd("minishell: cd: too many arguments\n",
+				STDERR_FILENO), EXIT_FAILURE);
+	if (!cmd->args[1] || !ft_strncmp(cmd->args[1], "~\0", 2))
+	{
+		if (!cmd->env->envp && !cmd->env->envp[0])
+			return (ft_putstr_fd("minishell: cd: HOME not set\n",
+					STDERR_FILENO), EXIT_FAILURE);
+		path = get_home_path(cmd);
+	}
+	else if (!ft_strncmp(cmd->args[1], "-", 2))
+	{
+		if (!cmd->env->envp && !cmd->env->envp[0])
+			return (ft_putstr_fd("minishell: cd: OLDPWD not set\n",
+					STDERR_FILENO), EXIT_FAILURE);
+		path = get_old_pwd(cmd);
+	}
+	if (path_env_check(cmd, &path))
+		return (EXIT_FAILURE);
+	return (action_cd(cmd, path));
 }

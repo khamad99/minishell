@@ -6,13 +6,13 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/07 13:17:15 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/03 14:51:29 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/05 15:10:23 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-int g_exit_code;
+int	g_exit_code;
 
 /*
 is used to insert a newline character ("\n") into the input buffer of the

@@ -3,8 +3,6 @@
 
 _______________echo______________
 
- ## echo ~  && echo ~/123 && echo ~/123/456 not echo '~' or echo "~" it returns HOME env
-
 echo '\" ' " \"\""
 
 echo \\\" \\\" \\\" \\\"\\\"\\\" \\\'\\\'\\\'

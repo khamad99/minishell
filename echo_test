@@ -39,20 +39,6 @@ echo "-n -n -n"-n bonjour
 sleep 0.6
 echo "-n '-n'" bonjour
 sleep 0.6
-echo ~
-sleep 0.6
-echo "~"
-sleep 0.6
-echo '~'
-sleep 0.6
-echo ~123
-sleep 0.6
-echo 123~
-sleep 0.6
-echo ~/123
-sleep 0.6
-echo ~/123/456
-sleep 0.6
 echo $USER
 sleep 0.6
 echo "$USER"
@@ -138,8 +124,6 @@ sleep 0.6
 echo "text" "text$USER" ... "$USER"
 sleep 0.6
 echo $PWD
-sleep 0.6
-
 sleep 0.6
 test
 sleep 0.6

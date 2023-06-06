@@ -6,64 +6,23 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/03 20:41:33 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/05 15:06:08 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-extern int g_exit_code;
+extern int	g_exit_code;
 
-void minishell_reset(t_shell_s *shell)
-{
-	//shell->num_commands = 0;
-    //shell->num_pipes = 0;
-	shell->pipes_fd = 0;
-	shell->pid = 0;
-	//shell->cmd_used = 0;
-	shell->flags = 0;
-    shell->commands = 0;
-    shell->cmd_line = 0;
-	shell->lexer = 0;	
-	shell->files = 0;	 
-	shell->command_block = 0;
-	shell->std_in = dup(STDIN_FILENO);
-	shell->std_out = dup(STDOUT_FILENO);
-}
-
-void minishell_init(t_shell_s *shell)
-{
-	//shell->num_commands = 0;
-    //shell->num_pipes = 0;
-	shell->pipes_fd = 0;
-	shell->pid = 0;
-	//shell->cmd_used = 0;
-	//shell->exit_code = 0;
-	shell->flags = 0;
-    shell->commands = 0;
-    shell->path = 0; 
-    shell->cmd_line = 0;
-	// shell->std_in = 0;
-	// shell->std_out = 0;
-    shell->envp = 0;
-	shell->lexer = 0;	
-	shell->files = 0;	 
-	shell->command_block = 0; 
-}
-
-void	parent_after_fork(t_shell_s *shell)
+int	parent_waitpid(t_shell_s *shell)
 {
 	int	i;
 	int	status;
 	int	exit_code;
 
-	i = 0;
-	exit_code = -1;
-	if (shell->num_pipes > 0)
-		while (i < shell->num_pipes * 2)
-			close(shell->pipes_fd[i++]);
 	i = -1;
-	while (++i < shell->num_commands )
+	exit_code = -1;
+	while (++i < shell->num_commands)
 	{
 		if (waitpid(shell->pid[i], &status, 0) == -1)
 		{
@@ -73,6 +32,19 @@ void	parent_after_fork(t_shell_s *shell)
 		if (WIFEXITED(status))
 			exit_code = WEXITSTATUS(status);
 	}
+	return (exit_code);
+}
+
+void	parent_after_fork(t_shell_s *shell)
+{
+	int	i;
+	int	exit_code;
+
+	i = 0;
+	if (shell->num_pipes > 0)
+		while (i < shell->num_pipes * 2)
+			close(shell->pipes_fd[i++]);
+	exit_code = parent_waitpid(shell);
 	if (exit_code != -1)
 		g_exit_code = exit_code;
 	dup2(shell->std_out, STDOUT_FILENO);
@@ -83,23 +55,22 @@ void	parent_after_fork(t_shell_s *shell)
 
 void	exec_child_heredoc(t_shell_s *shell)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (++i < shell->num_commands)
 		if (shell->command_block[i]->files->limiter[0] != NULL)
 			break ;
 	i = -1;
-	g_exit_code = 0;
 	while (++i < shell->num_commands)
 		if (shell->command_block[i]->files->limiter[0] != NULL)
-			init_heredoc(shell->command_block[i], shell);
+			open_exec_heredoc(shell->command_block[i]->files, shell);
 }
 
 /*
 check if forking required in order to call fork or excute by parent
 */
-static int	forking_required(t_shell_s *shell)
+int	forking_required(t_shell_s *shell)
 {
 	if (shell->num_pipes == 0)
 	{
@@ -111,126 +82,12 @@ static int	forking_required(t_shell_s *shell)
 	return (0);
 }
 
-void	excute_only_redir(t_shell_s *shell, t_execute *cmd)
+void	excute_only_redir(t_execute *cmd)
 {
-	if (init_redir(cmd, shell) == -1)
+	if (init_redir(cmd) == -1)
 	{
 		g_exit_code = EXIT_FAILURE;
 		return ;
 	}
 	g_exit_code = EXIT_SUCCESS;
-}
-
-
-void	excute_simple_cmd(t_shell_s *shell)
-{
-	if (!shell->command_block[0]->command)
-		excute_only_redir(shell, shell->command_block[0]);
-	else if (init_redir(shell->command_block[0], shell) == -1)
-	{
-		g_exit_code = EXIT_FAILURE;
-		return ;
-	}
-	if (shell->command_block[0]->command)
-		g_exit_code = builtin_exec(shell->command_block[0], shell);
-	dup2(shell->std_out, STDOUT_FILENO);
-	dup2(shell->std_in, STDIN_FILENO);
-}
-
-/*
-it have 2 roles, 
-1- it check if forking required and if not it will excute the builtin by 
-	make the redirection
-	excute the builtin
-	return any redir to original
-2- it will loop and fork the proccess in each loop to execute the child
-*/
-static void	start_exec(t_shell_s *shell)
-{
-	exec_child_heredoc(shell);
-	if (forking_required(shell))
-		excute_simple_cmd(shell);
-	else
-	{
-		pid_pipes_init(shell);
-		if (g_exit_code != 130)
-		{
-			close(shell->std_out);
-			close(shell->std_in);
-			while (++shell->cmd_used < shell->num_commands)
-				excute_child(shell, shell->cmd_used);
-			parent_after_fork(shell);
-		}
-	}
-}
-
-/*
-chech if it reads spaces by all types
-*/
-static int	check_cmd(char *cmd)
-{
-	int		i;
-
-	i = -1;
-	
-	while (cmd[++i])
-		if (cmd[i] > 32 )
-			return (0);
-	return (1);
-}
-
-/*
-this the core function that have infinit loop the keep read the input and 
-then do parsing and if no errors it will start excution
-*/
-int	shell_loop(char **envp)
-{
-	t_shell_s	*shell;
-	char		*cmd;
-	int			i;
-
-	shell = ft_calloc(sizeof(t_shell_s), 1);
-	minishell_init(shell);
-	i = -1;
-	while (1)
-	{
-		cmd = readline("minishell🤓$ ");
-		if (!cmd)
-		{
-			printf("exit\n");
-			break ;
-		}
-		if (check_cmd(cmd))
-			continue ;
-		add_history(cmd);
-		shell = parse(shell, cmd, envp, ++i);
-		if (i == 0)
-		{
-			int i2 = -1;
-			shell->envp->export_env = (char **)ft_calloc(ft_strstrlen(shell->envp->envp), sizeof(char *) + 1);
-			shell->envp->export_key = (char **)ft_calloc(ft_strstrlen(shell->envp->key), sizeof(char *) + 1);
-			shell->envp->export_value = (char **)ft_calloc(ft_strstrlen(shell->envp->value), sizeof(char *) + 1);
-			while (shell->envp->envp[++i2])
-			{
-				shell->envp->export_env[i2] = ft_strdup(shell->envp->envp[i2]);
-				shell->envp->export_key[i2] = ft_strdup(shell->envp->key[i2]);
-				shell->envp->export_value[i2] = ft_strdup(shell->envp->value[i2]);
-			}
-			shell->envp->export_env[i2] = 0;
-			shell->envp->export_key[i2] = 0;
-			shell->envp->export_value[i2] = 0;
-		}
-		free(cmd);
-		cmd = NULL;
-		if (shell && shell->command_block)
-		{
-			printf("%s\n", shell->command_block[0]->files->infile_name[0]);
-			start_exec(shell);
-			free_after_execution(shell);
-			minishell_reset(shell);
-		}
-	}
-	close_all_fd();
-	free_everything(shell);
-	return (0);
 }

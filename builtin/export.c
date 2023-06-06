@@ -6,185 +6,46 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/03 10:12:35 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/06 18:00:59 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void add_export_args(char *str, int *flag, t_env_s *env)
-{
-	char 	**temp_envp;
-	char 	**temp_key;
-	char 	**temp_key_ex;
-	char 	**temp_value_ex;
-	int		i;
-
-	i = -1;
-	while (env->export_key[++i])
-		if (!ft_strncmp(str, env->export_key[i], ft_strlen(str)))
-			return ;
-	temp_key_ex = ft_calloc(ft_strstrlen(env->export_key) + 2, sizeof(char *));
-	temp_value_ex = ft_calloc(ft_strstrlen(env->export_value) + 2, sizeof(char *));
-	i = -1;
-	if (*flag != 0)
-	{
-		temp_envp = ft_calloc(ft_strstrlen(env->envp) + 2, sizeof(char *));
-		temp_key = ft_calloc(ft_strstrlen(env->key) + 2, sizeof(char *));
-		while (env->envp[++i])
-		{
-			temp_envp[i] = ft_strdup(env->envp[i]);
-			temp_key[i] = ft_strdup(env->key[i]);
-		}
-		temp_envp[i] = ft_strdup(str);
-		temp_key[i] = ft_calloc(*flag + 1, sizeof(char));
-		ft_strlcpy(temp_key[i], str, *flag + 1);
-		i = -1;
-		while (env->export_key[++i])
-			temp_key_ex[i] = ft_strdup(env->export_key[i]);
-		temp_key_ex[i] = ft_calloc(*flag + 1, sizeof(char));
-		ft_strlcpy(temp_key_ex[i], str, *flag + 1);
-		i = -1;
-		while (env->export_value[++i])
-			temp_value_ex[i] = ft_strdup(env->export_value[i]);
-		temp_value_ex[i] = ft_strdup(str + *flag + 1);
-		free_2d(env->envp);
-		free_2d(env->key);
-		free_2d(env->export_key);
-		free_2d(env->export_value);
-		env->envp = temp_envp;
-		env->key = temp_key;
-		env->export_key = temp_key_ex;
-		env->export_value = temp_value_ex;
-	}
-	else
-	{
-		while (env->export_key[++i])
-			temp_key_ex[i] = ft_strdup(env->export_key[i]);
-		temp_key_ex[i] = ft_strdup(str);
-		i = -1;
-		while (env->export_value[++i])
-			temp_value_ex[i] = ft_strdup(env->export_value[i]);
-		temp_value_ex[i] = NULL;
-		free_2d(env->export_key);
-		free_2d(env->export_value);
-		env->export_key = temp_key_ex;
-		env->export_value = temp_value_ex;
-	}
-}
-
-static void sort_key_value(char **key, char **value) 
-{
-	int		i;
-	char	*temp;
-	char	*temp2;
-	int		len;
-	int		j;
-
-	j = -1;
-	len = ft_strstrlen(key);
-	while (++j < len)
-	{
-		i = -1;
-		while (key[++i])
-		{
-			if (key[i + 1] && ft_strncmp(key[i], key[i + 1], ft_strlen(key[i])) > 0)
-			{
-				temp = key[i];
-				temp2 = value[i];
-				key[i] = key[i + 1];
-				value[i] = value[i + 1];
-				key[i + 1] = temp;
-				value[i + 1] = temp2;
-			}
-		}
-	}
-}
-
-static void	env_export_printing(t_env_s *env)
+void	export_init(t_shell_s *shell, int flag)
 {
 	int	i;
 
-	sort_key_value(env->export_key, env->export_value);
+	if (flag != 0 || !shell->envp->envp || !shell->envp->envp[0])
+		return ;
 	i = -1;
-	while (env->export_key[++i])
+	shell->envp->export_env = (char **)ft_calloc(ft_strstrlen(
+				shell->envp->envp), sizeof(char *) + 1);
+	shell->envp->export_key = (char **)ft_calloc(ft_strstrlen(
+				shell->envp->key), sizeof(char *) + 1);
+	shell->envp->export_value = (char **)ft_calloc(ft_strstrlen(
+				shell->envp->value), sizeof(char *) + 1);
+	while (shell->envp->envp[++i])
 	{
-		ft_putstr_fd("declare -x ", STDOUT_FILENO);
-		ft_putstr_fd(env->export_key[i], STDOUT_FILENO);
-		if (env->export_value[i])
-		{
-			ft_putstr_fd("=\"", STDOUT_FILENO);
-			ft_putstr_fd(env->export_value[i], STDOUT_FILENO);
-			ft_putstr_fd("\"", STDOUT_FILENO);
-			ft_putstr_fd("\n", STDOUT_FILENO);
-		}
-		else
-			ft_putstr_fd("\n", STDOUT_FILENO);
+		shell->envp->export_env[i] = ft_strdup(shell->envp->envp[i]);
+		shell->envp->export_key[i] = ft_strdup(shell->envp->key[i]);
+		shell->envp->export_value[i] = ft_strdup(shell->envp->value[i]);
 	}
+	shell->envp->export_env[i] = 0;
+	shell->envp->export_key[i] = 0;
+	shell->envp->export_value[i] = 0;
 }
 
-/*
-1 -> do nothing
-0 -> not valid
-2 -> ok to add
-*/
-
-// {
-// 	!;
-// 	@;
-// 	$;
-// 	%;
-// 	^;
-// 	-;
-// 	" ";
-// 	"\";
-// 	_; //->one only will do nothing if it is alone
-// }
-static int	export_args_check(char *str)
-{
-	int		i;
-	char	r[17];
-	int		flag;
-
-	ft_strlcpy(r, " !@$%^-\\+{}*#~.", 17);
-	i = -1;
-	flag = 0;
-	if (!ft_strncmp(str, "_\0", 2))
-		return (1);
-	if (ft_isdigit(str[0]) || str[0] == '=')
-		return (0);
-	while (str[++i] != '\0')
-	{
-		if (str[i] == '=')
-			flag = i;
-		else if (flag == 0 && ft_strchr(r, str[i]) != NULL)
-			return (0);
-		else if (!str[i + 1])
-			return (1);
-	}
-	return (0);
-}
-
-static int	check_in_export(t_env_s *env, char *str, int *flag)
+int	check_in_export(t_env_s *env, char *str, int *flag)
 {
 	int		i;
 	char	*key;
-	
-	i = -1;
-	*flag = 0;
-	while (str[++i] != '\0')
-	{
-		if (str[i] == '=')
-		{
-			*flag = i;
-			break ;
-		}
-	}
+
+	get_flag(flag, str);
 	if (*flag != 0)
 	{
 		key = ft_calloc(*flag + 1, sizeof(char));
 		ft_strlcpy(key, str, *flag + 1);
-		//key[*flag + 1] = 0;
 		i = -1;
 		while (env->export_key[++i])
 		{
@@ -200,87 +61,14 @@ static int	check_in_export(t_env_s *env, char *str, int *flag)
 	return (-1);
 }
 
-static int	check_in_env(t_env_s *env, char *str, int *flag)
-{
-	int		i;
-	char	*key;
-	
-	i = -1;
-	*flag = 0;
-	while (str[++i] != '\0')
-	{
-		if (str[i] == '=')
-		{
-			*flag = i;
-			break ;
-		}
-	}
-	if (*flag != 0)
-	{
-		key = ft_calloc(*flag + 1, sizeof(char));
-		ft_strlcpy(key, str, *flag);
-		i = -1;
-		while (env->key[++i])
-		{
-			if (!ft_strncmp(key, env->key[i], ft_strlen(key) - 1))
-			{
-				free(key);
-				return (i);
-			}
-		}
-		free(key);
-		return (-1);
-	}
-	return (-1);
-}
-
-void	add_new_to_env(t_env_s *env, char *str, int *flag)
-{
-	int		i;
-	char 	**temp_envp;
-	char 	**temp_key;
-	
-	i = -1;
-	temp_envp = ft_calloc(ft_strstrlen(env->envp) + 2, sizeof(char *));
-	temp_key = ft_calloc(ft_strstrlen(env->key) + 2, sizeof(char *));
-	while (env->envp[++i])
-	{
-		temp_envp[i] = ft_strdup(env->envp[i]);
-		temp_key[i] = ft_strdup(env->key[i]);
-	}
-	temp_envp[i] = ft_strdup(str);
-	temp_key[i] = ft_calloc(*flag + 1, sizeof(char));
-	ft_strlcpy(temp_key[i], str, *flag + 1);
-	free_2d(env->envp);
-	free_2d(env->key);
-	env->envp = temp_envp;
-	env->key = temp_key;
-}
-
-void	add_value_to_env(int p, t_env_s *env, char *str, int *flag)
-{
-	(void)flag;
-	free(env->envp[p]);
-	env->envp[p] = ft_calloc(ft_strlen(str) + 1, sizeof(char));
-	ft_strlcpy(env->envp[p], str, ft_strlen(str) + 1);
-}
-
-void	add_value_to_export(int p, t_env_s *env, char *str, int *flag)
-{
-	// free(env->export_env[p]);
-	// env->export_env[p] = ft_calloc(ft_strlen(str) + 1, sizeof(char));
-	// ft_strlcpy(env->export_env[p], str, ft_strlen(str) + 1);
-	free(env->export_value[p]);
-	env->export_value[p] = ft_calloc(ft_strlen(str) - *flag + 1, sizeof(char));
-	ft_strlcpy(env->export_value[p], str + *flag + 1, ft_strlen(str) - *flag);
-}
-
 int	ft_export(t_execute *cmd)
 {	
 	int		i;
 	int		p;
 	int		flag;
 
+	if (!cmd->env->envp || !cmd->env->envp[0])
+		return (EXIT_SUCCESS);
 	i = 0;
 	if (!cmd->args[1])
 	{
@@ -293,23 +81,9 @@ int	ft_export(t_execute *cmd)
 		{
 			p = check_in_export(cmd->env, cmd->args[i], &flag);
 			if (export_args_check(cmd->args[i]) == 0 && p == -1)
-			{
-				ft_putstr_fd("minishell: export: ", STDERR_FILENO);
-				ft_putstr_fd(cmd->args[i], STDERR_FILENO);
-				ft_putstr_fd(": not a valid identifier\n", STDERR_FILENO);
-				return (EXIT_FAILURE);
-			}
-			if (p != -1)
-			{
-				add_value_to_export(p, cmd->env, cmd->args[i], &flag);
-				p = check_in_env(cmd->env, cmd->args[i], &flag);
-				if (p != -1)
-					add_value_to_env(p, cmd->env, cmd->args[i], &flag);
-				else if (p == -1 && flag != 0)
-					add_new_to_env(cmd->env, cmd->args[i], &flag);
-			}
+				return (exit_export(cmd->args[i]), EXIT_FAILURE);
 			else
-				add_export_args(cmd->args[i], &flag, cmd->env);
+				ft_export2(cmd, &flag, p, i);
 		}
 	}
 	return (EXIT_SUCCESS);

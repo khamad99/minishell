@@ -16,7 +16,7 @@ cd ./././
 sleep 0.6
 cd /
 sleep 0.6
-cd '/////' 2>/dev/null 
+cd '/////'
 sleep 0.6
 cd '/etc' 
 sleep 0.6
@@ -26,11 +26,11 @@ cd "$PWD/file_tests"
 sleep 0.6
 cd "doesntexist" 
 sleep 0.6
-cd "doesntexist" 2>/dev/null 
+cd "doesntexist" 
 sleep 0.6
 cd ../../..
 sleep 0.6
-cd "wtf" 2>/dev/null 
+cd "wtf" 
 sleep 0.6
 cd .. 
 sleep 0.6

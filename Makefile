@@ -6,7 +6,7 @@
 #    By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/09 11:29:51 by ooutabac          #+#    #+#              #
-#    Updated: 2023/05/28 13:49:29 by kalshaer         ###   ########.fr        #
+#    Updated: 2023/06/06 21:27:33 by kalshaer         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,8 +21,7 @@ INC_DIR		=	include
 SRC_DIR		=	src
 OBJ_DIR		=	objects
 
-SRCS		=	src/main.c					\
-				parsing/parse.c				\
+SRCS		=	parsing/parse.c				\
 				parsing/utils1.c			\
 				parsing/utils2.c			\
 				parsing/utils3.c			\
@@ -31,22 +30,34 @@ SRCS		=	src/main.c					\
 				parsing/utils6.c			\
 				parsing/utils7.c			\
 				parsing/free.c				\
+				src/main.c					\
 				builtin/echo.c				\
 				builtin/env.c				\
 				builtin/pwd.c				\
 				builtin/unset.c				\
+				builtin/unset_utils.c		\
 				builtin/exit.c				\
 				builtin/export.c			\
+				builtin/export_utils1.c		\
+				builtin/export_utils2.c		\
+				builtin/export_utils3.c		\
 				builtin/cd.c				\
+				builtin/cd_utils.c			\
+				builtin/cd_utils2.c			\
 				builtin/builtin_utils.c		\
 				src/excution.c				\
+				src/error_handling.c		\
 				src/exec_child.c			\
+				src/exec_child_utils.c		\
 				src/redir.c					\
 				src/exec_heredoc.c			\
 				src/exec_infile.c			\
 				src/exec_outfile.c			\
 				src/pipes.c					\
 				src/signal.c				\
+				parsing/skip.c				\
+				parsing/count_redirections.c\
+				#parsing/dollar_sign1.c		\#
 
 OBJS		=	$(SRCS:%c=%o)
 

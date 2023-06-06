@@ -115,5 +115,3 @@ sleep 0.6
 export TES\~T=123
 sleep 0.6
 export TEST+=100
-
-
