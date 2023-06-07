@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 00:21:15 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/06 22:42:08 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 10:47:27 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	add_export_args(char *str, int *flag, t_env_s *env)
 	i = -1;
 	get_flag(flag, str);
 	while (env->export_key && env->export_key[++i])
-		if (!ft_strncmp(str, env->export_key[i], ft_strlen(str)))
+		if (!ft_strncmp(str, env->export_key[i], ft_strlen(str) + 1))
 			return ;
 	if (*flag != 0)
 	{

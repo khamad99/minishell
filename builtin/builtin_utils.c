@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:03:04 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/04 11:31:01 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 10:38:43 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int	builtin_exec(t_execute *exec, t_shell_s *shell)
 		return (ft_env(exec->args, exec->env));
 	else if (!ft_strncmp(exec->command, "unset", 6))
 		return (ft_unset(exec));
-	else if (!ft_strncmp(exec->command, "exit\0", 5))
+	else if (!ft_strncmp(exec->command, "exit", 5))
 		ft_exit(exec, shell);
 	else if (!ft_strncmp(exec->command, "pwd", 4))
 		return (ft_pwd());

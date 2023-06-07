@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/07 10:29:32 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 10:48:16 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	check_in_export(t_env_s *env, char *str, int *flag)
 		i = -1;
 		while (env->export_key && env->export_key[++i])
 		{
-			if (!ft_strncmp(key, env->export_key[i], ft_strlen(key)))
+			if (!ft_strncmp(key, env->export_key[i], ft_strlen(key) + 1))
 			{
 				free(key);
 				return (i);

@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 00:22:36 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/06 22:43:49 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 10:48:00 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	check_in_env(t_env_s *env, char *str, int *flag)
 		i = -1;
 		while (env->key && env->key[++i])
 		{
-			if (!ft_strncmp(key, env->key[i], ft_strlen(key) - 1))
+			if (!ft_strncmp(key, env->key[i], ft_strlen(key) + 1))
 			{
 				free(key);
 				return (i);

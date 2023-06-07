@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 00:22:08 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/07 10:28:04 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 10:47:46 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	sort_key_value(char **key, char **value)
 		while (key && key[++i])
 		{
 			if (key[i + 1] && ft_strncmp(key[i], key[i + 1],
-					ft_strlen(key[i])) > 0)
+					ft_strlen(key[i]) + 1) > 0)
 				swap_key_value(key, value, i);
 		}
 	}
