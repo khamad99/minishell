@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/14 22:27:20 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/07 18:55:55 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 19:39:23 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ int	ft_pwd(void)
 	char	*pwd;
 
 	pwd = 0;
-	if (!pwd)
-		return (1);
 	pwd = getcwd(NULL, 0);
 	if (!pwd)
 	{
