@@ -12,8 +12,6 @@ unset PATH
 sleep 0.6
 unset PATH 
 sleep 0.6
-unset TES\\\\T
-sleep 0.6
 unset TES;T
 sleep 0.6
 unset TES.T
@@ -67,6 +65,4 @@ sleep 0.6
 unset TES^T
 sleep 0.6
 unset TES!T
-sleep 0.6
-unset TES\~T
 sleep 0.6

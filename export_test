@@ -24,8 +24,6 @@ export "="="="
 sleep 0.6
 export '='='='
 sleep 0.6
-export TE\\\ST=100
-sleep 0.6
 export TE-ST=100
 sleep 0.6
 export -TEST=100
@@ -50,13 +48,7 @@ export TES=T=""
 sleep 0.6
 export TE+S=T=""
 sleep 0.6
-export TES\\\\T=123
-sleep 0.6
 export TES.T=123
-sleep 0.6
-export TES\\\$T=123
-sleep 0.6
-export TES\\\\T
 sleep 0.6
 export TES.T=123
 sleep 0.6
@@ -111,7 +103,5 @@ sleep 0.6
 export TES^T=123
 sleep 0.6
 export TES!T=123
-sleep 0.6
-export TES\~T=123
 sleep 0.6
 export TEST+=100

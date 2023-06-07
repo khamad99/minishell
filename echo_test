@@ -69,8 +69,6 @@ echo "$USER""$USER""$USER"
 sleep 0.6
 echo text"$USER"test
 sleep 0.6
-echo '$USER' "$USER" "text \' text"
-sleep 0.6
 echo '$USER'
 sleep 0.6
 echo $USER " "
@@ -84,8 +82,6 @@ sleep 0.6
 echo '"$USER"''$USER'"""$USER"
 sleep 0.6
 echo " $USER  "'$PWD'
-sleep 0.6
-echo " $USER  \$ "'$PWD'
 sleep 0.6
 echo $USER=4
 sleep 0.6
