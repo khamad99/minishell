@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 00:22:36 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/07 10:48:00 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 19:05:57 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	check_in_env(t_env_s *env, char *str, int *flag)
 	if (*flag != 0)
 	{
 		key = ft_calloc(*flag + 1, sizeof(char));
-		ft_strlcpy(key, str, *flag);
+		ft_strlcpy(key, str, *flag + 1);
 		i = -1;
 		while (env->key && env->key[++i])
 		{

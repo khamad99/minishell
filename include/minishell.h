@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/14 13:47:57 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/06/06 21:22:40 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 18:34:34 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,6 +161,7 @@ typedef struct s_shell_s
 	int			num_commands;
 	int			num_pipes;
 	int			*pipes_fd;
+	int			heredoc_flag;
 	pid_t		*pid;
 	int			cmd_used;
 	int			exit_code;
@@ -182,7 +183,7 @@ void	shell_loop(char **envp, t_shell_s *shell, int i);
 void	excute_simple_cmd(t_shell_s *shell);
 void	excute_only_redir(t_execute *cmd);
 int		forking_required(t_shell_s *shell);
-void	exec_child_heredoc(t_shell_s *shell);
+int		exec_child_heredoc(t_shell_s *shell);
 void	parent_after_fork(t_shell_s *shell);
 void	update_path(t_shell_s *shell);
 void	check_if_dir(char *cmd, t_shell_s *shell, int from);
@@ -202,7 +203,7 @@ void	close_all_fd(void);
 /*---------------------------------redir--------------------------------*/
 int		ft_strstrlen(char **str);
 int		init_redir(t_execute *cmd);
-void	open_exec_heredoc(t_files *files, t_shell_s *shell);
+int		open_exec_heredoc(t_files *files, t_shell_s *shell);
 int		open_outfile(t_files *files, int i);
 int		open_appendfile(t_files *files, int i);
 int		open_infile(t_files *files, int i);

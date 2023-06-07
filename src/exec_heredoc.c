@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/18 08:08:08 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/05 15:11:22 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 18:47:49 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ void	exec_heredoc_loop(t_files *files, t_shell_s *shell, char *input, int i)
 	while (1)
 	{
 		if (g_exit_code == 130)
+		{
+			shell->heredoc_flag = 1;
 			break ;
+		}
 		write(shell->std_out, "> ", 2);
 		input = get_next_line(shell->std_in);
 		if (!input)
@@ -82,7 +85,10 @@ void	exec_heredoc(t_files *files, t_shell_s *shell)
 	while (files->limiter[++i])
 	{
 		if (g_exit_code == 130)
+		{
+			shell->heredoc_flag = 1;
 			break ;
+		}
 		exec_heredoc_loop(files, shell, input, i);
 	}
 	close(files->heredoc_fd);
@@ -97,13 +103,19 @@ O_WRONLY flag specifies that the file should be opened for writing only
 0644: This is the file mode that specifies the permissions for the
 newly created file
 */
-void	open_exec_heredoc(t_files *files, t_shell_s *shell)
+int	open_exec_heredoc(t_files *files, t_shell_s *shell)
 {
 	if (files->limiter)
 	{
 		files->heredoc_fd = open(".temp",
 				O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (files->heredoc_fd == -1)
+		{
+			perror("Error");
+			return (-1);
+		}
 		g_exit_code = 0;
 		exec_heredoc(files, shell);
 	}
+	return (0);
 }

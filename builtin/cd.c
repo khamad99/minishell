@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:09 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/06 20:12:31 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 18:29:02 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ int	action_cd(t_execute *cmd, char *path)
 	char	*old_pwd;
 
 	old_pwd = getcwd(NULL, 0);
+	if (!old_pwd)
+		return (EXIT_FAILURE);
 	if (!chdir(path))
 		add_pwd_env(cmd->env, old_pwd);
 	else

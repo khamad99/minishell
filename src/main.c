@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 11:58:15 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/06 18:05:37 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 18:49:08 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,15 @@ it have 2 roles,
 */
 void	start_exec(t_shell_s *shell)
 {
-	exec_child_heredoc(shell);
+	shell->heredoc_flag = 0;
+	if (exec_child_heredoc(shell) == -1)
+		return ;
 	if (forking_required(shell))
 		excute_simple_cmd(shell);
 	else
 	{
 		pid_pipes_init(shell);
-		if (g_exit_code != 130)
+		if (shell->heredoc_flag != 1)
 		{
 			close(shell->std_out);
 			close(shell->std_in);
@@ -53,6 +55,7 @@ void	start_exec(t_shell_s *shell)
 				excute_child(shell, shell->cmd_used);
 			parent_after_fork(shell);
 		}
+		shell->heredoc_flag = 0;
 	}
 }
 

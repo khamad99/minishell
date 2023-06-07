@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 20:07:28 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/05 15:06:08 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 17:58:17 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,18 +53,25 @@ void	parent_after_fork(t_shell_s *shell)
 	close(shell->std_in);
 }
 
-void	exec_child_heredoc(t_shell_s *shell)
+int	exec_child_heredoc(t_shell_s *shell)
 {
 	int	i;
+	int	r;
 
 	i = -1;
+	r = 0;
 	while (++i < shell->num_commands)
 		if (shell->command_block[i]->files->limiter[0] != NULL)
 			break ;
 	i = -1;
 	while (++i < shell->num_commands)
+	{
 		if (shell->command_block[i]->files->limiter[0] != NULL)
-			open_exec_heredoc(shell->command_block[i]->files, shell);
+			r = open_exec_heredoc(shell->command_block[i]->files, shell);
+		if (r == -1)
+			return (-1);
+	}
+	return (0);
 }
 
 /*

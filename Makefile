@@ -6,7 +6,7 @@
 #    By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/09 11:29:51 by ooutabac          #+#    #+#              #
-#    Updated: 2023/06/06 23:07:33 by kalshaer         ###   ########.fr        #
+#    Updated: 2023/06/07 16:22:34 by kalshaer         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,6 +30,8 @@ SRCS		=	parsing/parse.c				\
 				parsing/utils6.c			\
 				parsing/utils7.c			\
 				parsing/free.c				\
+				parsing/free_everything.c	\
+				parsing/free_after_exec.c	\
 				src/main.c					\
 				builtin/echo.c				\
 				builtin/env.c				\
