@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 05:35:50 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/06/07 09:47:28 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 09:53:17 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ void	free_2d_utils(char **array)
 
 void	free_2d(char **array)
 {
-	int	i;
-
 	if (array == NULL)
 		return ;
 	if (array[0] == NULL)
@@ -79,7 +77,6 @@ void	free_3d_utils(char ***array, int i)
 void	free_3d(char ***array)
 {
 	int	i;
-	int	j;
 
 	i = 0;
 	if (!array)

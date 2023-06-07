@@ -65,12 +65,6 @@ echo $USER'$USER'text oui oui     oui  oui $USER oui      $USER ''
 sleep 0.6
 echo $USER '' $USER $USER '' $USER '' $USER -n $USER
 sleep 0.6
-echo ' \' ' \'
-sleep 0.6
-echo '\" ' " \"\""
-sleep 0.6
-echo \\\" \\\" \\\" \\\"\\\"\\\" \\\'\\\'\\\'
-sleep 0.6
 echo "$USER""$USER""$USER"
 sleep 0.6
 echo text"$USER"test

@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/04 12:24:12 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/07 07:43:55 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 09:58:40 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,11 @@ void	add_to_env(t_env_s *env, char *pwd, char *old_pwd)
 	{
 		if (!ft_strncmp(env->key[i], "PWD", 4))
 		{
-			free(env->envp[i]);
+			if (env->envp && env->envp[i])
+				free(env->envp[i]);
 			env->envp[i] = pwd;
 		}
-		if (i == ft_strstrlen(env->key) - 1)
+		else if (i == ft_strstrlen(env->key))
 			free (pwd);
 	}
 }
@@ -80,10 +81,11 @@ void	add_to_export(t_env_s *env, char *pwd_export, char *old_pwd)
 	{
 		if (!ft_strncmp(env->export_key[i], "PWD", 4))
 		{
-			free(env->export_value[i]);
+			if (env->export_value && env->export_value[i])
+				free(env->export_value[i]);
 			env->export_value[i] = pwd_export;
 		}
-		if (i == ft_strstrlen(env->export_key) - 1)
+		else if (i == ft_strstrlen(env->export_key))
 			free (pwd_export);
 	}
 }

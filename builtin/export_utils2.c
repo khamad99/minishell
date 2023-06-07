@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 00:22:08 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/06 22:42:59 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 10:28:04 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int	export_args_check(char *str)
 			flag = i;
 		else if (flag == 0 && ft_strchr(r, str[i]) != NULL)
 			return (0);
-		else if (!str[i + 1])
+		if (!str[i + 1])
 			return (1);
 	}
 	return (0);
