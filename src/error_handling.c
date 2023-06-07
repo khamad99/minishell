@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 11:12:21 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/06 17:37:36 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/06 22:52:01 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	ft_strstrlen(char **str)
 	int	i;
 
 	if (!str || !str[0])
-		return (0);
+		return (1);
 	i = 0;
 	while (str[i])
 		i++;

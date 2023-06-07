@@ -6,11 +6,17 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/13 22:18:42 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/05 15:05:14 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 08:16:39 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
+
+void	update_path(t_shell_s *shell)
+{
+	free_2d(shell->path);
+	get_path(shell, shell->envp->envp);
+}
 
 /*
 this function excute the non_builtin command, it do the following
@@ -40,6 +46,11 @@ void	excute_child_non_builtin(t_shell_s *shell, int cmd_num)
 	{
 		free_error(shell);
 		exit(126);
+	}
+	else if (r == 2)
+	{
+		free_error(shell);
+		exit(127);
 	}
 	update_path(shell);
 	excute_child_with_path(shell, cmd_num);

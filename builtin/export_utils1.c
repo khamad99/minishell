@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 00:21:15 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/05 00:21:50 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/06 22:42:08 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,11 @@ void	add_only_key(t_env_s *env, char *str)
 	temp_key_ex = ft_calloc(ft_strstrlen(env->export_key) + 2, sizeof(char *));
 	temp_value_ex = ft_calloc(ft_strstrlen(env->export_value) + 2,
 			sizeof(char *));
-	while (env->export_key[++i])
+	while (env->export_key && env->export_key[++i])
 		temp_key_ex[i] = ft_strdup(env->export_key[i]);
 	temp_key_ex[i] = ft_strdup(str);
 	i = -1;
-	while (env->export_value[++i])
+	while (env->export_value && env->export_value[++i])
 		temp_value_ex[i] = ft_strdup(env->export_value[i]);
 	temp_value_ex[i] = ft_strdup(" ");
 	free_2d(env->export_key);
@@ -61,12 +61,12 @@ void	add_args_export(t_env_s *env, int *flag, char *str)
 	temp_key_ex = ft_calloc(ft_strstrlen(env->export_key) + 2, sizeof(char *));
 	temp_value_ex = ft_calloc(ft_strstrlen(env->export_value) + 2,
 			sizeof(char *));
-	while (env->export_key[++i])
+	while (env->export_key && env->export_key[++i])
 		temp_key_ex[i] = ft_strdup(env->export_key[i]);
 	temp_key_ex[i] = ft_calloc(*flag + 1, sizeof(char));
 	ft_strlcpy(temp_key_ex[i], str, *flag + 1);
 	i = -1;
-	while (env->export_value[++i])
+	while (env->export_value && env->export_value[++i])
 		temp_value_ex[i] = ft_strdup(env->export_value[i]);
 	temp_value_ex[i] = ft_strdup(str + *flag + 1);
 	free_2d(env->export_key);
@@ -84,7 +84,7 @@ void	add_args_env(t_env_s *env, int *flag, char *str)
 	i = -1;
 	temp_envp = ft_calloc(ft_strstrlen(env->envp) + 2, sizeof(char *));
 	temp_key = ft_calloc(ft_strstrlen(env->key) + 2, sizeof(char *));
-	while (env->envp[++i])
+	while (env->envp && env->envp[++i])
 	{
 		temp_envp[i] = ft_strdup(env->envp[i]);
 		temp_key[i] = ft_strdup(env->key[i]);
@@ -104,7 +104,7 @@ void	add_export_args(char *str, int *flag, t_env_s *env)
 
 	i = -1;
 	get_flag(flag, str);
-	while (env->export_key[++i])
+	while (env->export_key && env->export_key[++i])
 		if (!ft_strncmp(str, env->export_key[i], ft_strlen(str)))
 			return ;
 	if (*flag != 0)

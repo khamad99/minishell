@@ -3,27 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ooutabac <ooutabac@student.42.fr>          +#+  +:+       +#+        */
+/*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/27 05:35:50 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/06/05 17:19:18 by ooutabac         ###   ########.fr       */
+/*   Updated: 2023/06/07 09:47:28 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
-void	free_2d(char **array)
+void	free_2d_utils(char **array)
 {
 	int	i;
 
-	if (array == NULL)
-		return ;
-	if (array[0] == NULL)
-	{
-		free(array);
-		array = NULL;
-		return ;
-	}
 	i = 0;
 	if (array != NULL)
 	{
@@ -41,7 +33,47 @@ void	free_2d(char **array)
 		free(array);
 		array = NULL;
 	}
-	return ;
+}
+
+void	free_2d(char **array)
+{
+	int	i;
+
+	if (array == NULL)
+		return ;
+	if (array[0] == NULL)
+	{
+		free(array);
+		array = NULL;
+		return ;
+	}
+	free_2d_utils(array);
+}
+
+void	free_3d_utils(char ***array, int i)
+{
+	int	j;
+
+	j = 0;
+	if (array)
+	{
+		while (array[i])
+		{
+			j = 0;
+			while (array[i][j])
+			{
+				if (array[i][j] != NULL)
+				{
+					free(array[i][j]);
+					array[i][j++] = NULL;
+				}
+			}
+			free(array[i]);
+			array[i++] = NULL;
+		}
+		free(array);
+		array = NULL;
+	}
 }
 
 void	free_3d(char ***array)
@@ -66,64 +98,33 @@ void	free_3d(char ***array)
 		array = NULL;
 		return ;
 	}
-	j = 0;
-	if (array)
-	{
-		while (array[i])
-		{
-			j = 0;
-			while (array[i][j])
-			{
-				if (array[i][j] != NULL)
-				{
-					free(array[i][j]);
-					array[i][j++] = NULL;
-				}
-			}
-			free(array[i]);
-			array[i++] = NULL;
-		}
-		free(array);
-		array = NULL;
-	}
+	free_3d_utils(array, i);
 }
 
-void	free_everything(t_shell_s *minishell)
+void	init_counter(t_counter	*c)
+{
+	c->i = 0;
+	c->j = 0;
+	c->k = 0;
+	c->m = 0;
+	c->n = 0;
+}
+
+void	free_everything_utils3(t_shell_s *minishell)
+{
+	if (minishell->pipes_fd)
+		free(minishell->pipes_fd);
+	if (minishell->pid)
+		free(minishell->pid);
+	if (minishell != NULL)
+		free(minishell);
+}
+
+void	free_everything_utils2(t_shell_s *minishell)
 {
 	t_counter	c;
 
-	c.i = 0;
-	c.j = 0;
-	c.k = 0;
-	c.m = 0;
-	c.n = 0;
-	if (!minishell)
-		return ;
-	if (minishell->cmd_line != NULL)
-	{
-		free(minishell->cmd_line);
-		minishell->cmd_line = NULL;
-	}
-	free_2d(minishell->commands);
-	free_2d(minishell->path);
-	if (minishell->lexer != NULL)
-	{
-		free_2d(minishell->lexer->tokens);
-		free_2d(minishell->lexer->raw_tokens);
-		free_2d(minishell->lexer->command_blocks);
-		free(minishell->lexer);
-	}
-	free_3d(minishell->flags);
-	if (minishell->files)
-	{
-		free_2d(minishell->files->infile_name);
-		free_2d(minishell->files->outfile_name);
-		free_2d(minishell->files->append_name);
-		free_2d(minishell->files->limiter);
-		if (minishell->files->redirect_type)
-			free(minishell->files->redirect_type);
-		free(minishell->files);
-	}
+	init_counter(&c);
 	if (minishell->command_block)
 	{
 		while (minishell->command_block[c.n])
@@ -145,44 +146,11 @@ void	free_everything(t_shell_s *minishell)
 		}
 		free(minishell->command_block);
 	}
-	if (minishell->envp)
-	{
-		free_2d(minishell->envp->envp);
-		free_2d(minishell->envp->key);
-		free(minishell->envp->value);
-		free_2d(minishell->envp->export_key);
-		free_2d(minishell->envp->export_value);
-		free_2d(minishell->envp->export_env);
-		free(minishell->envp);
-	}
-	if (minishell->pipes_fd)
-		free(minishell->pipes_fd);
-	if (minishell->pid)
-		free(minishell->pid);
-	if (minishell != NULL)
-		free(minishell);
+	free_everything_utils3(minishell);
 }
 
-void	free_after_execution(t_shell_s *minishell)
+void	free_everything_utils(t_shell_s *minishell)
 {
-	t_counter	c;
-
-	if (!minishell)
-		return ;
-	free_3d(minishell->flags);
-	free_2d(minishell->commands);
-	if (minishell->cmd_line)
-	{
-		free(minishell->cmd_line);
-		minishell->cmd_line = 0;
-	}
-	if (minishell->lexer)
-	{
-		free_2d(minishell->lexer->command_blocks);
-		free_2d(minishell->lexer->raw_tokens);
-		free_2d(minishell->lexer->tokens);
-		free(minishell->lexer);
-	}
 	if (minishell->files)
 	{
 		free_2d(minishell->files->infile_name);
@@ -193,6 +161,63 @@ void	free_after_execution(t_shell_s *minishell)
 			free(minishell->files->redirect_type);
 		free(minishell->files);
 	}
+	if (minishell->envp)
+	{
+		free_2d(minishell->envp->envp);
+		free_2d(minishell->envp->key);
+		free(minishell->envp->value);
+		free_2d(minishell->envp->export_key);
+		free_2d(minishell->envp->export_value);
+		free_2d(minishell->envp->export_env);
+		free(minishell->envp);
+	}
+	free_everything_utils2(minishell);
+}
+
+void	free_everything(t_shell_s *minishell)
+{
+	if (!minishell)
+		return ;
+	if (minishell->cmd_line != NULL)
+	{
+		free(minishell->cmd_line);
+		minishell->cmd_line = NULL;
+	}
+	free_2d(minishell->commands);
+	free_2d(minishell->path);
+	if (minishell->lexer != NULL)
+	{
+		free_2d(minishell->lexer->tokens);
+		free_2d(minishell->lexer->raw_tokens);
+		free_2d(minishell->lexer->command_blocks);
+		free(minishell->lexer);
+	}
+	free_3d(minishell->flags);
+	free_everything_utils(minishell);
+}
+
+void	free_after_execution_utils2(t_shell_s *minishell)
+{
+	if (minishell->files)
+	{
+		free_2d(minishell->files->infile_name);
+		free_2d(minishell->files->outfile_name);
+		free_2d(minishell->files->append_name);
+		free_2d(minishell->files->limiter);
+		if (minishell->files->redirect_type)
+			free(minishell->files->redirect_type);
+		free(minishell->files);
+	}
+	if (minishell->pipes_fd)
+		free(minishell->pipes_fd);
+	if (minishell->pid)
+		free(minishell->pid);
+}
+
+void	free_after_execution_utils(t_shell_s *minishell)
+{
+	t_counter	c;
+
 	if (minishell->command_block)
 	{
 		c.i = 0;
@@ -211,16 +236,32 @@ void	free_after_execution(t_shell_s *minishell)
 					free(minishell->command_block[c.i]->files->redirect_type);
 				free(minishell->command_block[c.i]->files);
 			}
-			free(minishell->command_block[c.i]);
-			c.i++;
+			free(minishell->command_block[c.i++]);
 		}
 		free(minishell->command_block);
 	}
-	if (minishell->pipes_fd)
-		free(minishell->pipes_fd);
-	if (minishell->pid)
-		free(minishell->pid);
-	return ;
+	free_after_execution_utils2(minishell);
+}
+
+void	free_after_execution(t_shell_s *minishell)
+{
+	if (!minishell)
+		return ;
+	free_3d(minishell->flags);
+	free_2d(minishell->commands);
+	if (minishell->cmd_line)
+	{
+		free(minishell->cmd_line);
+		minishell->cmd_line = 0;
+	}
+	if (minishell->lexer)
+	{
+		free_2d(minishell->lexer->command_blocks);
+		free_2d(minishell->lexer->raw_tokens);
+		free_2d(minishell->lexer->tokens);
+		free(minishell->lexer);
+	}
+	free_after_execution_utils(minishell);
 }
 
 void	free_and_null(void *ptr)

@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/05 00:22:08 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/05 08:21:59 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/06 22:42:59 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	sort_key_value(char **key, char **value)
 	while (++j < len)
 	{
 		i = -1;
-		while (key[++i])
+		while (key && key[++i])
 		{
 			if (key[i + 1] && ft_strncmp(key[i], key[i + 1],
 					ft_strlen(key[i])) > 0)
@@ -69,7 +69,7 @@ void	env_export_printing(t_env_s *env)
 
 	sort_key_value(env->export_key, env->export_value);
 	i = -1;
-	while (env->export_key[++i])
+	while (env->export_key && env->export_key[++i])
 	{
 		ft_putstr_fd("declare -x ", STDOUT_FILENO);
 		ft_putstr_fd(env->export_key[i], STDOUT_FILENO);

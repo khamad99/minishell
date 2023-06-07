@@ -6,17 +6,33 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:35 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/06 18:00:59 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/07 08:29:23 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
 
+// void	control_oldpwd(t_env_s *env)
+// {
+// 	int	i;
+
+// 	i = -1;
+// 	while (env->envp && env->export_key[++i])
+// 	{
+// 		if (!ft_strncmp(env->export_key[i], "OLDPWD", 7))
+// 		{
+// 			free(env->export_value[i]);
+// 			env->export_value[i] = ft_strdup(" ");
+// 			break ;
+// 		}
+// 	}
+// }
+
 void	export_init(t_shell_s *shell, int flag)
 {
 	int	i;
 
-	if (flag != 0 || !shell->envp->envp || !shell->envp->envp[0])
+	if (flag != 0)
 		return ;
 	i = -1;
 	shell->envp->export_env = (char **)ft_calloc(ft_strstrlen(
@@ -25,7 +41,7 @@ void	export_init(t_shell_s *shell, int flag)
 				shell->envp->key), sizeof(char *) + 1);
 	shell->envp->export_value = (char **)ft_calloc(ft_strstrlen(
 				shell->envp->value), sizeof(char *) + 1);
-	while (shell->envp->envp[++i])
+	while (shell->envp->envp && shell->envp->envp[++i])
 	{
 		shell->envp->export_env[i] = ft_strdup(shell->envp->envp[i]);
 		shell->envp->export_key[i] = ft_strdup(shell->envp->key[i]);
@@ -47,7 +63,7 @@ int	check_in_export(t_env_s *env, char *str, int *flag)
 		key = ft_calloc(*flag + 1, sizeof(char));
 		ft_strlcpy(key, str, *flag + 1);
 		i = -1;
-		while (env->export_key[++i])
+		while (env->export_key && env->export_key[++i])
 		{
 			if (!ft_strncmp(key, env->export_key[i], ft_strlen(key)))
 			{
@@ -67,10 +83,8 @@ int	ft_export(t_execute *cmd)
 	int		p;
 	int		flag;
 
-	if (!cmd->env->envp || !cmd->env->envp[0])
-		return (EXIT_SUCCESS);
 	i = 0;
-	if (!cmd->args[1])
+	if (!cmd->args[1] && cmd->env->export_key && cmd->env->export_key[0])
 	{
 		env_export_printing(cmd->env);
 		return (0);

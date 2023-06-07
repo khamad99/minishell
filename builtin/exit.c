@@ -6,7 +6,7 @@
 /*   By: kalshaer <kalshaer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/16 08:15:26 by kalshaer          #+#    #+#             */
-/*   Updated: 2023/06/04 22:12:16 by kalshaer         ###   ########.fr       */
+/*   Updated: 2023/06/06 23:28:21 by kalshaer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,8 +116,8 @@ void	ft_exit(t_execute *exec, t_shell_s *shell)
 		exit_status("exit\n", EXIT_SUCCESS, STDOUT_FILENO, shell);
 	else
 	{
-		ft_putstr_fd("exit\nminishell:exit: ", STDERR_FILENO);
+		ft_putstr_fd("exit\nminishell: exit: ", STDERR_FILENO);
 		ft_putstr_fd(exec->args[1], STDERR_FILENO);
-		exit_status(": numeric argument required", 2, STDERR_FILENO, shell);
+		exit_status(": numeric argument required\n", 2, STDERR_FILENO, shell);
 	}
 }
