@@ -6,7 +6,7 @@
 /*   By: ooutabac <ooutabac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/09 11:29:43 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/06/06 14:23:45 by ooutabac         ###   ########.fr       */
+/*   Updated: 2023/06/07 16:57:37 by ooutabac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,8 @@ t_shell_s	*parse(t_shell_s *minishell, char *str, char **envp, int iteration)
 	if (check_validity(minishell, str) == FALSE)
 	{
 		free_after_execution(minishell);
-		ft_putstr_fd("Error: Syntax\n", STDERR_FILENO);
+		if (minishell && minishell->lexer)
+			ft_putstr_fd("Error: Syntax\n", STDERR_FILENO);
 		g_exit_code = 2;
 		return (minishell);
 	}

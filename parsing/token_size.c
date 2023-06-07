@@ -1,73 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils4.c                                           :+:      :+:    :+:   */
+/*   token_size.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ooutabac <ooutabac@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/02/09 11:29:38 by ooutabac          #+#    #+#             */
-/*   Updated: 2023/06/06 16:56:25 by ooutabac         ###   ########.fr       */
+/*   Created: 2023/06/07 13:33:52 by ooutabac          #+#    #+#             */
+/*   Updated: 2023/06/07 13:33:58 by ooutabac         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
-void	num_of_tokens_loop(char *str, t_counter *count)
-{
-	while (str[count->i])
-	{
-		if (str[count->i] == '\"')
-			count->i = skip_dquotes(str, count->i);
-		else if (str[count->i] == '\'')
-			count->i = skip_squotes(str, count->i);
-		else if (str[count->i] == '>' || str[count->i] == '<'
-			|| str[count->i] == '|')
-		{
-			count->counter++;
-			if (count->i > 0 && str[count->i - 1] != ' '
-				&& str[count->i - 1] != '\t')
-				count->counter++;
-			count->i = skip_symbols(str, count->i);
-			count->i = skip_spaces(str, count->i);
-		}
-		else if (str[count->i] != ' ' && str[count->i] != '\t')
-			count->i++;
-		else if (str[count->i] == ' ' || str[count->i] == '\t')
-		{
-			count->counter++;
-			count->i = skip_spaces(str, count->i);
-		}
-	}
-}
-
-int	num_of_tokens(char *str)
-{
-	t_counter	count;
-
-	if (!str || !str[0])
-		return (0);
-	count.i = 0;
-	count.counter = 1;
-	num_of_tokens_loop(str, &count);
-	return (count.counter);
-}
-
-int	is_heredoc_append(char *str, t_counter *c)
-{
-	if ((str[c->i] == '>'
-			&& str[c->i + 1] && str[c->i + 1] == '>')
-		|| (str[c->i] == '<'
-			&& str[c->i + 1] && str[c->i + 1] == '<'))
-		return (TRUE);
-	return (FALSE);
-}
-
-int	is_infile_outfile_pipe(char *str, t_counter *c)
-{
-	if (str[c->i] == '>' || str[c->i] == '<' || str[c->i] == '|')
-		return (TRUE);
-	return (FALSE);
-}
 
 void	token_size_squote(char *str, t_counter *c)
 {
@@ -128,16 +71,3 @@ int	token_size(char *str, int i)
 	return (c.length);
 }
 	// printf("token size = %i\n", length);
-
-int	check_for_dquotes(char *str, int i)
-{
-	if (!str)
-		return (FALSE);
-	while (str[i] && (str[i] != ' ' && str[i] != '\t'))
-	{
-		if (str[i] == '\"')
-			return (TRUE);
-		i++;
-	}
-	return (FALSE);
-}
